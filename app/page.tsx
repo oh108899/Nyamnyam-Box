@@ -168,10 +168,10 @@ export default function HomePage() {
             <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
             <span>북마크</span>
           </button>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
+          <Link href="/my" className={`${styles.navItem} ${styles.navItemInactive} ${styles.navLink}`}>
             <Image src="/images/my.svg" alt="" width={16} height={16} aria-hidden="true" />
             <span>마이페이지</span>
-          </button>
+          </Link>
         </nav>
       </div>
     </main>

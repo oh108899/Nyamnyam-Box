@@ -1,0 +1,249 @@
+.viewport {
+  min-height: 100vh;
+  background: var(--bg-color);
+}
+
+.page {
+  display: flex;
+  width: min(100%, 375px);
+  min-height: 100vh;
+  margin: 0 auto;
+  flex-direction: column;
+  background: var(--bg-color);
+  color: var(--text-black);
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+.header {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e5e5;
+  background: var(--white);
+  padding: 0 16px;
+}
+
+.headerButton {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-black);
+  text-decoration: none;
+  padding: 0;
+}
+
+.headerIcon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: var(--body1_700);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.profileSection {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-color);
+  padding: 24px 16px;
+}
+
+.profileAvatar,
+.profileAvatarSkeleton {
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  border: 4px solid var(--solid);
+}
+
+.profileAvatar {
+  background: #d3d3d3;
+}
+
+.profileAvatarSkeleton,
+.profileNameSkeleton,
+.profileMetaSkeleton,
+.profileDescSkeleton,
+.recipeImageSkeleton,
+.recipeTitleSkeleton,
+.recipeMetaSkeleton {
+  background: linear-gradient(110deg, #eceff2 25%, #f5f7fa 40%, #eceff2 55%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.1s linear infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.profileInfo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profileName {
+  margin: 0;
+  font-size: var(--h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.profileMeta {
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.profileDesc {
+  margin: 0;
+  color: var(--text-gray);
+  font-size: var(--body2);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.profileNameSkeleton {
+  width: 92px;
+  height: 24px;
+  border-radius: 8px;
+}
+
+.profileMetaSkeleton {
+  width: 180px;
+  height: 18px;
+  border-radius: 8px;
+}
+
+.profileDescSkeleton {
+  width: 220px;
+  height: 18px;
+  border-radius: 8px;
+}
+
+.recipeSection {
+  flex: 1;
+  padding: 24px 16px;
+}
+
+.recipeSectionTitle {
+  margin: 0 0 16px;
+  font-size: var(--h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.recipeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.emptyText {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--text-gray);
+  font-size: var(--body1);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.recipeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recipeImageWrap,
+.recipeImageSkeleton {
+  position: relative;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #d3d3d3;
+}
+
+.recipeImage {
+  object-fit: cover;
+}
+
+.bestBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  border-radius: 9999px;
+  background: var(--secondary);
+  color: var(--white);
+  font-size: var(--desc);
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 4px 8px;
+}
+
+.recipeTitle {
+  margin: 0;
+  color: var(--text-black);
+  font-size: var(--body2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.recipeMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary);
+  font-size: var(--desc);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.recipeTitleSkeleton {
+  width: 120px;
+  height: 18px;
+  border-radius: 8px;
+}
+
+.recipeMetaSkeleton {
+  width: 92px;
+  height: 16px;
+  border-radius: 8px;
+}
+
+.bottomActionWrap {
+  padding: 16px;
+}
+
+.bottomActionButton {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: var(--body1_700);
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+}
