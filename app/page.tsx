@@ -8,29 +8,28 @@ import styles from "./page.module.css";
 export default function HomePage() {
   const [loading] = useState(true);
   const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
-  
 
   return (
     <main className={styles.viewport}>
-      <div className={`${styles.page} ui-mobile-page`}>
-        <header className={`${styles.header} ui-page-header`}>
+      <div className={styles.page}>
+        <header className={styles.header}>
           <h1 className={styles.logoHeading}>
             <Link href="/" className={styles.logoLink}>
               냠냠박스
             </Link>
           </h1>
-          <Link href="/serch" className={`${styles.headerButton} ui-reset-button`} aria-label="검색">
+          <Link href="/serch" className={styles.headerButton} aria-label="검색">
             <Image src="/images/serchIcon.svg" alt="" width={20} height={20} aria-hidden="true" />
           </Link>
         </header>
 
         <section className={styles.section}>
-          <h2 className={`${styles.sectionTitle} ui-section-title`}>오늘의 Pick!</h2>
-          <div className={`${styles.horizontalScroll} ui-scroll-x`}>
+          <h2 className={styles.sectionTitle}>오늘의 Pick!</h2>
+          <div className={styles.horizontalScroll}>
             {loading
               ? Array.from({ length: 2 }, (_, index) => (
                   <article key={`pick-skeleton-${index}`} className={styles.pickCard}>
-                    <div className={`${styles.imageSkeleton} ui-skeleton`} role="img" aria-label="레시피 이미지 로딩중" />
+                    <div className={styles.imageSkeleton} role="img" aria-label="레시피 이미지 로딩중" />
                     <div className={styles.pickGradient} />
                     <div className={styles.pickTextWrap}>
                       <span className={styles.pickBadge}>Pick!</span>
@@ -53,18 +52,18 @@ export default function HomePage() {
 
         <section className={styles.sectionLargeGap}>
           <div className={styles.sectionHeaderRow}>
-            <h2 className={`${styles.sectionTitle} ui-section-title`}>인기 레시피 TOP 10</h2>
-            <button type="button" className={`${styles.viewAllButton} ui-reset-button`}>
+            <h2 className={styles.sectionTitle}>인기 레시피 TOP 10</h2>
+            <button type="button" className={styles.viewAllButton}>
               전체보기
             </button>
           </div>
 
-          <div className={`${styles.horizontalScroll} ui-scroll-x`}>
+          <div className={styles.horizontalScroll}>
             {loading
               ? Array.from({ length: 3 }, (_, index) => (
                   <article key={`top-skeleton-${index}`} className={styles.topRecipeCard}>
                     <div className={styles.squareImageWrap}>
-                      <div className={`${styles.imageSkeleton} ui-skeleton`} role="img" aria-label="레시피 이미지 로딩중" />
+                      <div className={styles.imageSkeleton} role="img" aria-label="레시피 이미지 로딩중" />
                     </div>
                     <h3 className={styles.recipeTitle}>제목 로딩중..</h3>
                     <div className={styles.metaRow}>
@@ -101,15 +100,15 @@ export default function HomePage() {
         </section>
 
         <section className={styles.sectionBottom}>
-          <h2 className={`${styles.sectionTitle} ui-section-title`}>새로운 레시피</h2>
+          <h2 className={styles.sectionTitle}>새로운 레시피</h2>
 
           <div className={styles.newRecipeGrid}>
             {loading
               ? Array.from({ length: 4 }, (_, index) => (
                   <article key={`new-skeleton-${index}`} className={styles.newRecipeCard}>
                     <div className={styles.newRecipeImageWrap}>
-                      <div className={`${styles.imageSkeleton} ui-skeleton`} role="img" aria-label="레시피 이미지 로딩중" />
-                      <button type="button" className={`${styles.favoriteButton} ui-reset-button`} aria-label="북마크">
+                      <div className={styles.imageSkeleton} role="img" aria-label="레시피 이미지 로딩중" />
+                      <button type="button" className={styles.favoriteButton} aria-label="북마크">
                         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
                       </button>
                     </div>
@@ -131,7 +130,7 @@ export default function HomePage() {
                   <article key={item.id} className={styles.newRecipeCard}>
                     <div className={styles.newRecipeImageWrap}>
                       <Image src={item.src} alt={item.alt} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                      <button type="button" className={`${styles.favoriteButton} ui-reset-button`} aria-label="북마크">
+                      <button type="button" className={styles.favoriteButton} aria-label="북마크">
                         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
                       </button>
                     </div>
@@ -152,7 +151,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <button type="button" className={`${styles.floatingButton} ui-reset-button`} aria-label="글쓰기">
+        <button type="button" className={styles.floatingButton} aria-label="글쓰기">
           <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
         </button>
 
@@ -161,15 +160,15 @@ export default function HomePage() {
             <Image src="/images/home.svg" alt="" width={14} height={16} aria-hidden="true" />
             <span>홈</span>
           </Link>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive} ui-reset-button`}>
+          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
             <Image src="/images/recipe.svg" alt="" width={14} height={16} aria-hidden="true" />
             <span>레시피</span>
           </button>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive} ui-reset-button`}>
+          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
             <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
             <span>북마크</span>
           </button>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive} ui-reset-button`}>
+          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
             <Image src="/images/my.svg" alt="" width={16} height={16} aria-hidden="true" />
             <span>마이페이지</span>
           </button>

@@ -27,22 +27,22 @@ export default function SearchPage() {
   const [ingredient, setIngredient] = useState("고기");
 
   return (
-    <div className={`${styles.page} ui-mobile-page`}>
-      <header className={`${styles.header} ui-page-header`}>
-        <Link href="/" className={`${styles.iconButton} ui-reset-button`} aria-label="뒤로가기">
-          <span className={`ui-material-icon ${styles.headerIcon}`} aria-hidden="true">
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <Link href="/" className={styles.iconButton} aria-label="뒤로가기">
+          <span className={`${styles.materialIcon} ${styles.headerIcon}`} aria-hidden="true">
             arrow_back
           </span>
         </Link>
         <h1 className={styles.headerTitle}>레시피 검색</h1>
-        <button type="button" className={`${styles.applyButton} ui-reset-button`}>
+        <button type="button" className={styles.applyButton}>
           적용
         </button>
       </header>
 
       <div className={styles.content}>
         <div className={styles.searchBox}>
-          <span className={`ui-material-icon ${styles.searchIcon}`} aria-hidden="true">
+          <span className={`${styles.materialIcon} ${styles.searchIcon}`} aria-hidden="true">
             search
           </span>
           <input
@@ -64,9 +64,10 @@ export default function SearchPage() {
                   key={cat.label}
                   type="button"
                   onClick={() => setSelectedCategory(cat.label)}
-                  className={`${styles.categoryButton} ${active ? styles.categoryButtonActive : ""} ui-reset-button`}
+                  aria-pressed={active}
+                  className={`${styles.categoryButton} ${active ? styles.categoryButtonActive : ""}`}
                 >
-                  <span className={`ui-material-icon ${styles.categoryIcon}`} aria-hidden="true">
+                  <span className={`${styles.materialIcon} ${styles.categoryIcon}`} aria-hidden="true">
                     {cat.icon}
                   </span>
                   <span className={styles.categoryText}>{cat.label}</span>
@@ -80,16 +81,14 @@ export default function SearchPage() {
           <h2 className={styles.blockTitle}>상세 필터</h2>
 
           <FilterGroup title="난이도" options={difficultyOptions} selected={difficulty} onSelect={setDifficulty} />
-
           <FilterGroup title="소요 시간" options={timeOptions} selected={time} onSelect={setTime} />
-
           <FilterGroup title="주요 식재료" options={ingredientOptions} selected={ingredient} onSelect={setIngredient} />
         </section>
       </div>
 
       <div className={styles.bottomActionWrap}>
-        <button type="button" className={`${styles.bottomActionButton} ui-reset-button`}>
-          <span className={`ui-material-icon ${styles.bottomActionIcon}`} aria-hidden="true">
+        <button type="button" className={styles.bottomActionButton}>
+          <span className={`${styles.materialIcon} ${styles.bottomActionIcon}`} aria-hidden="true">
             filter_list
           </span>
           필터 적용 검색
@@ -118,7 +117,8 @@ function FilterGroup({ title, options, selected, onSelect }: FilterGroupProps) {
               key={option}
               type="button"
               onClick={() => onSelect(option)}
-              className={`${styles.filterOption} ${active ? styles.filterOptionActive : ""} ui-reset-button`}
+              aria-pressed={active}
+              className={`${styles.filterOption} ${active ? styles.filterOptionActive : ""}`}
             >
               {option}
             </button>
