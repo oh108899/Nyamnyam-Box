@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import BottomNav from "./components/BottomNav";
+import LogoHeader from "./components/LogoHeader";
 import styles from "./page.module.css";
 
 export default function HomePage() {
@@ -12,16 +13,12 @@ export default function HomePage() {
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
-        <header className={styles.header}>
-          <h1 className={styles.logoHeading}>
-            <Link href="/" className={styles.logoLink}>
-              냠냠박스
-            </Link>
-          </h1>
-          <Link href="/serch" className={styles.headerButton} aria-label="검색">
-            <Image src="/images/serchIcon.svg" alt="" width={20} height={20} aria-hidden="true" />
-          </Link>
-        </header>
+        <LogoHeader
+          headerClassName={styles.header}
+          logoHeadingClassName={styles.logoHeading}
+          logoLinkClassName={styles.logoLink}
+          headerButtonClassName={styles.headerButton}
+        />
 
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>오늘의 Pick!</h2>
@@ -155,24 +152,14 @@ export default function HomePage() {
           <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
         </button>
 
-        <nav className={styles.bottomNav}>
-          <Link href="/" className={`${styles.navItem} ${styles.navItemActive} ${styles.navLink}`}>
-            <Image src="/images/home.svg" alt="" width={14} height={16} aria-hidden="true" />
-            <span>홈</span>
-          </Link>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
-            <Image src="/images/recipe.svg" alt="" width={14} height={16} aria-hidden="true" />
-            <span>레시피</span>
-          </button>
-          <button type="button" className={`${styles.navItem} ${styles.navItemInactive}`}>
-            <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-            <span>북마크</span>
-          </button>
-          <Link href="/my" className={`${styles.navItem} ${styles.navItemInactive} ${styles.navLink}`}>
-            <Image src="/images/my.svg" alt="" width={16} height={16} aria-hidden="true" />
-            <span>마이페이지</span>
-          </Link>
-        </nav>
+        <BottomNav
+          activeTab="home"
+          bottomNavClassName={styles.bottomNav}
+          navItemClassName={styles.navItem}
+          navItemActiveClassName={styles.navItemActive}
+          navItemInactiveClassName={styles.navItemInactive}
+          navLinkClassName={styles.navLink}
+        />
       </div>
     </main>
   );

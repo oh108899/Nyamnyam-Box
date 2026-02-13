@@ -9,6 +9,7 @@
   min-height: 100vh;
   margin: 0 auto;
   flex-direction: column;
+  position: relative;
   background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
@@ -229,7 +230,7 @@
 }
 
 .bottomActionWrap {
-  padding: 16px;
+  padding: 16px 16px 88px;
 }
 
 .bottomActionButton {
@@ -245,5 +246,48 @@
   font-size: var(--body1_700);
   font-weight: 700;
   line-height: 1.3;
+  text-decoration: none;
+}
+
+.bottomNav {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  width: min(100%, 375px);
+  height: 64px;
+  transform: translateX(-50%);
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1px solid #dfdfdf;
+  background: var(--white);
+}
+
+.navItem {
+  display: flex;
+  min-width: 58px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: #a0a0a0;
+  font-size: var(--desc);
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 0;
+}
+
+.navItemActive {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.navItemInactive {
+  color: #a0a0a0;
+}
+
+.navLink {
   text-decoration: none;
 }

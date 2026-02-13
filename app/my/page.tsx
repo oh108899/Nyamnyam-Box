@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import BottomNav from "../components/BottomNav";
 import styles from "./page.module.css";
 
 type MyRecipe = {
@@ -93,6 +94,15 @@ export default function MyPage() {
             레시피 작성하기
           </Link>
         </div>
+
+        <BottomNav
+          activeTab="my"
+          bottomNavClassName={styles.bottomNav}
+          navItemClassName={styles.navItem}
+          navItemActiveClassName={styles.navItemActive}
+          navItemInactiveClassName={styles.navItemInactive}
+          navLinkClassName={styles.navLink}
+        />
       </div>
     </main>
   );
