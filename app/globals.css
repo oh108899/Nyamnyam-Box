@@ -1,26 +1,141 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1");
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Color styles */
+--primary: rgba(244, 140, 37, 1);
+--primary-bg: rgba(244, 140, 37, 0.10000000149011612);
+--link: rgba(230, 122, 26, 1);
+--secondary: rgba(72, 176, 154, 1);
+--secondary-bg: rgba(72, 176, 154, 0.10000000149011612);
+--text-black: rgba(44, 44, 44, 1);
+--text-gray: rgba(107, 107, 107, 1);
+--text-light-gray: rgba(184, 184, 184, 1);
+--bg-color: rgba(248, 249, 250, 1);
+--white: rgba(255, 255, 255, 1);
+--solid: rgba(235, 235, 235, 1);
+--dark--primary: rgba(255, 155, 61, 1);
+--dark---link: rgba(255, 134, 27, 1);
+--dark--primary-bg: rgba(255, 155, 61, 0.20000000298023224);
+--dark--secondary: rgba(91, 196, 168, 1);
+--dark--secondary-bg: rgba(91, 196, 168, 0.20000000298023224);
+--dark--text-black: rgba(229, 229, 229, 1);
+--dark--text-gray: rgba(160, 160, 160, 1);
+--dark--bg: rgba(18, 18, 18, 1);
+--dark--scd-bg: rgba(44, 44, 44, 1);
+--dark--elevated-bg: rgba(69, 69, 69, 1);
+
+/* Text-size styles */
+--h1: 32px;
+--h2: 24px;
+--h3: 18px;
+--body1: 16px;
+--body1_700: 16px;
+--body2: 14px;
+--desc: 12px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--white);
+  color: var(--text-black);
+}
+
+.ui-material-icon {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.ui-mobile-page {
+  width: min(100%, 375px);
+  min-height: 100vh;
+  margin: 0 auto;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+.ui-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.ui-reset-button {
+  border: 0;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+.ui-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ui-section-title {
+  font-size: var(--h2);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.ui-scroll-x {
+  scrollbar-width: none;
+}
+
+.ui-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-skeleton {
+  background: linear-gradient(110deg, #eceff2 25%, #f5f7fa 40%, #eceff2 55%);
+  background-size: 220% 100%;
+  animation: ui-skeleton-shimmer 1.1s linear infinite;
+}
+
+@keyframes ui-skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  }
 }
