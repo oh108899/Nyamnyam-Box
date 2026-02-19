@@ -16,7 +16,7 @@ type MyRecipe = {
 };
 
 export default function MyPage() {
-  const [loading] = useState(false);
+  const [loading] = useState(true);
   const myRecipes: MyRecipe[] = [];
 
   return (
@@ -95,14 +95,7 @@ export default function MyPage() {
           </Link>
         </div>
 
-        <BottomNav
-          activeTab="my"
-          bottomNavClassName={styles.bottomNav}
-          navItemClassName={styles.navItem}
-          navItemActiveClassName={styles.navItemActive}
-          navItemInactiveClassName={styles.navItemInactive}
-          navLinkClassName={styles.navLink}
-        />
+        <BottomNav activeTab="my" />
       </div>
     </main>
   );

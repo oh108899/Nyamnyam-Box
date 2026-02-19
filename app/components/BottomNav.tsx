@@ -1,31 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import styles from "./BottomNav.module.css";
 
-type NavTab = "home" | "recipes" | "my";
+type NavTab = "home" | "recipes" | "bookmark" | "my";
 
 interface BottomNavProps {
   activeTab: NavTab;
-  bottomNavClassName: string;
-  navItemClassName: string;
-  navItemActiveClassName: string;
-  navItemInactiveClassName: string;
-  navLinkClassName: string;
 }
 
-export default function BottomNav({
-  activeTab,
-  bottomNavClassName,
-  navItemClassName,
-  navItemActiveClassName,
-  navItemInactiveClassName,
-  navLinkClassName,
-}: BottomNavProps) {
+export default function BottomNav({ activeTab }: BottomNavProps) {
   const getTabClassName = (tab: NavTab) =>
-    `${navItemClassName} ${tab === activeTab ? navItemActiveClassName : navItemInactiveClassName}`;
+    `${styles.navItem} ${tab === activeTab ? styles.navItemActive : styles.navItemInactive}`;
 
   return (
-    <nav className={bottomNavClassName}>
-      <Link href="/" className={`${getTabClassName("home")} ${navLinkClassName}`}>
+    <nav className={styles.bottomNav}>
+      <Link href="/" className={`${getTabClassName("home")} ${styles.navLink}`}>
         <Image
           src={activeTab === "home" ? "/images/home.svg" : "/images/home-inactive.svg"}
           alt=""
@@ -36,7 +25,7 @@ export default function BottomNav({
         <span>홈</span>
       </Link>
 
-      <Link href="/recipes" className={`${getTabClassName("recipes")} ${navLinkClassName}`}>
+      <Link href="/recipes" className={`${getTabClassName("recipes")} ${styles.navLink}`}>
         <Image
           src={activeTab === "recipes" ? "/images/recipe-active.svg" : "/images/recipe.svg"}
           alt=""
@@ -47,12 +36,12 @@ export default function BottomNav({
         <span>레시피</span>
       </Link>
 
-      <button type="button" className={`${navItemClassName} ${navItemInactiveClassName}`}>
+      <Link href="/bookmark" className={`${getTabClassName("bookmark")} ${styles.navLink}`}>
         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
         <span>북마크</span>
-      </button>
+      </Link>
 
-      <Link href="/my" className={`${getTabClassName("my")} ${navLinkClassName}`}>
+      <Link href="/my" className={`${getTabClassName("my")} ${styles.navLink}`}>
         <Image
           src={activeTab === "my" ? "/images/my-active.svg" : "/images/my.svg"}
           alt=""

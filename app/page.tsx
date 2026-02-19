@@ -152,14 +152,7 @@ export default function HomePage() {
           <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
         </button>
 
-        <BottomNav
-          activeTab="home"
-          bottomNavClassName={styles.bottomNav}
-          navItemClassName={styles.navItem}
-          navItemActiveClassName={styles.navItemActive}
-          navItemInactiveClassName={styles.navItemInactive}
-          navLinkClassName={styles.navLink}
-        />
+        <BottomNav activeTab="home" />
       </div>
     </main>
   );
