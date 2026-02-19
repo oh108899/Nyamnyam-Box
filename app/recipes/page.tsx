@@ -65,14 +65,7 @@ export default function RecipesPage() {
           </div>
         </section>
 
-        <BottomNav
-          activeTab="recipes"
-          bottomNavClassName={styles.bottomNav}
-          navItemClassName={styles.navItem}
-          navItemActiveClassName={styles.navItemActive}
-          navItemInactiveClassName={styles.navItemInactive}
-          navLinkClassName={styles.navLink}
-        />
+        <BottomNav activeTab="recipes" />
       </div>
     </main>
   );

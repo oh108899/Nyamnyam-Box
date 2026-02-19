@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import OptionSection from "../components/write/OptionSection";
+import WriteTabs from "../components/write/WriteTabs";
 import styles from "./page.module.css";
 
 type TabType = "manual" | "ai";
@@ -92,22 +94,13 @@ export default function WritePage() {
           </button>
         </header>
 
-        <div className={styles.tabBar}>
-          <button
-            type="button"
-            className={`${styles.tabButton} ${activeTab === "manual" ? styles.tabButtonActive : ""}`}
-            onClick={() => setActiveTab("manual")}
-          >
-            레시피 작성
-          </button>
-          <button
-            type="button"
-            className={`${styles.tabButton} ${activeTab === "ai" ? styles.tabButtonActive : ""}`}
-            onClick={() => setActiveTab("ai")}
-          >
-            AI로 레시피 생성하기
-          </button>
-        </div>
+        <WriteTabs
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          tabBarClassName={styles.tabBar}
+          tabButtonClassName={styles.tabButton}
+          tabButtonActiveClassName={styles.tabButtonActive}
+        />
 
         <div className={styles.coverWrap}>
           <button type="button" className={styles.coverUpload}>
@@ -137,23 +130,38 @@ export default function WritePage() {
                 />
               </section>
 
-              <SelectSection
+              <OptionSection
                 title="난이도"
                 options={["전체", "상", "중", "하"]}
                 selected={difficulty}
                 onSelect={(value) => setDifficulty(value as Difficulty)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
-              <SelectSection
+              <OptionSection
                 title="소요 시간"
                 options={["15분 이내", "30분 이내", "60분 이내", "60분 이상"]}
                 selected={time}
                 onSelect={(value) => setTime(value as Time)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
-              <SelectSection
+              <OptionSection
                 title="재료 기준"
                 options={["1인분", "2인분", "3인분", "4인분"]}
                 selected={serving}
                 onSelect={(value) => setServing(value as Serving)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
 
               <section className={styles.section}>
@@ -243,23 +251,38 @@ export default function WritePage() {
                 />
               </section>
 
-              <SelectSection
+              <OptionSection
                 title="난이도"
                 options={["전체", "상", "중", "하"]}
                 selected={aiDifficulty}
                 onSelect={(value) => setAiDifficulty(value as Difficulty)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
-              <SelectSection
+              <OptionSection
                 title="소요 시간"
                 options={["15분 이내", "30분 이내", "60분 이내", "60분 이상"]}
                 selected={aiTime}
                 onSelect={(value) => setAiTime(value as Time)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
-              <SelectSection
+              <OptionSection
                 title="재료 기준"
                 options={["1인분", "2인분", "3인분", "4인분"]}
                 selected={aiServing}
                 onSelect={(value) => setAiServing(value as Serving)}
+                sectionClassName={styles.section}
+                titleClassName={styles.selectSectionTitle}
+                optionWrapClassName={styles.optionWrap}
+                optionButtonClassName={styles.optionButton}
+                optionButtonActiveClassName={styles.optionButtonActive}
               />
             </>
           )}
@@ -275,32 +298,5 @@ export default function WritePage() {
         </div>
       </div>
     </main>
-  );
-}
-
-interface SelectSectionProps {
-  title: string;
-  options: string[];
-  selected: string;
-  onSelect: (value: string) => void;
-}
-
-function SelectSection({ title, options, selected, onSelect }: SelectSectionProps) {
-  return (
-    <section className={styles.section}>
-      <h2 className={styles.selectSectionTitle}>{title}</h2>
-      <div className={styles.optionWrap}>
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => onSelect(option)}
-            className={`${styles.optionButton} ${selected === option ? styles.optionButtonActive : ""}`}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    </section>
   );
 }

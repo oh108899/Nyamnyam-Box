@@ -67,14 +67,7 @@ export default function BookmarkPage() {
           <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
         </Link>
 
-        <BottomNav
-          activeTab="bookmark"
-          bottomNavClassName={styles.bottomNav}
-          navItemClassName={styles.navItem}
-          navItemActiveClassName={styles.navItemActive}
-          navItemInactiveClassName={styles.navItemInactive}
-          navLinkClassName={styles.navLink}
-        />
+        <BottomNav activeTab="bookmark" />
       </div>
     </main>
   );

@@ -312,39 +312,6 @@
   line-height: 1.3;
 }
 
-.skeletonWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px 16px 96px;
-}
-
-.sectionSkeleton,
-.sectionSkeletonTall {
-  border-radius: 12px;
-  background: linear-gradient(110deg, #eceff2 25%, #f5f7fa 40%, #eceff2 55%);
-  background-size: 220% 100%;
-  animation: skeleton-shimmer 1.1s linear infinite;
-}
-
-.sectionSkeleton {
-  height: 90px;
-}
-
-.sectionSkeletonTall {
-  height: 180px;
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: 100% 0;
-  }
-
-  100% {
-    background-position: -100% 0;
-  }
-}
-
 .bottomActionWrap {
   position: fixed;
   left: 50%;
