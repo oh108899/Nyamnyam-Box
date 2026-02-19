@@ -16,7 +16,7 @@ type MyRecipe = {
 };
 
 export default function MyPage() {
-  const [loading] = useState(false);
+  const [loading] = useState(true);
   const myRecipes: MyRecipe[] = [];
 
   return (

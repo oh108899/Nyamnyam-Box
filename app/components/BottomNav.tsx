@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type NavTab = "home" | "recipes" | "my";
+type NavTab = "home" | "recipes" | "bookmark" | "my";
 
 interface BottomNavProps {
   activeTab: NavTab;
@@ -47,10 +47,10 @@ export default function BottomNav({
         <span>레시피</span>
       </Link>
 
-      <button type="button" className={`${navItemClassName} ${navItemInactiveClassName}`}>
+      <Link href="/bookmark" className={`${getTabClassName("bookmark")} ${navLinkClassName}`}>
         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
         <span>북마크</span>
-      </button>
+      </Link>
 
       <Link href="/my" className={`${getTabClassName("my")} ${navLinkClassName}`}>
         <Image
