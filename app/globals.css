@@ -1,5 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1");
 
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
 :root {
 /* Color styles */
 --primary: rgba(244, 140, 37, 1);
@@ -32,6 +54,16 @@
 --body1_700: 16px;
 --body2: 14px;
 --desc: 12px;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure {
+  padding: 0;
+  margin: 0;
+}
+ul, li, ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 *,
