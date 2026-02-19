@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import OptionSection from "../components/write/OptionSection";
-import WriteTabs from "../components/write/WriteTabs";
+import OptionSection from "../../components/write/OptionSection";
+import WriteTabs from "../../components/write/WriteTabs";
 import styles from "./page.module.css";
 
 type TabType = "manual" | "ai";
