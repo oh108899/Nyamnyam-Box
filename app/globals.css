@@ -82,6 +82,15 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-
+    --primary: rgba(255, 155, 61, 1);
+    ---link: rgba(255, 134, 27, 1);
+    --primary-bg: rgba(255, 155, 61, 0.20000000298023224);
+    --secondary: rgba(91, 196, 168, 1);
+    --secondary-bg: rgba(91, 196, 168, 0.20000000298023224);
+    --text-black: rgba(229, 229, 229, 1);
+    --text-gray: rgba(160, 160, 160, 1);
+    --bg-color: rgba(18, 18, 18, 1);
+    --white: rgba(44, 44, 44, 1);
+    --solid: rgba(69, 69, 69, 1);
   }
 }
