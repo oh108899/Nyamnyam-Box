@@ -8,8 +8,8 @@ import styles from "./page.module.css";
 
 export default function RecipePages({ params }: { params: { id: string } }) {
   //const [loading] = useState(true);
-  const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
-  const recipe = DB.find((item) => item.id === params.id);
+  const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [];
+  const recipe = DB.find((item) => item.id === parseInt(params.id));
   const handleSubmit = () => {
 
   }
