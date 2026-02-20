@@ -5,11 +5,13 @@ import Image from "next/image";
 import BottomNav from "../../components/BottomNav";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { use } from "react";
 
 export default function RecipePages({ params }: { params: { id: string } }) {
   //const [loading] = useState(true);
-  const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [{id: 1, created_at: "2024-01-01", user_id: "user1", title: "테스트 레시피", desc: "테스트 레시피 설명입니다.", thumb: "/images/test-thumb.jpg", difficulty: "쉬움", cooking_time: "30분", serving: "4인분"}];
-  const recipe = DB.find((item) => item.id === parseInt(params.id));
+  const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [{id: 1, created_at: "2024-01-01", user_id: "user1", title: "테스트 레시피", desc: "테스트 레시피 설명입니다.", thumb: "", difficulty: "쉬움", cooking_time: "30분", serving: "4인분"}];
+  const { id } = use(params)
+  const recipe = DB.find((item) => item.id === parseInt(id));
   const handleSubmit = () => {
 
   }
