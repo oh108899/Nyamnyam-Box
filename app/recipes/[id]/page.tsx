@@ -6,9 +6,10 @@ import BottomNav from "../../components/BottomNav";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-export default function RecipePages() {
+export default function RecipePages({ params }: { params: { id: string } }) {
   //const [loading] = useState(true);
   const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
+  const recipe = DB.find((item) => item.id === params.id);
   const handleSubmit = () => {
 
   }
@@ -27,7 +28,7 @@ export default function RecipePages() {
             <span className={`${styles.headerIconBack}`} aria-hidden="true"></span>
             <span className={styles.hidden}>뒤로가기</span>
           </Link>
-          <h1 className={styles.headerTitle}>{DB.title}</h1>
+          <h1 className={styles.headerTitle}>{recipe.title}</h1>
           <button className={styles.buttonBg}>
             <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
           </button>
@@ -46,10 +47,10 @@ export default function RecipePages() {
           </figure>
           <div className={`${styles.detailMenu} ${styles.detailContainer}`}>
             <div className={styles.detailMenuName}>
-              <h2 className={styles.detailTitle}>트러플 오일 버섯 파스타</h2>
+              <h2 className={styles.detailTitle}>{recipe.title}</h2>
               <button className={styles.shareIcon}><span className={styles.hidden}>공유하기 버튼</span></button>
             </div>
-            <p className={styles.detailBody1}>풍부한 버섯의 향과 트러플 오일의 고급스러운 조화가 일품인 이탈리아 정통 파스타입니다.</p>
+            <p className={styles.detailBody1}>{recipe.desc}</p>
           </div>
           <div className={`${styles.detailQuick} ${styles.detailContainer}`}>
             <ul>
@@ -62,7 +63,7 @@ export default function RecipePages() {
                     height={14}
                   />
                 </figure>
-                <p className={styles.detailDesc}>2인분</p>
+                <p className={styles.detailDesc}>{recipe.serving}</p>
               </li>
               <li>
                 <figure>
@@ -73,7 +74,7 @@ export default function RecipePages() {
                     height={20}
                   />
                 </figure>
-                <p className={styles.detailDesc}>30분내</p>
+                <p className={styles.detailDesc}>{recipe.cooking_time}</p>
               </li>
               <li>
                 <figure>
@@ -84,7 +85,7 @@ export default function RecipePages() {
                     height={20}
                   />
                 </figure>
-                <p className={styles.detailDesc}>하</p>
+                <p className={styles.detailDesc}>{recipe.difficulty}</p>
               </li>
 
             </ul>
