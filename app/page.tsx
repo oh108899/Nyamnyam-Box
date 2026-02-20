@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import BottomNav from "./components/BottomNav";
 import LogoHeader from "./components/LogoHeader";
@@ -62,7 +63,11 @@ export default function HomePage() {
                     <div className={styles.pickGradient} />
                     <div className={styles.pickTextWrap}>
                       <span className={styles.pickBadge}>Pick!</span>
-                      <h3 className={styles.pickTitle}>{item.title}</h3>
+                      <h3 className={styles.pickTitle}>
+                        <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                          {item.title}
+                        </Link>
+                      </h3>
                     </div>
                   </article>
                 ))}
@@ -102,7 +107,11 @@ export default function HomePage() {
                     <div className={styles.squareImageWrap}>
                       <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     </div>
-                    <h3 className={styles.recipeTitle}>{item.title}</h3>
+                    <h3 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                        {item.title}
+                      </Link>
+                    </h3>
                     <div className={styles.metaRow}>
                       <span className={styles.metaItem}>
                         <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
@@ -154,7 +163,11 @@ export default function HomePage() {
                       </button>
                     </div>
 
-                    <h3 className={styles.recipeTitle}>{item.title}</h3>
+                    <h3 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                        {item.title}
+                      </Link>
+                    </h3>
                     <div className={styles.metaRow}>
                       <span className={styles.metaItem}>
                         <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CommentActions, { CommentWriteButton } from "../../components/recipes/CommentActions";
 import styles from "./page.module.css";
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from "../../utils/supabase/client";
 
 export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient();
