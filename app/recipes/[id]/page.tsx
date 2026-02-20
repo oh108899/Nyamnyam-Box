@@ -20,6 +20,25 @@ export default function RecipePages({ params }: { params: { id: string } }) {
   const handleEdit = () => {
 
   }
+  if (!recipe) {
+    return (
+      <main className={styles.viewport}>
+        <div className={styles.page}>
+          <header className={styles.header}>
+            <Link href="/" className={styles.iconButton} aria-label="뒤로가기">
+              <span className={`${styles.headerIconBack}`} aria-hidden="true"></span>
+              <span className={styles.hidden}>뒤로가기</span>
+            </Link>
+            <h1 className={styles.headerTitle}>레시피를 찾을 수 없습니다</h1>
+            <button className={styles.buttonBg}>
+              <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
+            </button>
+            {/* 내 게시물 아니면 북마크, 로그인 후 내 게시물이면 수정, 삭제 버튼*/}
+          </header>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
