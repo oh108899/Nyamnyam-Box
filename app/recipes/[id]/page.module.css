@@ -2,6 +2,9 @@
   min-height: 100vh;
   background: var(--bg-color);
 }
+.section {
+  padding-bottom: 91px;
+}
 
 .page {
   position: relative;
@@ -49,6 +52,7 @@
   border: 0;
   background: transparent;
   padding: 0;
+
 }
 
 .content {
@@ -59,6 +63,9 @@
   background: transparent;
   border: 0;
   outline: 0;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
 .bookmarkButton {
@@ -69,13 +76,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   background-image: url("/images/bookmark.svg");
   filter: invert(62%) sepia(57%) saturate(1509%) hue-rotate(343deg) brightness(99%) contrast(94%);
   background-size: 16px 20px;
+  background-position: center center;
   background-repeat: no-repeat;
-  cursor: pointer;
+
 }
 
 .hidden {
@@ -114,8 +122,8 @@
   font-weight: 700;
 }
 
-.detailConainter {
-  padding: 27px 16px 0;
+.detailContainer {
+  padding: 27px 16px;
 }
 
 .detailTumbnail {
@@ -236,4 +244,60 @@
   margin-top: 16px;
   border-radius: 8px;
   overflow: hidden;
+}
+
+.commentsWrap {
+  background-color: var(--white);
+  border-radius: 8px;
+  border: solid 1px var(--solid);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+.commentsProfile {
+  width: 40px;
+  height: 40px;
+}
+.commentsBox {
+  flex: 1 0 1;
+  display: flex;
+  flex-direction: column;
+}
+.commentsUser {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+.commentsId {
+  color: var(--text-black);
+  font-weight: 700;
+}
+.commentsMy button {
+  background: transparent;
+  border: 0;
+  font-size: var(--body2);
+  color: var(--text-gray);
+  font-weight: 500;
+  cursor: pointer;
+}
+.commentsContext {
+  width: 100%;
+  color: var(--text-gray);
+  line-height: 22px;
+  min-height: 54px;
+}
+.commentsWrite {
+  width: 100%;
+  height: 56px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 12px;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
 }

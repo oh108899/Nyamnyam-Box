@@ -9,7 +9,16 @@ import styles from "./page.module.css";
 export default function RecipePages() {
   //const [loading] = useState(true);
   const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
+  const handleSubmit = () => {
 
+  }
+  const handleDelete = () => {
+
+  }
+
+  const handleEdit = () => {
+
+  }
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -27,21 +36,22 @@ export default function RecipePages() {
 
         <section className={styles.section}>
           <figure className={styles.detailTumbnail}>
-            <Image
+            이미지
+            {/* <Image
               src=""
               alt=""
               width={375}
               height={320}
-            />
+            /> */}
           </figure>
-          <div className={`${styles.detailMenu} ${styles.detailConainter}`}>
+          <div className={`${styles.detailMenu} ${styles.detailContainer}`}>
             <div className={styles.detailMenuName}>
               <h2 className={styles.detailTitle}>트러플 오일 버섯 파스타</h2>
               <button className={styles.shareIcon}><span className={styles.hidden}>공유하기 버튼</span></button>
             </div>
             <p className={styles.detailBody1}>풍부한 버섯의 향과 트러플 오일의 고급스러운 조화가 일품인 이탈리아 정통 파스타입니다.</p>
           </div>
-          <div className={`${styles.detailQuick} ${styles.detailConainter}`}>
+          <div className={`${styles.detailQuick} ${styles.detailContainer}`}>
             <ul>
               <li>
                 <figure>
@@ -80,7 +90,7 @@ export default function RecipePages() {
             </ul>
           </div>
 
-          <div className={`${styles.detailConainter}`}>
+          <div className={`${styles.detailContainer}`}>
             <h2 className={styles.detailTitle}>필수재료</h2>
             <div className={styles.detailIngredient}>
               <ul>
@@ -100,7 +110,7 @@ export default function RecipePages() {
             </div>
           </div>
 
-          <div className={`${styles.detailConainter}`}>
+          <div className={`${styles.detailContainer}`}>
             <h2 className={styles.detailTitle}>요리순서</h2>
             <div className={styles.detailStep}>
               <ul>
@@ -110,12 +120,12 @@ export default function RecipePages() {
                     <p className={`${styles.detailBody1} ${styles.detailBold}`}>면 삶기</p>
                     <p className={styles.detailBody1}>끓는 물에 소금 1큰술을 넣고 파스타 면을 8분간 삶아주세요. 면수는 1컵 정도 남겨둡니다.</p>
                     <figure className={styles.setpImage}>
-                      <Image
+                      {/* <Image
                         src=""
-                        alt="dummy"
+                        alt=""
                         width={304}
                         height={160}
-                      />
+                      /> */}
                     </figure>
 
                   </div>
@@ -127,12 +137,12 @@ export default function RecipePages() {
                     <p className={`${styles.detailBody1} ${styles.detailBold}`}>재료 손질</p>
                     <p className={styles.detailBody1}>마늘은 편으로 썰고, 버섯은 먹기 좋은 크기로 썰어서 준비합니다.</p>
                     <figure className={styles.setpImage}>
-                      <Image
+                      {/* <Image
                         src=""
-                        alt="dummy"
+                        alt=""
                         width={304}
                         height={160}
-                      />
+                      /> */}
                     </figure>
 
                   </div>
@@ -142,12 +152,42 @@ export default function RecipePages() {
             </div>
           </div>
 
-          <div className={`${styles.detailConainter}`}>
+          <div className={`${styles.detailContainer}`}>
             <h2 className={styles.detailTitle}>댓글</h2>
             <div className={styles.commentsWrap}>
-              
+              <div className={styles.commentsProfile}>
+                <Image
+                  src="/images/profilePrm.svg"
+                  alt="유저 아이콘"
+                  width={40}
+                  height={40}
+                />
+              </div>
+              <div className={styles.commentsBox}>
+                <div className={styles.commentsUser}>
+                  <span className={`${styles.commentsId} ${styles.detailBody1}`}>냠냠박스</span>
+                  <div className={styles.commentsMy}>
+                    <button className={styles.commentsDel} onClick={handleDelete}>삭제</button>
+                    <button className={styles.commentsEdit} onClick={handleEdit}>수정</button>
+                  </div>
+                </div>
+                <p className={styles.commentsContext}>
+                  넘 맛있어요^^ 만들기도 간단하고 한입 먹자마자 내몸한테 죄스러울 만큼 행복한 맛, ㅎㅎㅎ~
+                </p>
+              </div>
 
             </div>
+            <div className={styles.commentsWrap}>
+              <p className={styles.commentsContext}>
+                아직 작성한 댓글이 없습니다
+              </p>
+            </div>
+            <button
+              className={styles.commentsWrite}
+              type="button"
+              onClick={handleSubmit}>
+              댓글 작성
+            </button>
           </div>
 
         </section>
