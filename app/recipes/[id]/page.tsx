@@ -2,12 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import CommentActions, { CommentWriteButton } from "../../components/recipes/CommentActions";
 import styles from "./page.module.css";
+import { createClient } from '@/utils/supabase/client';
 
 export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
-  const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [{id: 1, created_at: "2024-01-01", user_id: "user1", title: "테스트 레시피", desc: "테스트 레시피 설명입니다.", thumb: "", difficulty: "쉬움", cooking_time: "30분", serving: "4인분"}];
+  const supabase = createClient();
   const { id } = await params;
-  const recipe = DB.find((item) => item.id === parseInt(id));
-  if (!recipe) {
+  const {data:recipe ,error} = await supabase
+  .from("recipes")
+  .select()
+  .eq('id', id)
+  .single();
+
+  if (error || !recipe) {
     return (
       <main className={styles.viewport}>
         <div className={styles.page}>
@@ -26,6 +32,19 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
       </main>
     );
   }
+
+  const {data: ingredients} = await supabase
+  .from("ingredients")
+  .select()
+  .eq('recipe_id', id);
+
+  const{data: steps} = await supabase
+  .from("steps")
+  .select()
+  .eq('recipe_id', id);
+
+
+  
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
