@@ -14,7 +14,7 @@ export default function LogoHeader({
   logoHeadingClassName,
   logoLinkClassName,
   headerButtonClassName,
-  searchHref = "/serch",
+  searchHref = "/search",
 }: LogoHeaderProps) {
   return (
     <header className={headerClassName}>

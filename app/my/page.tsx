@@ -89,7 +89,7 @@ export default function MyPage() {
         </section>
 
         <div className={styles.bottomActionWrap}>
-          <Link href="/write" className={styles.bottomActionButton}>
+          <Link href="/recipes/new" className={styles.bottomActionButton}>
             <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
             레시피 작성하기
           </Link>

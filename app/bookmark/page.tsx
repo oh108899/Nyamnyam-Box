@@ -63,7 +63,7 @@ export default function BookmarkPage() {
           </div>
         </section>
 
-        <Link href="/write" className={styles.floatingButton} aria-label="글쓰기">
+        <Link href="/recipes/new" className={styles.floatingButton} aria-label="글쓰기">
           <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
         </Link>
 
