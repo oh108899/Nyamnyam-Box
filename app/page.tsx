@@ -100,7 +100,7 @@ export default function HomePage() {
               : recipes.map((item) => (
                   <article key={item.id} className={styles.topRecipeCard}>
                     <div className={styles.squareImageWrap}>
-                      <Image src={item.image} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     </div>
                     <h3 className={styles.recipeTitle}>{item.title}</h3>
                     <div className={styles.metaRow}>
@@ -148,7 +148,7 @@ export default function HomePage() {
               : recipes.map((item) => (
                   <article key={item.id} className={styles.newRecipeCard}>
                     <div className={styles.newRecipeImageWrap}>
-                      <Image src={item.image} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                       <button type="button" className={styles.favoriteButton} aria-label="북마크">
                         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
                       </button>
