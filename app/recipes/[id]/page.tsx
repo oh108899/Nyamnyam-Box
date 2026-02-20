@@ -1,27 +1,12 @@
-"use client";
-
 import Image from "next/image";
-//import { useState } from "react";
-import BottomNav from "../../components/BottomNav";
 import Link from "next/link";
+import CommentActions, { CommentWriteButton } from "../../components/recipes/CommentActions";
 import styles from "./page.module.css";
-import { use } from "react";
 
-export default function RecipePages({ params }: { params: { id: string } }) {
-  //const [loading] = useState(true);
+export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
   const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [{id: 1, created_at: "2024-01-01", user_id: "user1", title: "테스트 레시피", desc: "테스트 레시피 설명입니다.", thumb: "", difficulty: "쉬움", cooking_time: "30분", serving: "4인분"}];
-  const { id } = use(params)
+  const { id } = await params;
   const recipe = DB.find((item) => item.id === parseInt(id));
-  const handleSubmit = () => {
-
-  }
-  const handleDelete = () => {
-
-  }
-
-  const handleEdit = () => {
-
-  }
   if (!recipe) {
     return (
       <main className={styles.viewport}>
@@ -189,8 +174,10 @@ export default function RecipePages({ params }: { params: { id: string } }) {
                 <div className={styles.commentsUser}>
                   <span className={`${styles.commentsId} ${styles.detailBody1}`}>냠냠박스</span>
                   <div className={styles.commentsMy}>
-                    <button className={styles.commentsDel} onClick={handleDelete}>삭제</button>
-                    <button className={styles.commentsEdit} onClick={handleEdit}>수정</button>
+                    <CommentActions
+                      deleteClassName={styles.commentsDel}
+                      editClassName={styles.commentsEdit}
+                    />
                   </div>
                 </div>
                 <p className={styles.commentsContext}>
@@ -204,17 +191,10 @@ export default function RecipePages({ params }: { params: { id: string } }) {
                 아직 작성한 댓글이 없습니다
               </p>
             </div>
-            <button
-              className={styles.commentsWrite}
-              type="button"
-              onClick={handleSubmit}>
-              댓글 작성
-            </button>
+            <CommentWriteButton writeClassName={styles.commentsWrite} />
           </div>
 
         </section>
-
-        <BottomNav activeTab="recipes" />
       </div>
     </main>
   );
