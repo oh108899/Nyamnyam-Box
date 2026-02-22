@@ -1,0 +1,136 @@
+.viewport {
+  min-height: 100vh;
+  background: var(--bg-color);
+}
+
+.page {
+  display: flex;
+  width: min(100%, 375px);
+  min-height: 100vh;
+  margin: 0 auto;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg-color);
+  color: var(--text-black);
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e5e5;
+  background: var(--white);
+  padding: 0 16px;
+}
+
+.headerButton {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-black);
+  text-decoration: none;
+  padding: 0;
+}
+
+.headerIcon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.headerTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: var(--body1_700);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.bottomActionWrap {
+  padding: 16px 16px 88px;
+}
+
+.bottomActionButton {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: var(--body1_700);
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.hidden {
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+
+
+.loginLogo {
+  max-width: 151px;
+  aspect-ratio: 37.75 / 8;
+  margin: 54px auto;
+  background-image: url("/images/logoLogin.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.loginText {
+  font-size: var(--body2);
+  color: var(--text-gray);
+  display: flex;
+  justify-content: center;
+  margin: 27px 0;
+}
+
+.loginWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: calc(100% - 32px);
+  margin: 0 auto;
+}
+
+.loginCommon {
+  width: 100%;
+  height: 48px;
+  background-size: 100% auto;
+  background-position: center center;
+}
+.loginNaver {
+  background-image: url("/images/naverLogin.svg");
+}
+.loginKakao {
+  background-image: url("/images/kakaoLogin.svg");
+}
+.loginGoogle {
+  background-image: url("/images/googleLogin.svg");
+}
+
+.signUp {
+  border-top: 1px solid var(--solid);
+  padding: 8px 0;
+  margin-top: 24px;
+}

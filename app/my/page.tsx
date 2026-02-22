@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BottomNav from "../components/BottomNav";
+import { createClient } from "../utils/supabase/client";
 import styles from "./page.module.css";
 
 type MyRecipe = {
@@ -16,8 +18,25 @@ type MyRecipe = {
 };
 
 export default function MyPage() {
+  const router = useRouter();
+  const supabase = createClient();
   const [loading] = useState(true);
+  const [isLogout, setisLogout] = useState(false);
   const myRecipes: MyRecipe[] = [];
+
+  const handleLogout = async () => {
+    setisLogout(true);
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      alert(`로그아웃 실패: ${error.message}`);
+      setisLogout(false);
+      return;
+    }
+
+    router.push("/login");
+  };
 
   return (
     <main className={styles.viewport}>
@@ -29,8 +48,14 @@ export default function MyPage() {
 
           <h1 className={styles.headerTitle}>마이페이지</h1>
 
-          <button type="button" className={styles.headerButton} aria-label="설정">
-            <Image src="/images/option.svg" alt="" width={20} height={20} aria-hidden="true" />
+          <button
+            type="button"
+            className={styles.logoutButton}
+            onClick={handleLogout}
+            disabled={isLogout}
+            aria-label="로그아웃"
+          >
+            로그아웃
           </button>
         </header>
 
