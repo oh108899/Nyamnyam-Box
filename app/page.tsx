@@ -1,15 +1,38 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 import BottomNav from "./components/BottomNav";
 import LogoHeader from "./components/LogoHeader";
 import styles from "./page.module.css";
+import {createClient} from "./utils/supabase/client";
+
+type Recipe = {
+  id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string
+};
 
 export default function HomePage() {
-  const [loading] = useState(true);
-  const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
+  const supabase = createClient();
 
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const { data, error } = await supabase
+        .from("recipes")
+        .select();
+      if (error) {
+        console.error(error);
+      } else {
+        setRecipes(data || []);
+      }
+      setLoading(false);
+    };
+    fetchRecipes();
+  }, []);
+  console.log(recipes);
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -34,13 +57,17 @@ export default function HomePage() {
                     </div>
                   </article>
                 ))
-              : DB.map((item) => (
+              : recipes.map((item) => (
                   <article key={item.id} className={styles.pickCard}>
-                    <Image src={item.src} alt={item.alt} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     <div className={styles.pickGradient} />
                     <div className={styles.pickTextWrap}>
                       <span className={styles.pickBadge}>Pick!</span>
-                      <h3 className={styles.pickTitle}>{item.title}</h3>
+                      <h3 className={styles.pickTitle}>
+                        <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                          {item.title}
+                        </Link>
+                      </h3>
                     </div>
                   </article>
                 ))}
@@ -75,20 +102,24 @@ export default function HomePage() {
                     </div>
                   </article>
                 ))
-              : DB.map((item) => (
+              : recipes.map((item) => (
                   <article key={item.id} className={styles.topRecipeCard}>
                     <div className={styles.squareImageWrap}>
-                      <Image src={item.src} alt={item.alt} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     </div>
-                    <h3 className={styles.recipeTitle}>{item.title}</h3>
+                    <h3 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                        {item.title}
+                      </Link>
+                    </h3>
                     <div className={styles.metaRow}>
                       <span className={styles.metaItem}>
                         <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.comments}
+                        {item.serving}
                       </span>
                       <span className={styles.metaItem}>
                         <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.time}
+                        {item.cooking_time}
                       </span>
                     </div>
                   </article>
@@ -123,24 +154,28 @@ export default function HomePage() {
                     </div>
                   </article>
                 ))
-              : DB.map((item) => (
+              : recipes.map((item) => (
                   <article key={item.id} className={styles.newRecipeCard}>
                     <div className={styles.newRecipeImageWrap}>
-                      <Image src={item.src} alt={item.alt} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                       <button type="button" className={styles.favoriteButton} aria-label="북마크">
                         <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
                       </button>
                     </div>
 
-                    <h3 className={styles.recipeTitle}>{item.title}</h3>
+                    <h3 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+                        {item.title}
+                      </Link>
+                    </h3>
                     <div className={styles.metaRow}>
                       <span className={styles.metaItem}>
                         <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.time}
+                        {item.cooking_time}
                       </span>
                       <span className={styles.metaItem}>
                         <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.comments}
+                        {item.serving}
                       </span>
                     </div>
                   </article>

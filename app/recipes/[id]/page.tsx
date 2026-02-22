@@ -1,26 +1,19 @@
-"use client";
-
 import Image from "next/image";
-//import { useState } from "react";
-import BottomNav from "../../components/BottomNav";
 import Link from "next/link";
+import CommentActions, { CommentWriteButton } from "../../components/recipes/CommentActions";
 import styles from "./page.module.css";
+import { createClient } from "../../utils/supabase/client";
 
-export default function RecipePages({ params }: { params: { id: string } }) {
-  //const [loading] = useState(true);
-  const DB: Array<{ id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string }> = [];
-  const recipe = DB.find((item) => item.id === parseInt(params.id));
-  const handleSubmit = () => {
+export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
+  const supabase = createClient();
+  const { id } = await params;
+  const {data:recipe ,error} = await supabase
+  .from("recipes")
+  .select()
+  .eq('id', id)
+  .single();
 
-  }
-  const handleDelete = () => {
-
-  }
-
-  const handleEdit = () => {
-
-  }
-  if (!recipe) {
+  if (error || !recipe) {
     return (
       <main className={styles.viewport}>
         <div className={styles.page}>
@@ -39,6 +32,19 @@ export default function RecipePages({ params }: { params: { id: string } }) {
       </main>
     );
   }
+
+  const {data: ingredients} = await supabase
+  .from("ingredients")
+  .select()
+  .eq('recipe_id', id);
+
+  const{data: steps} = await supabase
+  .from("recipe-steps")
+  .select()
+  .eq('recipe_id', id);
+
+
+  
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -187,8 +193,10 @@ export default function RecipePages({ params }: { params: { id: string } }) {
                 <div className={styles.commentsUser}>
                   <span className={`${styles.commentsId} ${styles.detailBody1}`}>냠냠박스</span>
                   <div className={styles.commentsMy}>
-                    <button className={styles.commentsDel} onClick={handleDelete}>삭제</button>
-                    <button className={styles.commentsEdit} onClick={handleEdit}>수정</button>
+                    <CommentActions
+                      deleteClassName={styles.commentsDel}
+                      editClassName={styles.commentsEdit}
+                    />
                   </div>
                 </div>
                 <p className={styles.commentsContext}>
@@ -202,17 +210,10 @@ export default function RecipePages({ params }: { params: { id: string } }) {
                 아직 작성한 댓글이 없습니다
               </p>
             </div>
-            <button
-              className={styles.commentsWrite}
-              type="button"
-              onClick={handleSubmit}>
-              댓글 작성
-            </button>
+            <CommentWriteButton writeClassName={styles.commentsWrite} />
           </div>
 
         </section>
-
-        <BottomNav activeTab="recipes" />
       </div>
     </main>
   );

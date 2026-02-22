@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import OptionSection from "../../components/write/OptionSection";
 import WriteTabs from "../../components/write/WriteTabs";
 import styles from "./page.module.css";
+import { createClient } from "../../utils/supabase/client";
 
 type TabType = "manual" | "ai";
 type Difficulty = "전체" | "상" | "중" | "하";
@@ -22,9 +23,13 @@ type Ingredient = {
 type Step = {
   id: number;
   description: string;
+  imageFile: File | null;
+  imagePreview: string;
 };
 
 export default function WritePage() {
+  const supabase = createClient();
+  
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("manual");
 
@@ -33,6 +38,8 @@ export default function WritePage() {
   const [difficulty, setDifficulty] = useState<Difficulty>("전체");
   const [time, setTime] = useState<Time>("15분 이내");
   const [serving, setServing] = useState<Serving>("1인분");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState("");
 
   const [aiTitle, setAiTitle] = useState("");
   const [aiDifficulty, setAiDifficulty] = useState<Difficulty>("전체");
@@ -40,7 +47,7 @@ export default function WritePage() {
   const [aiServing, setAiServing] = useState<Serving>("1인분");
 
   const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", amount: "" }]);
-  const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "" }]);
+  const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
 
   const addIngredient = () => {
     setIngredients((prev) => [...prev, { id: Date.now(), name: "", amount: "" }]);
@@ -51,24 +58,74 @@ export default function WritePage() {
   };
 
   const addStep = () => {
-    setSteps((prev) => [...prev, { id: Date.now(), description: "" }]);
+    setSteps((prev) => [...prev, { id: Date.now(), description: "", imageFile: null, imagePreview: "" }]);
   };
 
   const removeStep = (id: number) => {
     setSteps((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleSubmit = () => {
+  const handleCoverChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCoverFile(file);
+    setCoverPreview(URL.createObjectURL(file));
+  };
+
+  const handleStepImageChange = (stepId: number, e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setSteps((prev) =>
+      prev.map((step) =>
+        step.id === stepId
+          ? {
+              ...step,
+              imageFile: file,
+              imagePreview: previewUrl,
+            }
+          : step,
+      ),
+    );
+  };
+
+  const handleSubmit = async () => {
     if (activeTab === "manual") {
-      console.log({
-        title,
-        description,
-        difficulty,
-        time,
-        serving,
-        ingredients,
-        steps,
-      });
+      const { data: savedRecipe, error: recipeError } = await supabase
+        .from("recipes")
+        .insert({
+          title: title,
+          desc: description,
+          difficulty: difficulty,
+          cooking_time: time,
+          serving: serving,
+        })
+        .select("id")
+        .single();
+
+      if (recipeError || !savedRecipe) {
+        console.error(recipeError);
+        return;
+      }
+
+      const ingredientRows = ingredients
+        .filter((item) => item.name.trim() && item.amount.trim())
+        .map((item) => ({
+          recipe_id: savedRecipe.id,
+          ingredient_name: item.name.trim(),
+          ingredient_amount: item.amount.trim(),
+        }));
+
+      if (ingredientRows.length > 0) {
+        const { error: ingredientError } = await supabase.from("ingredients").insert(ingredientRows);
+
+        if (ingredientError) {
+          console.error(ingredientError);
+          return;
+        }
+      }
     } else {
       console.log({
         title: aiTitle,
@@ -103,10 +160,23 @@ export default function WritePage() {
         />
 
         <div className={styles.coverWrap}>
-          <button type="button" className={styles.coverUpload}>
+          {coverPreview && (
+            <div className={styles.coverPreview}>
+              <Image src={coverPreview} alt="커버 이미지 미리보기" fill className={styles.previewImage} />
+            </div>
+          )}
+
+          <label htmlFor="cover-upload" className={styles.coverUpload}>
             <Image src="/images/addphoto.svg" alt="" width={26} height={26} aria-hidden="true" />
-            <span>커버 사진 추가</span>
-          </button>
+            <span>{coverFile ? "커버 사진 변경" : "커버 사진 추가"}</span>
+          </label>
+          <input
+            id="cover-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleCoverChange}
+            className={styles.hiddenFileInput}
+          />
         </div>
 
         <section className={styles.content}>
@@ -225,10 +295,23 @@ export default function WritePage() {
                           placeholder="요리 순서 입력"
                           className={styles.stepTextarea}
                         />
-                        <button type="button" className={styles.stepImageButton}>
-                          <Image src="/images/addphoto.svg" alt="" width={24} height={24} aria-hidden="true" />
-                          <span>사진 추가</span>
-                        </button>
+                        <label htmlFor={`step-image-${step.id}`} className={styles.stepImageButton}>
+                          {step.imagePreview ? (
+                            <Image src={step.imagePreview} alt={`요리 순서 ${index + 1} 이미지`} fill className={styles.previewImage} />
+                          ) : (
+                            <>
+                              <Image src="/images/addphoto.svg" alt="" width={24} height={24} aria-hidden="true" />
+                              <span>사진 추가</span>
+                            </>
+                          )}
+                        </label>
+                        <input
+                          id={`step-image-${step.id}`}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleStepImageChange(step.id, e)}
+                          className={styles.hiddenFileInput}
+                        />
                       </div>
                     </div>
                   ))}
