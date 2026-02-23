@@ -1,5 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+import { createClient } from "../utils/supabase/client";
 import styles from "./BottomNav.module.css";
 
 type NavTab = "home" | "recipes" | "bookmark" | "my";
@@ -9,8 +14,17 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({ activeTab }: BottomNavProps) {
+  const router = useRouter();
+  const supabase = createClient();
+
   const getTabClassName = (tab: NavTab) =>
     `${styles.navItem} ${tab === activeTab ? styles.navItemActive : styles.navItemInactive}`;
+
+  const handleMyClick = async (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const { data: { session } } = await supabase.auth.getSession();
+    router.push(session ? "/my" : "/login");
+  };
 
   return (
     <nav className={styles.bottomNav}>
@@ -41,7 +55,7 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
         <span>북마크</span>
       </Link>
 
-      <Link href="/my" className={`${getTabClassName("my")} ${styles.navLink}`}>
+      <Link href="/my" onClick={handleMyClick} className={`${getTabClassName("my")} ${styles.navLink}`}>
         <Image
           src={activeTab === "my" ? "/images/my-active.svg" : "/images/my.svg"}
           alt=""

@@ -1,19 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import styles from "./page.module.css";
 
 
 export default function Login() {
+  const router = useRouter();
+  const supabase = createClient();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const loginCheck = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        router.replace("/my");
+      }
+    };
+
+    loginCheck();
+  }, [router, supabase.auth]);
 
   const handleSocialLogin = async (provider: "google" | "kakao") => {
     setIsLoading(true);
-
-    const supabase = createClient();
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
