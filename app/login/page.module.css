@@ -118,6 +118,8 @@
   height: 48px;
   background-size: 100% auto;
   background-position: center center;
+  border: 0;
+  outline: none;
 }
 .loginNaver {
   background-image: url("/images/naverLogin.svg");
