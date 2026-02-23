@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import OptionSection from "../../components/write/OptionSection";
 import WriteTabs from "../../components/write/WriteTabs";
 import styles from "./page.module.css";
@@ -30,6 +30,7 @@ type Step = {
 export default function WritePage() {
   const supabase = createClient();
   const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
 
   const [activeTab, setActiveTab] = useState<TabType>("manual");
 
@@ -48,6 +49,24 @@ export default function WritePage() {
 
   const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", qty: "" }]);
   const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        alert("로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.");
+        router.replace("/login");
+        return;
+      }
+
+      setAuthChecked(true);
+    };
+
+    checkUser();
+  }, [router, supabase]);
 
   const addIngredient = () => {
     setIngredients((prev) => [...prev, { id: Date.now(), name: "", qty: "" }]);
@@ -103,28 +122,45 @@ export default function WritePage() {
       return;
     }
 
+    let thumbUrl = "";
+    if (coverFile) {
+      const ext = coverFile.name.split(".").pop() || "jpg";
+      const coverPath = `${user.id}/cover-${Date.now()}.${ext}`;
+      const { error: coverUploadError } = await supabase.storage.from("thumb").upload(coverPath, coverFile, {
+        upsert: true,
+      });
+
+      if (coverUploadError) {
+        console.error(coverUploadError);
+        return;
+      }
+
+      const { data: coverUrlData } = supabase.storage.from("thumb").getPublicUrl(coverPath);
+      thumbUrl = coverUrlData.publicUrl;
+    }
+
     const recipePayload =
       activeTab === "manual"
         ? {
-          title: title,
-          desc: description,
-          thumb: coverPreview || "",
-          difficulty: difficulty,
-          cooking_time: time,
-          serving: serving,
-          is_AI: false,
-          user_id: user.id,
-        }
+            title: title,
+            desc: description,
+            thumb: thumbUrl,
+            difficulty: difficulty,
+            cooking_time: time,
+            serving: serving,
+            is_AI: false,
+            user_id: user.id,
+          }
         : {
-          title: aiTitle,
-          desc: "",
-          thumb: coverPreview || "",
-          difficulty: aiDifficulty,
-          cooking_time: aiTime,
-          serving: aiServing,
-          is_AI: true,
-          user_id: user.id,
-        };
+            title: aiTitle,
+            desc: "",
+            thumb: thumbUrl,
+            difficulty: aiDifficulty,
+            cooking_time: aiTime,
+            serving: aiServing,
+            is_AI: true,
+            user_id: user.id,
+          };
 
     const { data: savedRecipe, error: recipeError } = await supabase
       .from("recipes")
@@ -155,14 +191,36 @@ export default function WritePage() {
         }
       }
 
-      const stepRows = steps
-        .filter((step) => step.description.trim())
-        .map((step, index) => ({
+      const filteredSteps = steps.filter((step) => step.description.trim());
+      const stepRows: Array<{ recipe_id: number; step_num: number; content: string; img_url: string }> = [];
+
+      for (let index = 0; index < filteredSteps.length; index += 1) {
+        const step = filteredSteps[index];
+        let stepImageUrl = "";
+
+        if (step.imageFile) {
+          const ext = step.imageFile.name.split(".").pop() || "jpg";
+          const stepPath = `${user.id}/${savedRecipe.id}/step-${index + 1}-${Date.now()}.${ext}`;
+          const { error: stepUploadError } = await supabase.storage.from("steps").upload(stepPath, step.imageFile, {
+            upsert: true,
+          });
+
+          if (stepUploadError) {
+            console.error(stepUploadError);
+            return;
+          }
+
+          const { data: stepUrlData } = supabase.storage.from("steps").getPublicUrl(stepPath);
+          stepImageUrl = stepUrlData.publicUrl;
+        }
+
+        stepRows.push({
           recipe_id: savedRecipe.id,
           step_num: index + 1,
           content: step.description.trim(),
-          img_url: step.imagePreview || "",
-        }));
+          img_url: stepImageUrl,
+        });
+      }
 
       if (stepRows.length > 0) {
         const { error: stepError } = await supabase.from("recipe-steps").insert(stepRows);
@@ -176,6 +234,10 @@ export default function WritePage() {
 
     router.push(`/recipes/${savedRecipe.id}`);
   };
+
+  if (!authChecked) {
+    return null;
+  }
 
   return (
     <main className={styles.viewport}>

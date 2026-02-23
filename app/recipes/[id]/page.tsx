@@ -86,6 +86,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                 alt={recipe.title}
                 width={375}
                 height={320}
+                unoptimized
                 className={styles.detailThumbImage}
               />
             ) : (
@@ -176,6 +177,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                               alt={`요리순서 ${step.step_num}`}
                               width={304}
                               height={160}
+                              unoptimized
                             />
                           ) : null}
                         </figure>
