@@ -17,7 +17,7 @@ type Serving = "1인분" | "2인분" | "3인분" | "4인분";
 type Ingredient = {
   id: number;
   name: string;
-  amount: string;
+  qty: string;
 };
 
 type Step = {
@@ -46,11 +46,11 @@ export default function WritePage() {
   const [aiTime, setAiTime] = useState<Time>("15분 이내");
   const [aiServing, setAiServing] = useState<Serving>("1인분");
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", qty: "" }]);
   const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
 
   const addIngredient = () => {
-    setIngredients((prev) => [...prev, { id: Date.now(), name: "", amount: "" }]);
+    setIngredients((prev) => [...prev, { id: Date.now(), name: "", qty: "" }]);
   };
 
   const removeIngredient = (id: number) => {
@@ -92,30 +92,45 @@ export default function WritePage() {
   };
 
   const handleSubmit = async () => {
+    const recipePayload =
+      activeTab === "manual"
+        ? {
+            title: title,
+            desc: description,
+            thumb: coverPreview || "",
+            difficulty: difficulty,
+            cooking_time: time,
+            serving: serving,
+            is_AI: false,
+          }
+        : {
+            title: aiTitle,
+            desc: "",
+            thumb: coverPreview || "",
+            difficulty: aiDifficulty,
+            cooking_time: aiTime,
+            serving: aiServing,
+            is_AI: true,
+          };
+
+    const { data: savedRecipe, error: recipeError } = await supabase
+      .from("recipes")
+      .insert(recipePayload)
+      .select("id")
+      .single();
+
+    if (recipeError || !savedRecipe) {
+      console.error(recipeError);
+      return;
+    }
+
     if (activeTab === "manual") {
-      const { data: savedRecipe, error: recipeError } = await supabase
-        .from("recipes")
-        .insert({
-          title: title,
-          desc: description,
-          difficulty: difficulty,
-          cooking_time: time,
-          serving: serving,
-        })
-        .select("id")
-        .single();
-
-      if (recipeError || !savedRecipe) {
-        console.error(recipeError);
-        return;
-      }
-
       const ingredientRows = ingredients
-        .filter((item) => item.name.trim() && item.amount.trim())
+        .filter((item) => item.name.trim() && item.qty.trim())
         .map((item) => ({
           recipe_id: savedRecipe.id,
-          ingredient_name: item.name.trim(),
-          ingredient_amount: item.amount.trim(),
+          name: item.name.trim(),
+          qty: item.qty.trim(),
         }));
 
       if (ingredientRows.length > 0) {
@@ -126,16 +141,27 @@ export default function WritePage() {
           return;
         }
       }
-    } else {
-      console.log({
-        title: aiTitle,
-        difficulty: aiDifficulty,
-        time: aiTime,
-        serving: aiServing,
-      });
+
+      const stepRows = steps
+        .filter((step) => step.description.trim())
+        .map((step, index) => ({
+          recipe_id: savedRecipe.id,
+          step_num: index + 1,
+          content: step.description.trim(),
+          img_url: step.imagePreview || "",
+        }));
+
+      if (stepRows.length > 0) {
+        const { error: stepError } = await supabase.from("recipe-step").insert(stepRows);
+
+        if (stepError) {
+          console.error(stepError);
+          return;
+        }
+      }
     }
 
-    router.push("/my");
+    router.push(`/recipes/${savedRecipe.id}`);
   };
 
   return (
@@ -252,10 +278,10 @@ export default function WritePage() {
                       <input
                         placeholder="1큰술"
                         className={styles.amountInput}
-                        value={item.amount}
+                        value={item.qty}
                         onChange={(e) =>
                           setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, amount: e.target.value } : ingredient)),
+                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
                           )
                         }
                       />

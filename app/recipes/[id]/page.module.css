@@ -134,6 +134,12 @@
   background: #ebebeb;
 }
 
+.detailThumbImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .detailMenu {
   padding: 27px 16px;
   display: flex;
