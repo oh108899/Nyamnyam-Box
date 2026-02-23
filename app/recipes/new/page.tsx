@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import OptionSection from "../../components/write/OptionSection";
 import WriteTabs from "../../components/write/WriteTabs";
 import styles from "./page.module.css";
@@ -17,7 +17,7 @@ type Serving = "1인분" | "2인분" | "3인분" | "4인분";
 type Ingredient = {
   id: number;
   name: string;
-  amount: string;
+  qty: string;
 };
 
 type Step = {
@@ -29,8 +29,9 @@ type Step = {
 
 export default function WritePage() {
   const supabase = createClient();
-  
   const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
+
   const [activeTab, setActiveTab] = useState<TabType>("manual");
 
   const [title, setTitle] = useState("");
@@ -46,11 +47,29 @@ export default function WritePage() {
   const [aiTime, setAiTime] = useState<Time>("15분 이내");
   const [aiServing, setAiServing] = useState<Serving>("1인분");
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", qty: "" }]);
   const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
 
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        alert("로그인이 필요한 페이지입니다. 로그인 페이지로 이동합니다.");
+        router.replace("/login");
+        return;
+      }
+
+      setAuthChecked(true);
+    };
+
+    checkUser();
+  }, [router, supabase]);
+
   const addIngredient = () => {
-    setIngredients((prev) => [...prev, { id: Date.now(), name: "", amount: "" }]);
+    setIngredients((prev) => [...prev, { id: Date.now(), name: "", qty: "" }]);
   };
 
   const removeIngredient = (id: number) => {
@@ -82,40 +101,85 @@ export default function WritePage() {
       prev.map((step) =>
         step.id === stepId
           ? {
-              ...step,
-              imageFile: file,
-              imagePreview: previewUrl,
-            }
+            ...step,
+            imageFile: file,
+            imagePreview: previewUrl,
+          }
           : step,
       ),
     );
   };
 
   const handleSubmit = async () => {
-    if (activeTab === "manual") {
-      const { data: savedRecipe, error: recipeError } = await supabase
-        .from("recipes")
-        .insert({
-          title: title,
-          desc: description,
-          difficulty: difficulty,
-          cooking_time: time,
-          serving: serving,
-        })
-        .select("id")
-        .single();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-      if (recipeError || !savedRecipe) {
-        console.error(recipeError);
+    if (userError || !user) {
+      console.error(userError);
+      router.push("/login");
+      return;
+    }
+
+    let thumbUrl = "";
+    if (coverFile) {
+      const ext = coverFile.name.split(".").pop() || "jpg";
+      const coverPath = `${user.id}/cover-${Date.now()}.${ext}`;
+      const { error: coverUploadError } = await supabase.storage.from("thumb").upload(coverPath, coverFile, {
+        upsert: true,
+      });
+
+      if (coverUploadError) {
+        console.error(coverUploadError);
         return;
       }
 
+      const { data: coverUrlData } = supabase.storage.from("thumb").getPublicUrl(coverPath);
+      thumbUrl = coverUrlData.publicUrl;
+    }
+
+    const recipePayload =
+      activeTab === "manual"
+        ? {
+            title: title,
+            desc: description,
+            thumb: thumbUrl,
+            difficulty: difficulty,
+            cooking_time: time,
+            serving: serving,
+            is_AI: false,
+            user_id: user.id,
+          }
+        : {
+            title: aiTitle,
+            desc: "",
+            thumb: thumbUrl,
+            difficulty: aiDifficulty,
+            cooking_time: aiTime,
+            serving: aiServing,
+            is_AI: true,
+            user_id: user.id,
+          };
+
+    const { data: savedRecipe, error: recipeError } = await supabase
+      .from("recipes")
+      .insert(recipePayload)
+      .select("id")
+      .single();
+
+    if (recipeError || !savedRecipe) {
+      console.error(recipeError);
+      return;
+    }
+
+    if (activeTab === "manual") {
       const ingredientRows = ingredients
-        .filter((item) => item.name.trim() && item.amount.trim())
+        .filter((item) => item.name.trim() && item.qty.trim())
         .map((item) => ({
           recipe_id: savedRecipe.id,
-          ingredient_name: item.name.trim(),
-          ingredient_amount: item.amount.trim(),
+          name: item.name.trim(),
+          qty: item.qty.trim(),
         }));
 
       if (ingredientRows.length > 0) {
@@ -126,17 +190,54 @@ export default function WritePage() {
           return;
         }
       }
-    } else {
-      console.log({
-        title: aiTitle,
-        difficulty: aiDifficulty,
-        time: aiTime,
-        serving: aiServing,
-      });
+
+      const filteredSteps = steps.filter((step) => step.description.trim());
+      const stepRows: Array<{ recipe_id: number; step_num: number; content: string; img_url: string }> = [];
+
+      for (let index = 0; index < filteredSteps.length; index += 1) {
+        const step = filteredSteps[index];
+        let stepImageUrl = "";
+
+        if (step.imageFile) {
+          const ext = step.imageFile.name.split(".").pop() || "jpg";
+          const stepPath = `${user.id}/${savedRecipe.id}/step-${index + 1}-${Date.now()}.${ext}`;
+          const { error: stepUploadError } = await supabase.storage.from("steps").upload(stepPath, step.imageFile, {
+            upsert: true,
+          });
+
+          if (stepUploadError) {
+            console.error(stepUploadError);
+            return;
+          }
+
+          const { data: stepUrlData } = supabase.storage.from("steps").getPublicUrl(stepPath);
+          stepImageUrl = stepUrlData.publicUrl;
+        }
+
+        stepRows.push({
+          recipe_id: savedRecipe.id,
+          step_num: index + 1,
+          content: step.description.trim(),
+          img_url: stepImageUrl,
+        });
+      }
+
+      if (stepRows.length > 0) {
+        const { error: stepError } = await supabase.from("recipe-steps").insert(stepRows);
+
+        if (stepError) {
+          console.error(stepError);
+          return;
+        }
+      }
     }
 
-    router.push("/my");
+    router.push(`/recipes/${savedRecipe.id}`);
   };
+
+  if (!authChecked) {
+    return null;
+  }
 
   return (
     <main className={styles.viewport}>
@@ -252,10 +353,10 @@ export default function WritePage() {
                       <input
                         placeholder="1큰술"
                         className={styles.amountInput}
-                        value={item.amount}
+                        value={item.qty}
                         onChange={(e) =>
                           setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, amount: e.target.value } : ingredient)),
+                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
                           )
                         }
                       />

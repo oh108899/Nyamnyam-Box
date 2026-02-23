@@ -4,13 +4,26 @@ import CommentActions, { CommentWriteButton } from "../../components/recipes/Com
 import styles from "./page.module.css";
 import { createClient } from "../../utils/supabase/client";
 
+type IngredientRow = {
+  id: number;
+  name: string;
+  qty: string;
+};
+
+type StepRow = {
+  id: number;
+  step_num: number;
+  content: string;
+  img_url: string | null;
+};
+
 export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient();
   const { id } = await params;
-  const {data:recipe ,error} = await supabase
+  const { data: recipe, error } = await supabase
   .from("recipes")
   .select()
-  .eq('id', id)
+  .eq("id", id)
   .single();
 
   if (error || !recipe) {
@@ -33,15 +46,20 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     );
   }
 
-  const {data: ingredients} = await supabase
+  const { data: ingredients } = await supabase
   .from("ingredients")
   .select()
-  .eq('recipe_id', id);
+  .eq("recipe_id", id);
 
-  const{data: steps} = await supabase
+  const { data: steps } = await supabase
   .from("recipe-steps")
   .select()
-  .eq('recipe_id', id);
+  .eq("recipe_id", id)
+  .order("step_num", { ascending: true });
+
+  console.log(ingredients, steps);
+  const ingredientRows = (ingredients ?? []) as IngredientRow[];
+  const stepRows = (steps ?? []) as StepRow[];
 
 
   
@@ -62,13 +80,18 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
 
         <section className={styles.section}>
           <figure className={styles.detailTumbnail}>
-            이미지
-            {/* <Image
-              src=""
-              alt=""
-              width={375}
-              height={320}
-            /> */}
+            {recipe.thumb ? (
+              <Image
+                src={recipe.thumb}
+                alt={recipe.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 375px"
+                unoptimized
+                className={styles.detailThumbImage}
+              />
+            ) : (
+              "이미지가 없습니다"
+            )}
           </figure>
           <div className={`${styles.detailMenu} ${styles.detailContainer}`}>
             <div className={styles.detailMenuName}>
@@ -120,19 +143,19 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             <h2 className={styles.detailTitle}>필수재료</h2>
             <div className={styles.detailIngredient}>
               <ul>
-                <li className={styles.detailBody2}>
-                  <span>파스타 면(링귀네)</span><strong>200g</strong>
-                </li>
-                <li className={styles.detailBody2}>
-                  <span>모둠 버섯(양송이, 표고)</span><strong>150g</strong>
-                </li>
-                <li className={styles.detailBody2}>
-                  <span>트러플 오일</span><strong>2큰술</strong>
-                </li>
+                {ingredientRows.length ? (
+                  ingredientRows.map((item) => (
+                    <li className={styles.detailBody2} key={item.id}>
+                      <span>{item.name}</span>
+                      <strong>{item.qty}</strong>
+                    </li>
+                  ))
+                ) : (
+                  <li className={styles.detailBody2}>
+                    <span>등록된 재료가 없습니다.</span>
+                  </li>
+                )}
               </ul>
-              {/* DB.map((item) => <li className={styles.detailBody2} key={item.id}>
-                  <span>{item.ingredientName}</span><strong>{item.ingredientAmount}</strong>
-                </li>))*/}
             </div>
           </div>
 
@@ -140,39 +163,34 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             <h2 className={styles.detailTitle}>요리순서</h2>
             <div className={styles.detailStep}>
               <ul>
-                <li>
-                  <div className={styles.stepNum}>1</div>
-                  <div className={styles.stepBox}>
-                    <p className={`${styles.detailBody1} ${styles.detailBold}`}>면 삶기</p>
-                    <p className={styles.detailBody1}>끓는 물에 소금 1큰술을 넣고 파스타 면을 8분간 삶아주세요. 면수는 1컵 정도 남겨둡니다.</p>
-                    <figure className={styles.setpImage}>
-                      {/* <Image
-                        src=""
-                        alt=""
-                        width={304}
-                        height={160}
-                      /> */}
-                    </figure>
-
-                  </div>
-                </li>
-
-                <li>
-                  <div className={styles.stepNum}>2</div>
-                  <div className={styles.stepBox}>
-                    <p className={`${styles.detailBody1} ${styles.detailBold}`}>재료 손질</p>
-                    <p className={styles.detailBody1}>마늘은 편으로 썰고, 버섯은 먹기 좋은 크기로 썰어서 준비합니다.</p>
-                    <figure className={styles.setpImage}>
-                      {/* <Image
-                        src=""
-                        alt=""
-                        width={304}
-                        height={160}
-                      /> */}
-                    </figure>
-
-                  </div>
-                </li>
+                {stepRows.length ? (
+                  stepRows.map((step) => (
+                    <li key={step.id}>
+                      <div className={styles.stepNum}>{step.step_num}</div>
+                      <div className={styles.stepBox}>
+                        <p className={`${styles.detailBody1} ${styles.detailBold}`}>STEP {step.step_num}</p>
+                        <p className={styles.detailBody1}>{step.content}</p>
+                        <figure className={styles.setpImage}>
+                          {step.img_url ? (
+                            <Image
+                              src={step.img_url}
+                              alt={`요리순서 ${step.step_num}`}
+                              width={304}
+                              height={160}
+                              unoptimized
+                            />
+                          ) : null}
+                        </figure>
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <li>
+                    <div className={styles.stepBox}>
+                      <p className={styles.detailBody1}>등록된 요리 순서가 없습니다.</p>
+                    </div>
+                  </li>
+                )}
               </ul>
 
             </div>

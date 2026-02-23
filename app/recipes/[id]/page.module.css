@@ -55,6 +55,14 @@
 
 }
 
+.headerTitle {
+  margin: 0;
+  font-size: var(--body1);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-black);
+}
+
 .content {
   padding: 24px 16px 88px;
 }
@@ -127,11 +135,20 @@
 }
 
 .detailTumbnail {
+  position: relative;
   padding: 0;
   margin: 0;
   width: 100%;
-  max-height: 320px;
+  height: 320px;
+  max-height: none;
   background: #ebebeb;
+  overflow: hidden;
+}
+
+.detailThumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .detailMenu {
@@ -143,10 +160,21 @@
 
 .detailMenuName {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.detailMenuName .detailTitle {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-top: 6px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .shareIcon {
+  flex-shrink: 0;
   width: 40px;
   height: 40px;
   border: solid 1px var(--solid);
@@ -245,6 +273,9 @@
   border-radius: 8px;
   overflow: hidden;
 }
+.setpImage img {
+  object-fit: cover;
+}
 
 .commentsWrap {
   background-color: var(--white);
@@ -286,7 +317,8 @@
 .commentsContext {
   width: 100%;
   color: var(--text-gray);
-  line-height: 22px;
+  font-size: var(--body2);
+  line-height: 1.6;
   min-height: 54px;
 }
 .commentsWrite {
