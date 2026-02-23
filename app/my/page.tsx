@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BottomNav from "../components/BottomNav";
 import { createClient } from "../utils/supabase/client";
 import styles from "./page.module.css";
@@ -20,9 +20,38 @@ type MyRecipe = {
 export default function MyPage() {
   const router = useRouter();
   const supabase = createClient();
-  const [loading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [isLogout, setisLogout] = useState(false);
+  const [profile, setProfile] = useState(null);
   const myRecipes: MyRecipe[] = [];
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      const { data: profile, error } = await supabase
+        .from("profile")
+        .select()
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      setProfile(profile);
+      setLoading(false);
+      // console.log(profile);
+    };
+    fetchProfile();
+  }, []);
+
 
   const handleLogout = async () => {
     setisLogout(true);
@@ -35,7 +64,7 @@ export default function MyPage() {
       return;
     }
 
-    router.push("/login");
+    router.replace("/login");
   };
 
   return (
@@ -59,26 +88,28 @@ export default function MyPage() {
           </button>
         </header>
 
+      
         <section className={styles.profileSection}>
-          {loading ? (
-            <>
+          {loading
+            ? (<>
               <div className={styles.profileAvatarSkeleton} aria-hidden="true" />
               <div className={styles.profileInfo}>
                 <div className={styles.profileNameSkeleton} aria-hidden="true" />
                 <div className={styles.profileMetaSkeleton} aria-hidden="true" />
                 <div className={styles.profileDescSkeleton} aria-hidden="true" />
               </div>
-            </>
-          ) : (
+            </>)
+            : profile &&
+            (
             <>
               <div className={styles.profileAvatar} />
               <div className={styles.profileInfo}>
-                <h2 className={styles.profileName}>요리조리</h2>
-                <div className={styles.profileMeta}>레시피 24개 • 팔로워 1.2k</div>
-                <p className={styles.profileDesc}>집에서 즐기는 간단한 요리들을 공유합니다.</p>
+                <h2 className={styles.profileName}>{profile.nick_name}</h2>
+                <p className={styles.profileMeta}>{profile.email}</p>
               </div>
             </>
-          )}
+            )
+          }
         </section>
 
         <section className={styles.recipeSection}>
@@ -87,16 +118,16 @@ export default function MyPage() {
           <div className={styles.recipeGrid}>
             {loading
               ? Array.from({ length: 4 }, (_, index) => (
-                  <article key={`my-skeleton-${index}`} className={styles.recipeCard}>
-                    <div className={styles.recipeImageSkeleton} aria-hidden="true" />
-                    <div className={styles.recipeTitleSkeleton} aria-hidden="true" />
-                    <div className={styles.recipeMetaSkeleton} aria-hidden="true" />
-                  </article>
-                ))
+                <article key={`my-skeleton-${index}`} className={styles.recipeCard}>
+                  <div className={styles.recipeImageSkeleton} aria-hidden="true" />
+                  <div className={styles.recipeTitleSkeleton} aria-hidden="true" />
+                  <div className={styles.recipeMetaSkeleton} aria-hidden="true" />
+                </article>
+              ))
               : myRecipes.length === 0
                 ? (
-                    <p className={styles.emptyText}>작성한 레시피가 없습니다...</p>
-                  )
+                  <p className={styles.emptyText}>아직 작성한 레시피가 없습니다</p>
+                )
                 : myRecipes.map((recipe) => (
                   <article key={recipe.id} className={styles.recipeCard}>
                     <div className={styles.recipeImageWrap}>
