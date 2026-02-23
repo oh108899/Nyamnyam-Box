@@ -84,13 +84,13 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
               <Image
                 src={recipe.thumb}
                 alt={recipe.title}
-                width={375}
-                height={320}
+                fill
+                sizes="(max-width: 768px) 100vw, 375px"
                 unoptimized
                 className={styles.detailThumbImage}
               />
             ) : (
-              "이미지"
+              "이미지가 없습니다"
             )}
           </figure>
           <div className={`${styles.detailMenu} ${styles.detailContainer}`}>
