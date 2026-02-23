@@ -52,7 +52,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
   .eq("recipe_id", id);
 
   const { data: steps } = await supabase
-  .from("recipe-step")
+  .from("recipe-steps")
   .select()
   .eq("recipe_id", id)
   .order("step_num", { ascending: true });
