@@ -29,8 +29,8 @@ type Step = {
 
 export default function WritePage() {
   const supabase = createClient();
-  
   const router = useRouter();
+
   const [activeTab, setActiveTab] = useState<TabType>("manual");
 
   const [title, setTitle] = useState("");
@@ -82,36 +82,49 @@ export default function WritePage() {
       prev.map((step) =>
         step.id === stepId
           ? {
-              ...step,
-              imageFile: file,
-              imagePreview: previewUrl,
-            }
+            ...step,
+            imageFile: file,
+            imagePreview: previewUrl,
+          }
           : step,
       ),
     );
   };
 
   const handleSubmit = async () => {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      console.error(userError);
+      router.push("/login");
+      return;
+    }
+
     const recipePayload =
       activeTab === "manual"
         ? {
-            title: title,
-            desc: description,
-            thumb: coverPreview || "",
-            difficulty: difficulty,
-            cooking_time: time,
-            serving: serving,
-            is_AI: false,
-          }
+          title: title,
+          desc: description,
+          thumb: coverPreview || "",
+          difficulty: difficulty,
+          cooking_time: time,
+          serving: serving,
+          is_AI: false,
+          user_id: user.id,
+        }
         : {
-            title: aiTitle,
-            desc: "",
-            thumb: coverPreview || "",
-            difficulty: aiDifficulty,
-            cooking_time: aiTime,
-            serving: aiServing,
-            is_AI: true,
-          };
+          title: aiTitle,
+          desc: "",
+          thumb: coverPreview || "",
+          difficulty: aiDifficulty,
+          cooking_time: aiTime,
+          serving: aiServing,
+          is_AI: true,
+          user_id: user.id,
+        };
 
     const { data: savedRecipe, error: recipeError } = await supabase
       .from("recipes")
