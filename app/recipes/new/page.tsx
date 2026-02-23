@@ -152,7 +152,7 @@ export default function WritePage() {
         }));
 
       if (stepRows.length > 0) {
-        const { error: stepError } = await supabase.from("recipe-step").insert(stepRows);
+        const { error: stepError } = await supabase.from("recipe-steps").insert(stepRows);
 
         if (stepError) {
           console.error(stepError);
