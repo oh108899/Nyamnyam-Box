@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import CommentActions, { CommentWriteButton } from "../../components/recipes/CommentActions";
+import CommentClient from "../../components/recipes/CommentClient";
 import styles from "./page.module.css";
 import { createClient } from "../../utils/supabase/client";
 
@@ -21,10 +21,10 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
   const supabase = createClient();
   const { id } = await params;
   const { data: recipe, error } = await supabase
-  .from("recipes")
-  .select()
-  .eq("id", id)
-  .single();
+    .from("recipes")
+    .select()
+    .eq("id", id)
+    .single();
 
   if (error || !recipe) {
     return (
@@ -47,22 +47,23 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
   }
 
   const { data: ingredients } = await supabase
-  .from("ingredients")
-  .select()
-  .eq("recipe_id", id);
+    .from("ingredients")
+    .select()
+    .eq("recipe_id", id);
 
   const { data: steps } = await supabase
-  .from("recipe-steps")
-  .select()
-  .eq("recipe_id", id)
-  .order("step_num", { ascending: true });
+    .from("recipe-steps")
+    .select()
+    .eq("recipe_id", id)
+    .order("step_num", { ascending: true });
 
   console.log(ingredients, steps);
   const ingredientRows = (ingredients ?? []) as IngredientRow[];
   const stepRows = (steps ?? []) as StepRow[];
 
+  console.log("stepRows", stepRows);
 
-  
+
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -176,7 +177,8 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                               src={step.img_url}
                               alt={`요리순서 ${step.step_num}`}
                               width={304}
-                              height={160}
+                              height={171}
+                              sizes="(max-width: 768px) 100vw, 375px"
                               unoptimized
                             />
                           ) : null}
@@ -196,39 +198,24 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          <div className={`${styles.detailContainer}`}>
+          <div className={styles.detailContainer}>
             <h2 className={styles.detailTitle}>댓글</h2>
-            <div className={styles.commentsWrap}>
-              <div className={styles.commentsProfile}>
-                <Image
-                  src="/images/profilePrm.svg"
-                  alt="유저 아이콘"
-                  width={40}
-                  height={40}
-                />
-              </div>
-              <div className={styles.commentsBox}>
-                <div className={styles.commentsUser}>
-                  <span className={`${styles.commentsId} ${styles.detailBody1}`}>냠냠박스</span>
-                  <div className={styles.commentsMy}>
-                    <CommentActions
-                      deleteClassName={styles.commentsDel}
-                      editClassName={styles.commentsEdit}
-                    />
-                  </div>
-                </div>
-                <p className={styles.commentsContext}>
-                  넘 맛있어요^^ 만들기도 간단하고 한입 먹자마자 내몸한테 죄스러울 만큼 행복한 맛, ㅎㅎㅎ~
-                </p>
-              </div>
-
-            </div>
-            <div className={styles.commentsWrap}>
-              <p className={styles.commentsContext}>
-                아직 작성한 댓글이 없습니다
-              </p>
-            </div>
-            <CommentWriteButton writeClassName={styles.commentsWrite} />
+            <CommentClient 
+              recipeId={Number(id)}
+              classNames={{
+                commentsWrap: styles.commentsWrap,
+                commentsProfile: styles.commentsProfile,
+                commentsBox: styles.commentsBox,
+                commentsUser: styles.commentsUser,
+                commentsId: styles.commentsId,
+                commentsMy: styles.commentsMy,
+                commentsDel: styles.commentsDel,
+                commentsEdit: styles.commentsEdit,
+                commentsContext: styles.commentsContext,
+                commentsWrite: styles.commentsWrite,
+                commentsPreContext: styles.commentsPreContext,
+              }}
+            />
           </div>
 
         </section>
