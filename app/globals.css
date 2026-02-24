@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -72,12 +73,18 @@ ul, li, ol {
   box-sizing: border-box;
 }
 
+*::placeholder {
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: var(--body2);
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   background: var(--white);
   color: var(--text-black);
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

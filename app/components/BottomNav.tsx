@@ -51,7 +51,12 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
       </Link>
 
       <Link href="/bookmark" className={`${getTabClassName("bookmark")} ${styles.navLink}`}>
-        <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
+        <Image 
+            src={activeTab === "bookmark" ? "/images/bookmark-active.svg" : "/images/bookmark.svg"}
+            alt="" 
+            width={13} 
+            height={16} 
+            aria-hidden="true" />
         <span>북마크</span>
       </Link>
 
