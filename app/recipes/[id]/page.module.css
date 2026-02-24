@@ -266,7 +266,6 @@
   line-height: 27px;
 }
 .setpImage {
-  object-fit: cover;
   aspect-ratio: 16 / 9;
   background-color: #ebebeb;
   margin-top: 16px;
@@ -295,6 +294,7 @@
   flex: 1 0 1;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 .commentsUser {
   display: flex;
@@ -306,6 +306,9 @@
   color: var(--text-black);
   font-weight: 700;
 }
+.commentsMy {
+  min-width: 80px;
+}
 .commentsMy button {
   background: transparent;
   border: 0;
@@ -314,12 +317,16 @@
   font-weight: 500;
   cursor: pointer;
 }
+.commentsPreContext {
+    min-height: 54px;
+}
 .commentsContext {
   width: 100%;
   color: var(--text-gray);
   font-size: var(--body2);
   line-height: 1.6;
-  min-height: 54px;
+  resize: none;
+  overflow: auto;
 }
 .commentsWrite {
   width: 100%;

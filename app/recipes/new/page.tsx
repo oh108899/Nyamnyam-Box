@@ -473,9 +473,7 @@ export default function WritePage() {
         </section>
 
         <div className={styles.bottomActionWrap}>
-          <Link href="/recipes" className={styles.cancelButton}>
-            작성 취소
-          </Link>
+          <button type="button" className={styles.cancelButton} onClick={() => router.back()}>작성 취소</button>
           <button type="button" className={styles.bottomActionButton} onClick={handleSubmit}>
             {activeTab === "manual" ? "레시피 작성 완료" : "AI 레시피 생성"}
           </button>
