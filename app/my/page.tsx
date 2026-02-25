@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 
 type MyRecipe = {
   id: string;
-  image: string;
+  thumb: string;
   title: string;
   views: string;
   likes: string;
@@ -39,6 +39,7 @@ export default function MyPage() {
 
       if (!user) {
         setLoading(false);
+        router.replace("/login");
         return;
       }
       //프로필
