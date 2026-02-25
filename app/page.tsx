@@ -59,7 +59,7 @@ export default function HomePage() {
               ))
               : recipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
-                  <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>

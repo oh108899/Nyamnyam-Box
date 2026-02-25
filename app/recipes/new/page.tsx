@@ -110,6 +110,47 @@ export default function WritePage() {
     );
   };
 
+  const API_BASE = '/api/v1';
+  const CLIENT_ID = process.env.NEXT_PUBLIC_AI_CLIENT_ID ?? "";
+  async function apiRequest(path: string, options: RequestInit = {}) {
+    const res = await fetch(`${API_BASE}${path}`, options);
+    const data = await res.json();
+    const only =
+      typeof data?.content === "string"
+        ? data.content
+        : JSON.stringify(data, null, 2) ||
+          typeof data?.summary === "string"
+          ? data.summary
+          : JSON.stringify(data, null, 2);
+    return only;
+  }
+  const getAIRecipe = async () => {
+    if (!CLIENT_ID) {
+      console.error("NEXT_PUBLIC_AI_CLIENT_ID is not set");
+      return;
+    }
+
+    const qs = new URLSearchParams({
+      content: `응답은 무조건 JSON 형식으로 다른 어떤말도 하지마 제목: ${aiTitle}, 난이도: ${aiDifficulty}, 소요 시간: ${aiTime}, 재료 기준: ${aiServing}에 맞는 요리 레시피를 알려줘. 응답은 무조건 JSON 형식으로 만 해, 제목은 title, 난이도는 difficulty, 소요 시간은 time, 재료 기준은 serving, 레시피 설명은 desc, 재료는 ingredients 배열로 (재료명 name, 양 qty), 요리 순서는 recipe-steps 배열로 (순서 step_num, 내용 content, 사진 img_url) 표현해줘. 이때 사진은 구글에서 저작권 문제가 없는 요리 순서와 관련된 이미지를 찾아서 img_url에 넣어줘.`
+      ,
+      client_id: CLIENT_ID
+    }).toString();
+    const data = await apiRequest(`/question?${qs}`);
+    const cleaned = data
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+    let aiRecipe;
+    try {
+      aiRecipe = JSON.parse(cleaned);
+    } catch (err) {
+      console.error("AI 응답 파싱 실패", err);
+      return;
+    }
+    
+    console.log("AI Recipe:", aiRecipe);
+  };
+
   const handleSubmit = async () => {
     const {
       data: { user },
@@ -139,28 +180,30 @@ export default function WritePage() {
       thumbUrl = coverUrlData.publicUrl;
     }
 
+
+
     const recipePayload =
       activeTab === "manual"
         ? {
-            title: title,
-            desc: description,
-            thumb: thumbUrl,
-            difficulty: difficulty,
-            cooking_time: time,
-            serving: serving,
-            is_AI: false,
-            user_id: user.id,
-          }
+          title: title,
+          desc: description,
+          thumb: thumbUrl,
+          difficulty: difficulty,
+          cooking_time: time,
+          serving: serving,
+          is_AI: false,
+          user_id: user.id,
+        }
         : {
-            title: aiTitle,
-            desc: "",
-            thumb: thumbUrl,
-            difficulty: aiDifficulty,
-            cooking_time: aiTime,
-            serving: aiServing,
-            is_AI: true,
-            user_id: user.id,
-          };
+          title: aiTitle,
+          desc: "",
+          thumb: thumbUrl,
+          difficulty: aiDifficulty,
+          cooking_time: aiTime,
+          serving: aiServing,
+          is_AI: true,
+          user_id: user.id,
+        };
 
     const { data: savedRecipe, error: recipeError } = await supabase
       .from("recipes")
@@ -474,7 +517,7 @@ export default function WritePage() {
 
         <div className={styles.bottomActionWrap}>
           <button type="button" className={styles.cancelButton} onClick={() => router.back()}>작성 취소</button>
-          <button type="button" className={styles.bottomActionButton} onClick={handleSubmit}>
+          <button type="button" className={styles.bottomActionButton} onClick={()=>getAIRecipe()}>
             {activeTab === "manual" ? "레시피 작성 완료" : "AI 레시피 생성"}
           </button>
         </div>
