@@ -10,9 +10,9 @@ import BottomNav from "../../components/BottomNav";
 import LogoHeader from "../../components/LogoHeader";
 
 type RecipeRow = {
-  id: string;
+  id: number;
   title: string;
-  thumb: string | null;
+  image: string | null;
   time: string | number | null;
   cooking_time: string | number | null;
   description?: string | null;
@@ -135,7 +135,7 @@ export default function SearchResultsPage() {
           </div>
         </section>
 
-        <BottomNav activeTab="search" />
+        <BottomNav activeTab="recipes" />
       </div>
     </main>
   );
