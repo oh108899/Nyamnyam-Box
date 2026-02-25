@@ -159,6 +159,9 @@
   font-weight: 700;
   line-height: 1.3;
 }
+.myRecipeNum {
+  color: var(--primary);
+}
 
 .recipeGrid {
   display: grid;
@@ -225,6 +228,23 @@
   font-size: var(--desc);
   font-weight: 500;
   line-height: 1.3;
+}
+.recipeMetaBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: auto 10px;
+}
+.recipeMetaView{
+  background-image: url("/images/recipeVeiw.svg");
+  padding-left: 20px;
+}
+.recipeMetaBookmark {
+  background-image: url("/images/recipeBookmark.svg");
+  padding-left: 16px;
 }
 
 .recipeTitleSkeleton {

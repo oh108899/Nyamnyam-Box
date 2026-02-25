@@ -11,7 +11,6 @@ type Recipe = {
 };
 
 export default function RecipesPage() {
-  const supabase = createClient();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -47,26 +47,54 @@ export default function CommentsClient({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editComment, setEditComment] = useState("");
 
+
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setMe(data.user ? { id: data.user.id } : null);
-    });
+
+    //프로필 가져오기
+    const fetchMe = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profile")
+        .select()
+        .eq("id", user.id)
+        .single();
+
+      if (profileError) {
+        console.error("프로필을 로딩할 수 없습니다:", profileError);
+        return;
+      }
+
+      setMe(profile);
+    };
+
+    fetchMe();
   }, [supabase]);
 
+  // 댓글 가져오기
   useEffect(() => {
     if (!recipeId) return;
 
-    (async () => {
+    const fetchReviews = async () => {
       const { data, error } = await supabase
         .from("review")
         .select("*")
         .eq("recipe_id", recipeId)
         .order("created_at", { ascending: true });
 
-      if (error) console.error(error);
-      else setReviews((data ?? []) as ReviewRow[]);
-    })();
+      if (error) {
+        console.error("댓글 로딩 에러:", error);
+        return;
+      }
+
+      setReviews((data ?? []) as ReviewRow[]);
+    };
+
+    fetchReviews();
   }, [recipeId, supabase]);
+
 
   // 수정 시작
   const startEdit = (r: ReviewRow) => {
@@ -115,7 +143,7 @@ export default function CommentsClient({
 
     const { data, error } = await supabase
       .from("review")
-      .insert({ recipe_id: recipeId, user_id: me.id, comment })
+      .insert({ recipe_id: recipeId, user_id: me.id, comment, nick_name: me.nick_name })
       .select("*")
       .single();
 
@@ -171,7 +199,7 @@ export default function CommentsClient({
 
             <div className={classNames.commentsBox}>
               <div className={classNames.commentsUser}>
-                <span className={classNames.commentsId}>{r.user_id}</span>
+                <span className={classNames.commentsId}>{r.nick_name}</span>
 
                 {isMine && !isEditing && (
                   <div className={classNames.commentsMy}>
