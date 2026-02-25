@@ -7,25 +7,19 @@ import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
 import styles from "./page.module.css";
-import { createClient } from "../utils/supabase/client";
 
 type Recipe = {
   id: number;
-  created_at: string;
-  user_id: string;
   title: string;
-  desc: string;
-  thumb: string;
-  difficulty: string;
-  cooking_time: string;
-  serving: string
+  thumb: string | null;
+  views: number | null;
+  review: { count: number }[] | null;
 };
 
 export default function RecipesPage() {
   const supabase = createClient();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
-  const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -33,18 +27,17 @@ export default function RecipesPage() {
 
       const { data, error } = await supabase
         .from("recipes")
-        .select("*, review(count)")
+        .select("id, title, thumb, views, review(count)");
       if (error) {
         console.error(error);
       } else {
-        setRecipes(data || []);
+        setRecipes((data ?? []) as Recipe[]);
       }
 
       setLoading(false);
-      console.log();
     };
     fetchRecipes();
-  }, []);
+  }, [supabase]);
 
   return (
     <main className={styles.viewport}>
@@ -79,7 +72,7 @@ export default function RecipesPage() {
                 <article key={recipe.id} className={styles.recipeCard}>
                   <Link href={`/recipes/${recipe.id}`}>
                     <div className={styles.recipeImageWrap}>
-                      {hasThumb(recipe.thumb) ? (
+                      {recipe.thumb ? (
                         <Image src={recipe.thumb} alt={recipe.title} fill unoptimized className={styles.recipeImage} />
                       ) : (
                         <div className={styles.recipeImageSkeleton} aria-hidden="true" />
@@ -92,9 +85,9 @@ export default function RecipesPage() {
                   <div className={styles.recipeTextWrap}>
                     <h2 className={styles.recipeTitle}>{recipe.title}</h2>
                     <div className={styles.recipeMeta}>
-                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
-                      {recipe.review[0].count > 0 &&
-                        (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{recipe.review.length}</span>)}
+                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views ?? 0}</span>
+                      {(recipe.review?.[0]?.count ?? 0) > 0 &&
+                        (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{recipe.review?.[0]?.count ?? 0}</span>)}
                     </div>
                   </div>
                 </article>
