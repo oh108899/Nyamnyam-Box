@@ -7,6 +7,7 @@ import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
 import styles from "./page.module.css";
+import { createClient } from "../utils/supabase/client";
 
 type Recipe = {
   id: number;

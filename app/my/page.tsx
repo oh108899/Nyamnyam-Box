@@ -10,7 +10,8 @@ import styles from "./page.module.css";
 
 type MyRecipe = {
   id: string;
-  thumb: string;
+  image: string;
+  thumb: string | null;
   title: string;
   views: string;
   likes: string;
