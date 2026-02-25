@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 
 type MyRecipe = {
   id: string;
-  image: string;
+  thumb: string;
   title: string;
   views: string;
   likes: string;
@@ -39,6 +39,7 @@ export default function MyPage() {
 
       if (!user) {
         setLoading(false);
+        router.replace("/login");
         return;
       }
       //프로필
@@ -49,7 +50,7 @@ export default function MyPage() {
         .single();
 
       if (profileError) {
-        console.error(error);
+        console.error(profileError);
         return;
       } else {
         setProfile(profile);
@@ -63,7 +64,7 @@ export default function MyPage() {
         .order("created_at", { ascending: false });
 
       if (recipesError) {
-        console.error(error);
+        console.error(recipesError);
         return;
       } else {
         setMyRecipes(recipes ?? []);
@@ -82,7 +83,7 @@ export default function MyPage() {
     const { error: logoutError } = await supabase.auth.signOut();
 
     if (logoutError) {
-      alert(`로그아웃 실패: ${error.message}`);
+      alert(`로그아웃 실패: ${logoutError.message}`);
       setisLogout(false);
       return;
     }
