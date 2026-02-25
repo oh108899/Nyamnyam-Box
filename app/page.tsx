@@ -156,6 +156,7 @@ export default function HomePage() {
               ))
               : recipes.map((item) => (
                 <article key={item.id} className={styles.newRecipeCard}>
+                  <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
                   <div className={styles.newRecipeImageWrap}>
                     <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     <button type="button" className={styles.favoriteButton} aria-label="북마크">
@@ -164,9 +165,7 @@ export default function HomePage() {
                   </div>
 
                   <h3 className={styles.recipeTitle}>
-                    <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
                       {item.title}
-                    </Link>
                   </h3>
                   <div className={styles.metaRow}>
                     <span className={styles.metaItem}>
@@ -178,6 +177,7 @@ export default function HomePage() {
                       {item.serving}
                     </span>
                   </div>
+                  </Link>
                 </article>
               ))}
           </div>
