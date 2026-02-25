@@ -131,7 +131,7 @@ export default function WritePage() {
     }
 
     const qs = new URLSearchParams({
-      content: `응답은 무조건 JSON 형식으로 다른 어떤말도 하지마 제목: ${aiTitle}, 난이도: ${aiDifficulty}, 소요 시간: ${aiTime}, 재료 기준: ${aiServing}에 맞는 요리 레시피를 알려줘. 응답은 무조건 JSON 형식으로 만 해, 제목은 title, 난이도는 difficulty, 소요 시간은 time, 재료 기준은 serving, 레시피 설명은 desc, 재료는 ingredients 배열로 (재료명 name, 양 qty), 요리 순서는 recipe-steps 배열로 (순서 step_num, 내용 content, 사진 img_url) 표현해줘. 이때 사진은 구글에서 저작권 문제가 없는 요리 순서와 관련된 이미지를 찾아서 img_url에 넣어줘.`
+      content: `응답은 무조건 JSON 형식으로 다른 어떤말도 하지마. 재료는 일반적으로 가정집에 있는 재료를 사용해. 제목: ${aiTitle}, 난이도: ${aiDifficulty}, 소요 시간: ${aiTime}, 재료 기준: ${aiServing}에 맞는 요리 레시피를 알려줘. 응답은 무조건 JSON 형식으로 만 해, 제목은 title, 난이도는 difficulty, 소요 시간은 time, 재료 기준은 serving, 레시피 설명은 desc, 재료는 ingredients 배열로 (재료명 name, 양 qty), 요리 순서는 recipe-steps 배열로 (순서 step_num, 내용 content, 사진 img_url(구글에서 적당한 사진을 검색해서 url을 넣는다)) 표현해줘. 제목이 특정 요리명이 아니라 재료명일 경우, 해당 재료로 만들 수 있는 대표적인 요리를 생성해. 그 다음 제목엔 그 요리의 제목을 써.`
       ,
       client_id: CLIENT_ID
     }).toString();
