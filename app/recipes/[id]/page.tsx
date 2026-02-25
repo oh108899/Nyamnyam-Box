@@ -200,7 +200,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
 
           <div className={styles.detailContainer}>
             <h2 className={styles.detailTitle}>댓글</h2>
-            <CommentClient 
+            <CommentClient
               recipeId={Number(id)}
               classNames={{
                 commentsWrap: styles.commentsWrap,
@@ -214,6 +214,10 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                 commentsContext: styles.commentsContext,
                 commentsWrite: styles.commentsWrite,
                 commentsPreContext: styles.commentsPreContext,
+                commentsEditButton: styles.editButton,
+                commentsEditButtonCancle: styles.editButtonCancle,
+                commentsEditButtonConfirm: styles.editButtonConfirm,
+                commentsContent: styles.commentsContent,
               }}
             />
           </div>

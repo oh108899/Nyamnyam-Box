@@ -320,11 +320,19 @@
 .commentsPreContext {
     min-height: 54px;
 }
+.commentsContent,
 .commentsContext {
-  width: 100%;
   color: var(--text-gray);
   font-size: var(--body2);
   line-height: 1.6;
+  width: 100%;
+}
+.commentsContent {
+  margin-top: 12px;
+}
+.commentsContext {
+  font-family: inherit;
+  padding: 8px;
   resize: none;
   overflow: auto;
 }
@@ -340,3 +348,29 @@
   font-size: 16px;
   line-height: 1;
 }
+.editButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.editButton button {
+  height: 44px;
+  text-align: center;
+  flex-grow: 1;
+  font-size: var(--body2);
+  font-weight: 500;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+}
+.editButtonCancle {
+  background: var(--bg-color);
+  color: var(--text-gray);
+}
+.editButtonConfirm {
+  background: var(--primary);
+  color: var(--white);
+}
+
