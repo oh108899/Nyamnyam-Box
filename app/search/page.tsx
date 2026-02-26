@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 const categories = [
@@ -25,6 +26,20 @@ export default function SearchPage() {
   const [difficulty, setDifficulty] = useState("쉬움");
   const [time, setTime] = useState("30분 이내");
   const [ingredient, setIngredient] = useState("고기");
+  const router = useRouter();
+
+  function handleApply() {
+    const params = new URLSearchParams();
+    const q = keyword.trim();
+    if (q) params.set("q", q);
+    if (selectedCategory) params.set("category", selectedCategory);
+    if (difficulty) params.set("difficulty", difficulty);
+    if (time) params.set("time", time);
+    if (ingredient) params.set("ingredient", ingredient);
+
+    const qs = params.toString();
+    router.push(`/search/results${qs ? `?${qs}` : ""}`);
+  }
 
   return (
     <div className={styles.page}>
@@ -35,7 +50,7 @@ export default function SearchPage() {
           </span>
         </Link>
         <h1 className={styles.headerTitle}>레시피 검색</h1>
-        <button type="button" className={styles.applyButton}>
+        <button type="button" className={styles.applyButton} onClick={handleApply}>
           적용
         </button>
       </header>
@@ -87,7 +102,7 @@ export default function SearchPage() {
       </div>
 
       <div className={styles.bottomActionWrap}>
-        <button type="button" className={styles.bottomActionButton}>
+        <button type="button" className={styles.bottomActionButton} onClick={handleApply}>
           <span className={`${styles.materialIcon} ${styles.bottomActionIcon}`} aria-hidden="true">
             filter_list
           </span>
