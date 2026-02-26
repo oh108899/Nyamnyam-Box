@@ -88,7 +88,7 @@ export default function SearchResultsPage() {
         />
 
         <section className={styles.content}>
-          <h2 className={styles.sectionTitle}>검색 결과</h2>
+          <h2 className={styles.sectionTitle}>검색어</h2>
 
           <div className={styles.searchRow}>
             <input
@@ -98,7 +98,7 @@ export default function SearchResultsPage() {
                 if (e.key === "Enter") handleSearch();
               }}
               className={styles.searchInput}
-              placeholder="레시피 검색"
+              placeholder="새우"
             />
           </div>
 
