@@ -94,6 +94,20 @@
   object-fit: cover;
 }
 
+.aiBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  border-radius: 9999px;
+  background: #2f7cff;
+  color: #ffffff;
+  font-size: var(--desc);
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 4px 8px;
+}
+
 .recipeImageSkeleton,
 .recipeTitleSkeleton,
 .recipeMetaSkeleton {
@@ -141,10 +155,16 @@
 }
 
 .recipeTitle {
+  margin: 0;
   color: var(--text-black);
   font-size: var(--body2);
   font-weight: 700;
   line-height: 1.3;
+}
+
+.recipeTitle a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .recipeMeta {
@@ -192,4 +212,3 @@
   height: 16px;
   border-radius: 8px;
 }
-

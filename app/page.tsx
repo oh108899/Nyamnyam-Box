@@ -10,32 +10,61 @@ import styles from "./page.module.css";
 import { createClient } from "./utils/supabase/client";
 
 type Recipe = {
-  id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string
+  id: number;
+  created_at: string;
+  user_id: string;
+  title: string;
+  desc: string;
+  thumb: string;
+  difficulty: string;
+  cooking_time: string;
+  serving: string;
+  is_AI: boolean;
+  views: number | null;
 };
 
 export default function HomePage() {
   const supabase = createClient();
 
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [pickRecipes, setPickRecipes] = useState<Recipe[]>([]);
+  const [topRecipes, setTopRecipes] = useState<Recipe[]>([]);
+  const [newRecipes, setNewRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
 
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const { data, error } = await supabase
-        .from("recipes")
-        .select();
-      if (error) {
-        console.error(error);
-      } else {
-        setRecipes(data || []);
-      }
+      setLoading(true);
+      const [pickRes, topRes, newRes] = await Promise.all([
+        supabase.from("recipes").select(),
+        supabase
+          .from("recipes")
+          .select()
+          .order("views", { ascending: false })
+          .limit(10),
+        supabase
+          .from("recipes")
+          .select()
+          .order("created_at", { ascending: false })
+          .limit(6),
+      ]);
+
+      if (pickRes.error) console.error(pickRes.error);
+      if (topRes.error) console.error(topRes.error);
+      if (newRes.error) console.error(newRes.error);
+
+      const pickData = (pickRes.data ?? []) as Recipe[];
+      const shuffled = [...pickData].sort(() => Math.random() - 0.5);
+      setPickRecipes(shuffled.slice(0, 2));
+      setTopRecipes((topRes.data ?? []) as Recipe[]);
+      setNewRecipes((newRes.data ?? []) as Recipe[]);
+
       setLoading(false);
     };
     fetchRecipes();
-  }, []);
-  console.log(recipes);
+  }, [supabase]);
+
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -60,13 +89,18 @@ export default function HomePage() {
                   </div>
                 </article>
               ))
-              : recipes.map((item) => (
+              : pickRecipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
+<<<<<<< HEAD
                   {hasThumb(item.thumb) ? (
                     <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                   ) : (
                     <div className={styles.imageSkeleton} aria-hidden="true" />
                   )}
+=======
+                  <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+>>>>>>> main
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>
@@ -84,9 +118,6 @@ export default function HomePage() {
         <section className={styles.sectionLargeGap}>
           <div className={styles.sectionHeaderRow}>
             <h2 className={styles.sectionTitle}>인기 레시피 TOP 10</h2>
-            <button type="button" className={styles.viewAllButton}>
-              전체보기
-            </button>
           </div>
 
           <div className={styles.horizontalScroll}>
@@ -109,14 +140,19 @@ export default function HomePage() {
                   </div>
                 </article>
               ))
-              : recipes.map((item) => (
+              : topRecipes.map((item) => (
                 <article key={item.id} className={styles.topRecipeCard}>
                   <div className={styles.squareImageWrap}>
+<<<<<<< HEAD
                     {hasThumb(item.thumb) ? (
                       <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                     ) : (
                       <div className={styles.imageSkeleton} aria-hidden="true" />
                     )}
+=======
+                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+>>>>>>> main
                   </div>
                   <h3 className={styles.recipeTitle}>
                     <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
@@ -126,7 +162,7 @@ export default function HomePage() {
                   <div className={styles.metaRow}>
                     <span className={styles.metaItem}>
                       <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                      {item.serving}
+                      조회수 {item.views ?? 0}
                     </span>
                     <span className={styles.metaItem}>
                       <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
@@ -139,7 +175,12 @@ export default function HomePage() {
         </section>
 
         <section className={styles.sectionBottom}>
-          <h2 className={styles.sectionTitle}>새로운 레시피</h2>
+          <div className={styles.sectionHeaderRow}>
+            <h2 className={styles.sectionTitle}>새로운 레시피</h2>
+            <Link href="/recipes" className={styles.viewAllButton}>
+              전체보기
+            </Link>
+          </div>
 
           <div className={styles.newRecipeGrid}>
             {loading
@@ -162,9 +203,10 @@ export default function HomePage() {
                   </div>
                 </article>
               ))
-              : recipes.map((item) => (
+              : newRecipes.map((item) => (
                 <article key={item.id} className={styles.newRecipeCard}>
                   <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
+<<<<<<< HEAD
                     <div className={styles.newRecipeImageWrap}>
                       {hasThumb(item.thumb) ? (
                         <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
@@ -173,6 +215,15 @@ export default function HomePage() {
                       )}
                       <BookmarkButton itemId={String(item.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
+=======
+                  <div className={styles.newRecipeImageWrap}>
+                    <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                    <button type="button" className={styles.favoriteButton} aria-label="북마크">
+                      <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
+                    </button>
+                  </div>
+>>>>>>> main
 
                     <h3 className={styles.recipeTitle}>
                       {item.title}

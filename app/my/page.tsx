@@ -10,7 +10,9 @@ import styles from "./page.module.css";
 
 type MyRecipe = {
   id: string;
-  thumb: string;
+  image: string;
+  thumb: string | null;
+  is_AI: boolean;
   title: string;
   views: string;
   likes: string;
@@ -157,6 +159,7 @@ export default function MyPage() {
                   <article key={recipe.id} className={styles.recipeCard}>
                       <Link href={`/recipes/${recipe.id}`}>
                       <div className={styles.recipeImageWrap}>
+                        {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                         {recipe.thumb &&
                           <Image
                             src={recipe.thumb}

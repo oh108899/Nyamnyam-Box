@@ -28,6 +28,12 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     .eq("id", id)
     .single();
 
+  const views = recipe?.views ?? 0;
+  const { error: updateError } = await supabase
+    .from("recipes")
+    .update({ views: views + 1 })
+    .eq("id", id);
+
   if (error || !recipe) {
     return (
       <main className={styles.viewport}>
@@ -38,6 +44,12 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
               <span className={styles.hidden}>뒤로가기</span>
             </Link>
             <h1 className={styles.headerTitle}>레시피를 찾을 수 없습니다</h1>
+<<<<<<< HEAD
+=======
+            <button className={styles.buttonBg}>
+              <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
+            </button>
+>>>>>>> main
           </header>
         </div>
       </main>
@@ -71,9 +83,15 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             <span className={styles.hidden}>뒤로가기</span>
           </Link>
           <h1 className={styles.headerTitle}>{recipe.title}</h1>
+<<<<<<< HEAD
           <RecipeHeaderActions recipeId={String(recipe.id)} recipeUserId={recipe.user_id} className={styles.recipeEditDel} />
 
           {/* 내 게시물 아니면 북마크, 로그인 후 내 게시물이면 수정, 삭제 버튼*/}
+=======
+          <button className={styles.buttonBg}>
+            <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
+          </button>
+>>>>>>> main
         </header>
 
         <section className={styles.section}>
