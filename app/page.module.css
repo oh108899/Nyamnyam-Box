@@ -82,6 +82,8 @@
   gap: 12px;
   margin-top: 14px;
   overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   padding-bottom: 2px;
   scrollbar-width: none;
 }
@@ -95,6 +97,7 @@
   width: 319px;
   height: 180px;
   flex-shrink: 0;
+  scroll-snap-align: start;
   border-radius: 14px;
   overflow: hidden;
   background: #d9d9d9;
@@ -192,6 +195,7 @@
 .topRecipeCard {
   width: 140px;
   flex-shrink: 0;
+  scroll-snap-align: start;
 }
 
 .squareImageWrap {
