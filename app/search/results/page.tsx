@@ -135,7 +135,7 @@ export default function SearchResultsPage() {
           </div>
         </section>
 
-        <BottomNav activeTab="search" />
+        <BottomNav activeTab="recipes" />
       </div>
     </main>
   );
