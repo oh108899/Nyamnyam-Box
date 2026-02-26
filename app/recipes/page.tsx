@@ -83,7 +83,9 @@ export default function RecipesPage() {
                     </div>
                   </Link>
                   <div className={styles.recipeTextWrap}>
-                    <h2 className={styles.recipeTitle}>{recipe.title}</h2>
+                    <h2 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
+                    </h2>
                     <div className={styles.recipeMeta}>
                       <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views ?? 0}</span>
                       {(recipe.review?.[0]?.count ?? 0) > 0 &&

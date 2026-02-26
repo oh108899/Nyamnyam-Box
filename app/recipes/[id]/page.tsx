@@ -39,7 +39,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             <button className={styles.buttonBg}>
               <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
             </button>
-            {/* 내 게시물 아니면 북마크, 로그인 후 내 게시물이면 수정, 삭제 버튼*/}
           </header>
         </div>
       </main>
@@ -76,7 +75,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
           <button className={styles.buttonBg}>
             <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
           </button>
-          {/* 내 게시물 아니면 북마크, 로그인 후 내 게시물이면 수정, 삭제 버튼*/}
         </header>
 
         <section className={styles.section}>
