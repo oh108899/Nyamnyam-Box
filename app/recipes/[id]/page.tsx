@@ -85,6 +85,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
 
         <section className={styles.section}>
           <figure className={styles.detailTumbnail}>
+            {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
             {recipe.thumb ? (
               <Image
                 src={recipe.thumb}
