@@ -2,14 +2,63 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
+import BookmarkButton from "../components/bookmark/BookmarkButton";
 import styles from "./page.module.css";
 
+type Bookmark = {
+  id: string;
+  user_id: string;
+  recipe_id: string;
+  created_at: string;
+  recipes: {
+    thumb?: string | null;
+    title?: string;
+    cooking_time?: string;
+    serving?: string;
+  };
+}
+
 export default function BookmarkPage() {
-  const [loading] = useState(true);
-  const DB: Array<{ id: string; src: string; alt: string; title: string; comments: string; time: string }> = [];
+  const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [isLogin, setIsLogin] = useState(null);
+  const [bookmark, setBookmark] = useState<Bookmark[]>([]);
+  const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
+
+  useEffect(() => {
+    const fetchBookmark = async () => {
+      setLoading(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+      setIsLogin(user);
+
+      const { data: bookmark, error: bookmarkError } = await supabase
+        .from("bookmark")
+        .select("*, recipes(*, review(count))")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+
+      if (bookmarkError) {
+        console.error(bookmarkError);
+        return;
+      } else {
+        setBookmark(bookmark || []);
+        setLoading(false);
+      }
+    };
+    fetchBookmark();
+  }, []);
+
+
 
   return (
     <main className={styles.viewport}>
@@ -22,44 +71,51 @@ export default function BookmarkPage() {
         />
 
         <section className={styles.content}>
-          <h2 className={styles.sectionTitle}>북마크한레시피</h2>
-          <p className={styles.countText}>{loading ? "북마크 로딩중.." : `${DB.length}개`}</p>
+          <p className={styles.countText}>
+            {loading ? "북마크 로딩중.." : (
+               bookmark.length === 0 
+               ? <></>
+               : <>북마크한 레시피 <span className={styles.countTextNum}>{bookmark.length}개</span></>
+            )}
+          </p>
 
           <div className={styles.recipeGrid}>
             {loading
               ? Array.from({ length: 4 }, (_, index) => (
-                  <article key={`bookmark-skeleton-${index}`} className={styles.recipeCard}>
-                    <div className={styles.recipeImageSkeleton} aria-hidden="true" />
-                    <div className={styles.recipeTitleSkeleton} aria-hidden="true" />
-                    <div className={styles.recipeMetaSkeleton} aria-hidden="true" />
-                  </article>
-                ))
-              : DB.length === 0
-                ? (
+                <article key={`bookmark-skeleton-${index}`} className={styles.recipeCard}>
+                  <div className={styles.recipeImageSkeleton} aria-hidden="true" />
+                  <div className={styles.recipeTitleSkeleton} aria-hidden="true" />
+                  <div className={styles.recipeMetaSkeleton} aria-hidden="true" />
+                </article>
+              ))
+              : !isLogin ? <p className={styles.emptyText}>북마크 기능은 로그인 후 이용 가능합니다.</p>
+                : bookmark.length === 0
+                  ? (
                     <p className={styles.emptyText}>북마크한 레시피가 없습니다.</p>
                   )
-              : DB.map((item) => (
-                  <article key={item.id} className={styles.recipeCard}>
-                    <div className={styles.recipeImageWrap}>
-                      <Image src={item.src} alt={item.alt} fill className={styles.recipeImage} />
-                      <button type="button" className={styles.bookmarkButton} aria-label="북마크">
-                        <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                      </button>
-                    </div>
+                  : bookmark.map((item) => (
+                    <article key={item.id} className={styles.recipeCard}>
+                      <Link href={`/recipes/${item.recipes.id}`}>
+                        <div className={styles.recipeImageWrap}>
+                          {hasThumb(item.recipes.thumb) ? (
+                            <Image src={item.recipes.thumb} alt={item.recipes.title} fill unoptimized className={styles.recipeImage} />
+                          ) : (
+                            <div className={styles.recipeImageSkeleton} aria-hidden="true" />
+                          )}
+                          <BookmarkButton itemId={String(item.recipe_id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                        </div>
 
-                    <h3 className={styles.recipeTitle}>{item.title}</h3>
-                    <div className={styles.recipeMeta}>
-                      <span>
-                        <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.time}
-                      </span>
-                      <span>
-                        <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                        {item.comments}
-                      </span>
-                    </div>
-                  </article>
-                ))}
+                      </Link>
+                      <h3 className={styles.recipeTitle}>{item.recipes.title}</h3>
+                      <div className={styles.recipeMeta}>
+                        <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{item.recipes.views}</span>
+                        {
+                          item.recipes.review?.[0]?.count > 0 &&
+                          (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{item.recipes.review[0].count}</span>)
+                        }
+                      </div>
+                    </article>
+                  ))}
           </div>
         </section>
 
