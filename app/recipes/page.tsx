@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
+import BookmarkButton from './../components/bookmark/BookmarkButton';
 import styles from "./page.module.css";
 
 type Recipe = {
@@ -83,9 +84,7 @@ export default function RecipesPage() {
                       ) : (
                         <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                       )}
-                      <button type="button" className={styles.bookmarkButton} aria-label="북마크">
-                        <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                      </button>
+                      <BookmarkButton itemId={String(recipe.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
                   </Link>
                   <div className={styles.recipeTextWrap}>

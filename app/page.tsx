@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import BottomNav from "./components/BottomNav";
 import LogoHeader from "./components/LogoHeader";
+import BookmarkButton from "./components/bookmark/BookmarkButton";
 import styles from "./page.module.css";
 import { createClient } from "./utils/supabase/client";
 
@@ -17,6 +18,8 @@ export default function HomePage() {
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
+
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -59,7 +62,11 @@ export default function HomePage() {
               ))
               : recipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
-                  <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  {hasThumb(item.thumb) ? (
+                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  ) : (
+                    <div className={styles.imageSkeleton} aria-hidden="true" />
+                  )}
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>
@@ -105,7 +112,11 @@ export default function HomePage() {
               : recipes.map((item) => (
                 <article key={item.id} className={styles.topRecipeCard}>
                   <div className={styles.squareImageWrap}>
-                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    {hasThumb(item.thumb) ? (
+                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    ) : (
+                      <div className={styles.imageSkeleton} aria-hidden="true" />
+                    )}
                   </div>
                   <h3 className={styles.recipeTitle}>
                     <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
@@ -136,9 +147,6 @@ export default function HomePage() {
                 <article key={`new-skeleton-${index}`} className={styles.newRecipeCard}>
                   <div className={styles.newRecipeImageWrap}>
                     <div className={styles.imageSkeleton} role="img" aria-label="레시피 이미지 로딩중" />
-                    <button type="button" className={styles.favoriteButton} aria-label="북마크">
-                      <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                    </button>
                   </div>
 
                   <h3 className={styles.recipeTitle}>제목 로딩중..</h3>
@@ -157,26 +165,28 @@ export default function HomePage() {
               : recipes.map((item) => (
                 <article key={item.id} className={styles.newRecipeCard}>
                   <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
-                  <div className={styles.newRecipeImageWrap}>
-                    <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                    <button type="button" className={styles.favoriteButton} aria-label="북마크">
-                      <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                    </button>
-                  </div>
+                    <div className={styles.newRecipeImageWrap}>
+                      {hasThumb(item.thumb) ? (
+                        <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      ) : (
+                        <div className={styles.imageSkeleton} aria-hidden="true" />
+                      )}
+                      <BookmarkButton itemId={String(item.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                    </div>
 
-                  <h3 className={styles.recipeTitle}>
+                    <h3 className={styles.recipeTitle}>
                       {item.title}
-                  </h3>
-                  <div className={styles.metaRow}>
-                    <span className={styles.metaItem}>
-                      <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                      {item.cooking_time}
-                    </span>
-                    <span className={styles.metaItem}>
-                      <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                      {item.serving}
-                    </span>
-                  </div>
+                    </h3>
+                    <div className={styles.metaRow}>
+                      <span className={styles.metaItem}>
+                        <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
+                        {item.cooking_time}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
+                        {item.serving}
+                      </span>
+                    </div>
                   </Link>
                 </article>
               ))}

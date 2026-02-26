@@ -91,7 +91,6 @@
   background-size: 16px 20px;
   background-position: center center;
   background-repeat: no-repeat;
-
 }
 
 .hidden {
@@ -104,6 +103,32 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
+}
+
+.recipeEditDel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.recipeEditDel a {
+  display: flex;
+  align-items: center;
+}
+.recipeEditDel a, 
+.recipeEditDel button {
+  font-family: inherit;
+  background: transparent;
+  font-size: var(--body2);
+  color: var(--primary);
+  outline: none;
+  border: 0;
+  text-decoration: none;
+  line-height: 1;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
 }
 
 .detailTitle {

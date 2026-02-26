@@ -59,7 +59,7 @@ export default function MyPage() {
       //작성레시피
       const { data: recipes, error: recipesError } = await supabase
         .from("recipes")
-        .select()
+        .select("*, bookmark(count)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -154,26 +154,25 @@ export default function MyPage() {
                   <p className={styles.emptyText}>아직 작성한 레시피가 없습니다</p>
                 )
                 : myRecipes.map((recipe) => (
-                  <Link href={`/recipes/${recipe.id}`} key={recipe.id}>
-                    <article className={styles.recipeCard}>
+                  <article key={recipe.id} className={styles.recipeCard}>
+                      <Link href={`/recipes/${recipe.id}`}>
                       <div className={styles.recipeImageWrap}>
                         {recipe.thumb &&
                           <Image
                             src={recipe.thumb}
                             alt={recipe.title}
                             fill className={styles.recipeImage}
-                          />
-                        }
+                          />}
                         {recipe.isBest && <span className={styles.bestBadge}>Best</span>}
                       </div>
+                      </Link>
                       <h4 className={styles.recipeTitle}>{recipe.title}</h4>
                       <div className={styles.recipeMeta}>
                         <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
-                        {/* css확인 차 임시로 id값 넣음 */}
-                        <span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.id}</span>
+                        <span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark.length}</span>
                       </div>
                     </article>
-                  </Link>
+                  
                 ))}
           </div>
         </section>
