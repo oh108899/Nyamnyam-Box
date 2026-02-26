@@ -91,13 +91,16 @@ export default function HomePage() {
               ))
               : pickRecipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
-                  {hasThumb(item.thumb) ? (
-                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  {hasThumb(item.thumb) 
+                  ? (
+                    <>
+                      <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                    </>
                   ) : (
                     <div className={styles.imageSkeleton} aria-hidden="true" />
                   )}
-                  <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                  {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>

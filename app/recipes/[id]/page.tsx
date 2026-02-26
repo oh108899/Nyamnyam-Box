@@ -44,9 +44,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
               <span className={styles.hidden}>뒤로가기</span>
             </Link>
             <h1 className={styles.headerTitle}>레시피를 찾을 수 없습니다</h1>
-            <button className={styles.buttonBg}>
-              <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
-            </button>
           </header>
         </div>
       </main>
