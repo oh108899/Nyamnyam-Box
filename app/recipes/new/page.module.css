@@ -58,6 +58,12 @@
   padding: 0;
 }
 
+.completeButton:disabled,
+.bottomActionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .tabBar {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -384,4 +390,14 @@
   white-space: nowrap;
   direction: ltr;
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.shareAgreeLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-black);
+  font-size: var(--body2);
+  font-weight: 500;
+  line-height: 1.4;
 }

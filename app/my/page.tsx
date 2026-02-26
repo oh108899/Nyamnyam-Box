@@ -12,6 +12,7 @@ type MyRecipe = {
   id: string;
   image: string;
   thumb: string | null;
+  is_AI: boolean;
   title: string;
   views: string;
   likes: string;
@@ -158,6 +159,7 @@ export default function MyPage() {
                   <Link href={`/recipes/${recipe.id}`} key={recipe.id}>
                     <article className={styles.recipeCard}>
                       <div className={styles.recipeImageWrap}>
+                        {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                         {recipe.thumb &&
                           <Image
                             src={recipe.thumb}

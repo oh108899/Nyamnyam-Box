@@ -9,7 +9,7 @@ import styles from "./page.module.css";
 import { createClient } from "./utils/supabase/client";
 
 type Recipe = {
-  id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string
+  id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string; is_AI: boolean
 };
 
 export default function HomePage() {
@@ -60,6 +60,7 @@ export default function HomePage() {
               : recipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
                   <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                  {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>
@@ -106,6 +107,7 @@ export default function HomePage() {
                 <article key={item.id} className={styles.topRecipeCard}>
                   <div className={styles.squareImageWrap}>
                     <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                   </div>
                   <h3 className={styles.recipeTitle}>
                     <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
@@ -159,6 +161,7 @@ export default function HomePage() {
                   <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
                   <div className={styles.newRecipeImageWrap}>
                     <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                     <button type="button" className={styles.favoriteButton} aria-label="북마크">
                       <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
                     </button>

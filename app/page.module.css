@@ -148,6 +148,20 @@
   padding: 4px 7px;
 }
 
+.aiBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 3;
+  border-radius: 9999px;
+  background: #2f7cff;
+  color: #ffffff;
+  font-size: var(--desc);
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 4px 8px;
+}
+
 .pickTitle {
   margin-top: 8px;
   color: #ffffff;

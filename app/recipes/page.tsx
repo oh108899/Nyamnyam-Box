@@ -12,6 +12,7 @@ type Recipe = {
   id: number;
   title: string;
   thumb: string | null;
+  is_AI: boolean;
   views: number | null;
   review: { count: number }[] | null;
 };
@@ -27,7 +28,7 @@ export default function RecipesPage() {
 
       const { data, error } = await supabase
         .from("recipes")
-        .select("id, title, thumb, views, review(count)");
+        .select("id, title, thumb, is_AI, views, review(count)");
       if (error) {
         console.error(error);
       } else {
@@ -72,6 +73,7 @@ export default function RecipesPage() {
                 <article key={recipe.id} className={styles.recipeCard}>
                   <Link href={`/recipes/${recipe.id}`}>
                     <div className={styles.recipeImageWrap}>
+                      {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                       {recipe.thumb ? (
                         <Image src={recipe.thumb} alt={recipe.title} fill unoptimized className={styles.recipeImage} />
                       ) : (

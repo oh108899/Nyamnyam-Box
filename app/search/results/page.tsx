@@ -13,6 +13,7 @@ type RecipeRow = {
   id: number;
   title: string;
   image: string | null;
+  is_AI: boolean;
   time: string | number | null;
   cooking_time: string | number | null;
   description?: string | null;
@@ -40,7 +41,7 @@ export default function SearchResultsPage() {
 
       let query = supabase
         .from("recipes")
-        .select("id,title,image,time,cooking_time,description")
+        .select("id,title,image,is_AI,time,cooking_time,description")
         .limit(50);
 
       if (trimmed) {
@@ -116,9 +117,10 @@ export default function SearchResultsPage() {
               : results.map((r) => (
                 <Link key={r.id} href={`/recipes/${r.id}`} className={styles.resultCard}>
                   <div className={styles.resultImageWrap}>
-                    {r.thumb ? (
+                    {r.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                    {r.image ? (
                       <Image
-                        src={r.thumb}
+                        src={r.image}
                         alt={r.title}
                         fill
                         sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
