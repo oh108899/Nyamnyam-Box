@@ -9,6 +9,7 @@ type ReviewRow = {
   id: number;
   user_id: string;
   recipe_id: number;
+  nick_name: string;
   comment: string;
   created_at: string;
   updated_at: string | null;
@@ -26,9 +27,16 @@ type ClassNames = {
   commentsContext: string;
   commentsWrite: string;
   commentsPreContext: string;
+  commentsContent: string;
+  commentsEditButton: string;
+  commentsEditButtonConfirm: string;
+  commentsEditButtonCancle: string;
 };
 
-type Me = { id: string };
+type Me = {
+  id: string;
+  nick_name: string;
+};
 
 export default function CommentsClient({
   recipeId,

@@ -28,6 +28,12 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     .eq("id", id)
     .single();
 
+  const views = recipe?.views ?? 0;
+  const { error: updateError } = await supabase
+    .from("recipes")
+    .update({ views: views + 1 })
+    .eq("id", id);
+
   if (error || !recipe) {
     return (
       <main className={styles.viewport}>
