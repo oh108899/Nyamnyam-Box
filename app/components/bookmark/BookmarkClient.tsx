@@ -29,7 +29,7 @@ export function useBookmark(itemId: string) {
   const handleToggleBookmark = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      alert("북마크 기능은 로그인 후 이용 가능합니다.")  // 추가
+      alert("북마크 기능은 로그인 후 이용 가능합니다.")
       return;
     }
 

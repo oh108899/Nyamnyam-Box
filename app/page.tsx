@@ -91,16 +91,13 @@ export default function HomePage() {
               ))
               : pickRecipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
-<<<<<<< HEAD
                   {hasThumb(item.thumb) ? (
                     <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                   ) : (
                     <div className={styles.imageSkeleton} aria-hidden="true" />
                   )}
-=======
                   <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
                   {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
->>>>>>> main
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>
                     <span className={styles.pickBadge}>Pick!</span>
@@ -143,16 +140,14 @@ export default function HomePage() {
               : topRecipes.map((item) => (
                 <article key={item.id} className={styles.topRecipeCard}>
                   <div className={styles.squareImageWrap}>
-<<<<<<< HEAD
                     {hasThumb(item.thumb) ? (
-                      <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                      <>
+                        <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                        {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                      </>
                     ) : (
                       <div className={styles.imageSkeleton} aria-hidden="true" />
                     )}
-=======
-                    <Image src={item.thumb} alt={item.title} fill className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
->>>>>>> main
                   </div>
                   <h3 className={styles.recipeTitle}>
                     <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
@@ -206,7 +201,6 @@ export default function HomePage() {
               : newRecipes.map((item) => (
                 <article key={item.id} className={styles.newRecipeCard}>
                   <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
-<<<<<<< HEAD
                     <div className={styles.newRecipeImageWrap}>
                       {hasThumb(item.thumb) ? (
                         <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
@@ -215,15 +209,6 @@ export default function HomePage() {
                       )}
                       <BookmarkButton itemId={String(item.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
-=======
-                  <div className={styles.newRecipeImageWrap}>
-                    <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                    {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
-                    <button type="button" className={styles.favoriteButton} aria-label="북마크">
-                      <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                    </button>
-                  </div>
->>>>>>> main
 
                     <h3 className={styles.recipeTitle}>
                       {item.title}
