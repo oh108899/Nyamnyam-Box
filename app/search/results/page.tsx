@@ -116,9 +116,9 @@ export default function SearchResultsPage() {
               : results.map((r) => (
                 <Link key={r.id} href={`/recipes/${r.id}`} className={styles.resultCard}>
                   <div className={styles.resultImageWrap}>
-                    {r.image ? (
+                    {r.thumb ? (
                       <Image
-                        src={r.image}
+                        src={r.thumb}
                         alt={r.title}
                         fill
                         sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
