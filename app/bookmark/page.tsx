@@ -15,16 +15,19 @@ type Bookmark = {
   recipe_id: string;
   created_at: string;
   recipes: {
+    id: string;
     thumb?: string | null;
     title?: string;
     cooking_time?: string;
     serving?: string;
+    views?: number;
+    review?: { count: number }[];
   };
 }
 
 export default function BookmarkPage() {
   const [loading, setLoading] = useState(true);
-  const [isLogin, setIsLogin] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
   const [bookmark, setBookmark] = useState<Bookmark[]>([]);
   const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
   
@@ -40,7 +43,7 @@ export default function BookmarkPage() {
         setLoading(false);
         return;
       }
-      setIsLogin(user);
+      setIsLogin(true);
 
       const { data: bookmark, error: bookmarkError } = await supabase
         .from("bookmark")
@@ -50,6 +53,7 @@ export default function BookmarkPage() {
 
       if (bookmarkError) {
         console.error(bookmarkError);
+        setLoading(false);
         return;
       } else {
         setBookmark(bookmark || []);
