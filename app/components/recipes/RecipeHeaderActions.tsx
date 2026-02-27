@@ -13,12 +13,11 @@ interface Props {
 }
 
 export default function RecipeHeaderActions({ recipeId, recipeUserId, className }: Props) {
+  const supabase = createClient()
   const router = useRouter()
   const [myRecipe, setmyRecipe] = useState(false)
   
   useEffect(() => {
-    
-    const supabase = createClient()
     const fetchMe = async () => {
 
       const { data: { user } } = await supabase.auth.getUser();
