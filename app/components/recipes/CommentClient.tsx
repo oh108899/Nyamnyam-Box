@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "../../utils/supabase/client";
 import CommentActions, { CommentWriteButton } from "./CommentActions";
 
