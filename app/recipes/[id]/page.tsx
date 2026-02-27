@@ -46,9 +46,9 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
   
   const views = recipe?.views ?? 0;
   const { error: updateError } = await supabase
-    .from("recipes")
-    .update({ views: views + 1 })
-    .eq("id", id);
+  .rpc("increment_recipe_views_once", {
+  recipe_id: Number(id),
+});
 
     if (updateError) {
       console.error("조회수 업데이트 중 오류 발생:", updateError);
