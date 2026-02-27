@@ -17,6 +17,7 @@ type MyRecipe = {
   views: string;
   likes: string;
   isBest: boolean;
+  bookmark: { count: number }[];
 };
 
 type Profile = {
