@@ -13,7 +13,10 @@ export function useBookmark(itemId: string) {
 
     const check = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
       const { data } = await supabase
         .from("bookmark")
@@ -21,7 +24,7 @@ export function useBookmark(itemId: string) {
         .eq("user_id", user.id)
         .eq("recipe_id", itemId);
 
-      setIsBookmarked(data && data.length > 0);
+      setIsBookmarked((data?.length ?? 0) > 0);
       setLoading(false);
     };
     check();
