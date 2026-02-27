@@ -159,6 +159,11 @@ export default function WritePage() {
     if (aiGenerating || submitting) return;
 
     if (activeTab === "ai" && !aiGeneratedDraft) {
+      if (!aiTitle.trim()) {
+        alert("AI 레시피 생성을 위해 레시피 제목을 입력해주세요.");
+        return;
+      }
+
       setAiGenerating(true);
       const aiRecipe = await getAIRecipe();
       setAiGenerating(false);
@@ -211,6 +216,39 @@ export default function WritePage() {
       return;
     }
 
+    const trimmedTitle = title.trim();
+    const trimmedDescription = description.trim();
+
+    if (!trimmedTitle) {
+      alert("레시피 제목을 입력해주세요.");
+      return;
+    }
+
+    if (!trimmedDescription) {
+      alert("레시피 설명을 입력해주세요.");
+      return;
+    }
+
+    if (ingredients.length === 0 || ingredients.some((item) => !item.name.trim() || !item.qty.trim())) {
+      alert("재료명과 양을 빈칸 없이 모두 입력해주세요.");
+      return;
+    }
+
+    if (steps.length === 0 || steps.some((step) => !step.description.trim())) {
+      alert("요리 순서를 빈칸 없이 모두 입력해주세요.");
+      return;
+    }
+
+    const ingredientRows = ingredients.map((item) => ({
+      name: item.name.trim(),
+      qty: item.qty.trim(),
+    }));
+
+    const normalizedSteps = steps.map((step) => ({
+      ...step,
+      description: step.description.trim(),
+    }));
+
     setSubmitting(true);
 
     const {
@@ -244,8 +282,8 @@ export default function WritePage() {
     }
 
     const recipePayload = {
-      title: title,
-      desc: description,
+      title: trimmedTitle,
+      desc: trimmedDescription,
       thumb: thumbUrl,
       difficulty: difficulty,
       cooking_time: time,
@@ -266,16 +304,14 @@ export default function WritePage() {
       return;
     }
 
-    const ingredientRows = ingredients
-      .filter((item) => item.name.trim() && item.qty.trim())
-      .map((item) => ({
-        recipe_id: savedRecipe.id,
-        name: item.name.trim(),
-        qty: item.qty.trim(),
-      }));
+    const ingredientInsertRows = ingredientRows.map((item) => ({
+      recipe_id: savedRecipe.id,
+      name: item.name,
+      qty: item.qty,
+    }));
 
-    if (ingredientRows.length > 0) {
-      const { error: ingredientError } = await supabase.from("ingredients").insert(ingredientRows);
+    if (ingredientInsertRows.length > 0) {
+      const { error: ingredientError } = await supabase.from("ingredients").insert(ingredientInsertRows);
 
       if (ingredientError) {
         console.error(ingredientError);
@@ -284,11 +320,10 @@ export default function WritePage() {
       }
     }
 
-    const filteredSteps = steps.filter((step) => step.description.trim());
     const stepRows: Array<{ recipe_id: number; step_num: number; content: string; img_url: string }> = [];
 
-    for (let index = 0; index < filteredSteps.length; index += 1) {
-      const step = filteredSteps[index];
+    for (let index = 0; index < normalizedSteps.length; index += 1) {
+      const step = normalizedSteps[index];
       let stepImageUrl = "";
 
       if (step.imageFile) {
@@ -313,7 +348,7 @@ export default function WritePage() {
       stepRows.push({
         recipe_id: savedRecipe.id,
         step_num: index + 1,
-        content: step.description.trim(),
+        content: step.description,
         img_url: stepImageUrl,
       });
     }
@@ -341,17 +376,9 @@ export default function WritePage() {
       <div className={styles.page}>
         <header className={styles.header}>
           <button type="button" onClick={() => router.back()} className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIcon}>←</span>
+            <span className={styles.headerIconBack} aria-hidden="true"></span>
           </button>
           <h1 className={styles.headerTitle}>레시피 작성</h1>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className={styles.completeButton}
-            disabled={aiGenerating || submitting || (aiGeneratedDraft && !aiShareAgreed)}
-          >
-            완료
-          </button>
         </header>
 
         <WriteTabs
