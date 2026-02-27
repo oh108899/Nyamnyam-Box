@@ -17,12 +17,14 @@ type MyRecipe = {
   views: string;
   likes: string;
   isBest: boolean;
+  bookmark?: { count: number; }[] | null;
 };
 
 type Profile = {
   id: string;
   nick_name: string;
   email: string;
+  avatar_url: string;
 }
 
 export default function MyPage() {
@@ -58,7 +60,7 @@ export default function MyPage() {
         setProfile(profile);
       }
 
-      //작성레시피
+      //작성레시피+북마크
       const { data: recipes, error: recipesError } = await supabase
         .from("recipes")
         .select("*, bookmark(count)")
@@ -76,7 +78,7 @@ export default function MyPage() {
       // console.log(profile);
     };
     fetchProfile();
-  }, []);
+  }, [router, supabase]);
 
 
   const handleLogout = async () => {
@@ -129,11 +131,18 @@ export default function MyPage() {
             : profile &&
             (
               <>
-                <div className={styles.profileAvatar} />
-                <div className={styles.profileInfo}>
-                  <h2 className={styles.profileName}>{profile.nick_name}</h2>
-                  <p className={styles.profileMeta}>{profile.email}</p>
-                </div>
+                    <div className={styles.profileAvatar}>
+                    <Image
+                      src={profile.avatar_url}
+                      width={80}
+                      height={80}
+                      alt=""
+                    />
+                    </div>
+                  <div className={styles.profileInfo}>
+                    <h2 className={styles.profileName}>{profile.nick_name}</h2>
+                    <p className={styles.profileMeta}>{profile.email}</p>
+                  </div>
               </>
             )
           }
@@ -157,7 +166,7 @@ export default function MyPage() {
                 )
                 : myRecipes.map((recipe) => (
                   <article key={recipe.id} className={styles.recipeCard}>
-                      <Link href={`/recipes/${recipe.id}`}>
+                    <Link href={`/recipes/${recipe.id}`}>
                       <div className={styles.recipeImageWrap}>
                         {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                         {recipe.thumb &&
@@ -168,14 +177,16 @@ export default function MyPage() {
                           />}
                         {recipe.isBest && <span className={styles.bestBadge}>Best</span>}
                       </div>
-                      </Link>
-                      <h4 className={styles.recipeTitle}>{recipe.title}</h4>
-                      <div className={styles.recipeMeta}>
-                        <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
-                        <span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark.length}</span>
-                      </div>
-                    </article>
-                  
+                    </Link>
+                    <h4 className={styles.recipeTitle}>{recipe.title}</h4>
+                    <div className={styles.recipeMeta}>
+                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
+
+                      {(recipe.bookmark?.[0]?.count ?? 0) > 0 &&
+                        (<span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark?.[0]?.count ?? 0}</span>)}
+                    </div>
+                  </article>
+
                 ))}
           </div>
         </section>
@@ -189,6 +200,6 @@ export default function MyPage() {
 
         <BottomNav activeTab="my" />
       </div>
-    </main>
+    </main >
   );
 }
