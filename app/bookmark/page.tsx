@@ -101,6 +101,7 @@ export default function BookmarkPage() {
                     (() => {
                       const thumbSrc = item.recipes.thumb?.trim();
                       const recipeTitle = item.recipes.title ?? "레시피";
+                      const reviewCount = item.recipes.review?.[0]?.count ?? 0;
 
                       return (
                     <article key={item.id} className={styles.recipeCard}>
@@ -118,10 +119,9 @@ export default function BookmarkPage() {
                       <h3 className={styles.recipeTitle}>{recipeTitle}</h3>
                       <div className={styles.recipeMeta}>
                         <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{item.recipes.views}</span>
-                        {
-                          item.recipes.review?.[0]?.count > 0 &&
-                          (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{item.recipes.review[0].count}</span>)
-                        }
+                        {reviewCount > 0 && (
+                          <span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{reviewCount}</span>
+                        )}
                       </div>
                     </article>
                       );
