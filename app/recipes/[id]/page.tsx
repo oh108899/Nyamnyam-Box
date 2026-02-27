@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import CommentClient from "../../components/recipes/CommentClient";
-import styles from "./page.module.css";
 import { createClient } from "../../utils/supabase/client";
+import RecipeHeaderActions from './../../components/recipes/RecipeHeaderActions';
+import styles from "./page.module.css";
 
 type IngredientRow = {
   id: number;
@@ -19,6 +20,7 @@ type StepRow = {
 
 export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient();
+
   const { id } = await params;
   const { data: recipe, error } = await supabase
     .from("recipes")
@@ -42,9 +44,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
               <span className={styles.hidden}>뒤로가기</span>
             </Link>
             <h1 className={styles.headerTitle}>레시피를 찾을 수 없습니다</h1>
-            <button className={styles.buttonBg}>
-              <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
-            </button>
           </header>
         </div>
       </main>
@@ -78,9 +77,9 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
             <span className={styles.hidden}>뒤로가기</span>
           </Link>
           <h1 className={styles.headerTitle}>{recipe.title}</h1>
-          <button className={styles.buttonBg}>
-            <p className={styles.bookmarkButton}><span className={styles.hidden}>북마크</span></p>
-          </button>
+          <RecipeHeaderActions recipeId={String(recipe.id)} recipeUserId={recipe.user_id} className={styles.recipeEditDel} />
+
+          {/* 내 게시물 아니면 북마크, 로그인 후 내 게시물이면 수정, 삭제 버튼*/}
         </header>
 
         <section className={styles.section}>
