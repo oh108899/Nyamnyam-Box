@@ -96,7 +96,6 @@ export default function CommentsClient({
         console.error("댓글 로딩 에러:", error);
         return;
       }
-
       setReviews((data ?? []) as ReviewRow[]);
     };
 

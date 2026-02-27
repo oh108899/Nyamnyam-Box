@@ -43,16 +43,16 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
       </main>
     );
   }
-  
+
   const views = recipe?.views ?? 0;
   const { error: updateError } = await supabase
     .from("recipes")
     .update({ views: views + 1 })
     .eq("id", id);
 
-    if (updateError) {
-      console.error("조회수 업데이트 중 오류 발생:", updateError);
-    }
+  if (updateError) {
+    console.error("조회수 업데이트 중 오류 발생:", updateError);
+  }
 
   const { data: ingredients } = await supabase
     .from("ingredients")
@@ -84,6 +84,7 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
 
         <section className={styles.section}>
           <figure className={styles.detailTumbnail}>
+            {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
             {recipe.thumb ? (
               <Image
                 src={recipe.thumb}

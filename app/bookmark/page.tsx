@@ -15,18 +15,20 @@ type Bookmark = {
   recipe_id: string;
   created_at: string;
   recipes: {
+    id: string;
     thumb?: string | null;
     title?: string;
     cooking_time?: string;
     serving?: string;
+    views?: number;
+    review?: { count: number }[];
   };
 }
 
 export default function BookmarkPage() {
   const [loading, setLoading] = useState(true);
-  const [isLogin, setIsLogin] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
   const [bookmark, setBookmark] = useState<Bookmark[]>([]);
-  const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
   
   useEffect(() => {
     const supabase = createClient();
@@ -40,7 +42,7 @@ export default function BookmarkPage() {
         setLoading(false);
         return;
       }
-      setIsLogin(user);
+      setIsLogin(true);
 
       const { data: bookmark, error: bookmarkError } = await supabase
         .from("bookmark")
@@ -50,6 +52,7 @@ export default function BookmarkPage() {
 
       if (bookmarkError) {
         console.error(bookmarkError);
+        setLoading(false);
         return;
       } else {
         setBookmark(bookmark || []);
@@ -95,11 +98,17 @@ export default function BookmarkPage() {
                     <p className={styles.emptyText}>북마크한 레시피가 없습니다.</p>
                   )
                   : bookmark.map((item) => (
+                    (() => {
+                      const thumbSrc = item.recipes.thumb?.trim();
+                      const recipeTitle = item.recipes.title ?? "레시피";
+                      const reviewCount = item.recipes.review?.[0]?.count ?? 0;
+
+                      return (
                     <article key={item.id} className={styles.recipeCard}>
                       <Link href={`/recipes/${item.recipes.id}`}>
                         <div className={styles.recipeImageWrap}>
-                          {hasThumb(item.recipes.thumb) ? (
-                            <Image src={item.recipes.thumb} alt={item.recipes.title} fill unoptimized className={styles.recipeImage} />
+                          {thumbSrc ? (
+                            <Image src={thumbSrc} alt={recipeTitle} fill unoptimized className={styles.recipeImage} />
                           ) : (
                             <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                           )}
@@ -107,15 +116,16 @@ export default function BookmarkPage() {
                         </div>
 
                       </Link>
-                      <h3 className={styles.recipeTitle}>{item.recipes.title}</h3>
+                      <h3 className={styles.recipeTitle}>{recipeTitle}</h3>
                       <div className={styles.recipeMeta}>
                         <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{item.recipes.views}</span>
-                        {
-                          item.recipes.review?.[0]?.count > 0 &&
-                          (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{item.recipes.review[0].count}</span>)
-                        }
+                        {reviewCount > 0 && (
+                          <span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{reviewCount}</span>
+                        )}
                       </div>
                     </article>
+                      );
+                    })()
                   ))}
           </div>
         </section>
