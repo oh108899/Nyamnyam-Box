@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '../../utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import BookmarkButton from '../bookmark/BookmarkButton'
+import type { MouseEvent } from 'react'
 
 interface Props {
   recipeId: string
@@ -28,7 +29,7 @@ export default function RecipeHeaderActions({ recipeId, recipeUserId, className 
 
   }, [recipeUserId])
 
-  const handleRecipeDel = async(e) => {
+  const handleRecipeDel = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!confirm("레시피를 삭제할까요?")) return;
