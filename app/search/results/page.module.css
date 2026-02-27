@@ -3,7 +3,7 @@
   background: var(--bg-color);
 }
 
-:global(a[aria-label="검색"]) {
+.header :global(a[aria-label="검색"]) {
   display: none;
 }
 
