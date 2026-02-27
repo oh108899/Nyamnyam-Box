@@ -38,6 +38,8 @@ type Me = {
   nick_name: string;
 };
 
+const supabase = createClient(); 
+
 export default function CommentsClient({
   recipeId,
   classNames,
@@ -45,8 +47,6 @@ export default function CommentsClient({
   recipeId: number;
   classNames: ClassNames;
 }) {
-  const supabase = useMemo(() => createClient(), []);
-
   const [me, setMe] = useState<Me | null>(null);
   const [reviews, setReviews] = useState<ReviewRow[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -79,7 +79,7 @@ export default function CommentsClient({
     };
 
     fetchMe();
-  }, [supabase]);
+  }, [recipeId]);
 
   // 댓글 가져오기
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function CommentsClient({
     };
 
     fetchReviews();
-  }, [recipeId, supabase]);
+  }, [recipeId]);
 
 
   // 수정 시작

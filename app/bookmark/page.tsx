@@ -23,13 +23,14 @@ type Bookmark = {
 }
 
 export default function BookmarkPage() {
-  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(null);
   const [bookmark, setBookmark] = useState<Bookmark[]>([]);
   const hasThumb = (thumb?: string | null) => Boolean(thumb?.trim());
-
+  
   useEffect(() => {
+    const supabase = createClient();
+    
     const fetchBookmark = async () => {
       setLoading(true);
 

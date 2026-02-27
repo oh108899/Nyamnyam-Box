@@ -5,11 +5,12 @@ import { createClient } from "../../utils/supabase/client";
 
 
 export function useBookmark(itemId: string) {
-  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  
   useEffect(() => {
+    const supabase = createClient();
+
     const check = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -27,6 +28,9 @@ export function useBookmark(itemId: string) {
   }, [itemId]);
 
   const handleToggleBookmark = async () => {
+    
+    const supabase = createClient();
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       alert("북마크 기능은 로그인 후 이용 가능합니다.")
