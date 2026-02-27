@@ -21,7 +21,16 @@ export default function BookmarkButton({ itemId, className, imageClassName }: Pr
   }
 
   if (loading) return (
-    <button className={className} aria-label="북마크 로딩중" disabled></button>
+    <button onClick={handleClick} className={className}>
+      <Image
+        src="/images/bookmark.svg"
+        alt=""
+        width={13}
+        height={16}
+        aria-hidden="true"
+        className={imageClassName}
+      />
+    </button>
   )
 
   return (

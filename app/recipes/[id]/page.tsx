@@ -28,12 +28,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     .eq("id", id)
     .single();
 
-  const views = recipe?.views ?? 0;
-  const { error: updateError } = await supabase
-    .from("recipes")
-    .update({ views: views + 1 })
-    .eq("id", id);
-
   if (error || !recipe) {
     return (
       <main className={styles.viewport}>
@@ -49,6 +43,16 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
       </main>
     );
   }
+  
+  const views = recipe?.views ?? 0;
+  const { error: updateError } = await supabase
+    .from("recipes")
+    .update({ views: views + 1 })
+    .eq("id", id);
+
+    if (updateError) {
+      console.error("조회수 업데이트 중 오류 발생:", updateError);
+    }
 
   const { data: ingredients } = await supabase
     .from("ingredients")
@@ -61,12 +65,8 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     .eq("recipe_id", id)
     .order("step_num", { ascending: true });
 
-  console.log(ingredients, steps);
   const ingredientRows = (ingredients ?? []) as IngredientRow[];
   const stepRows = (steps ?? []) as StepRow[];
-
-  console.log("stepRows", stepRows);
-
 
   return (
     <main className={styles.viewport}>
