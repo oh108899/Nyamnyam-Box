@@ -5,33 +5,26 @@ import { useBookmark } from "./BookmarkClient";
 import styles from "./BookmarkButton.module.css";
 
 interface Props {
-  itemId: string
-  className?: string
-  imageClassName?: string
+  itemId: number | string;
+  className?: string;
+  imageClassName?: string;
+  onToggle?: (isBookmarked: boolean) => void;
 }
 
-export default function BookmarkButton({ itemId, className, imageClassName }: Props) {
-  const { isBookmarked, handleToggleBookmark, loading } = useBookmark(itemId)
+export default function BookmarkButton({ itemId, className, imageClassName, onToggle }: Props) {
+  const { isBookmarked, handleToggleBookmark, loading } = useBookmark(itemId);
 
   // Link 막기
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    handleToggleBookmark()
+    handleToggleBookmark().then(()=>{
+      onToggle?.(!isBookmarked) //bookmark 해제 시 전달
+    })
   }
 
-  if (loading) return (
-    <button onClick={handleClick} className={className}>
-      <Image
-        src="/images/bookmark.svg"
-        alt=""
-        width={13}
-        height={16}
-        aria-hidden="true"
-        className={imageClassName}
-      />
-    </button>
-  )
+  if (loading) 
+    return null;
 
   return (
     <button

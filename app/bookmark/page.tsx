@@ -113,9 +113,13 @@ export default function BookmarkPage() {
                               ) : (
                                 <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                               )}
-                              <BookmarkButton itemId={String(item.recipe_id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                              <BookmarkButton
+                                itemId={item.recipe_id}
+                                className={styles.BookmarkButton}
+                                imageClassName={styles.BookmarkIcon}
+                                onToggle={(isBookmark) => !isBookmark && setBookmark(prev => prev.filter(bf => bf.recipe_id !== item.recipe_id))}
+                              />
                             </div>
-
                           </Link>
                           <h3 className={styles.recipeTitle}>{recipeTitle}</h3>
                           <div className={styles.recipeMeta}>

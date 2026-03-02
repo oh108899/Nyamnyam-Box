@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "../../utils/supabase/client";
 
 
-export function useBookmark(itemId: string) {
+export function useBookmark(itemId: number | string) {
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
 

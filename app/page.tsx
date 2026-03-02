@@ -214,7 +214,7 @@ export default function HomePage() {
                       ) : (
                         <div className={styles.imageSkeleton} aria-hidden="true" />
                       )}
-                      <BookmarkButton itemId={String(item.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                      <BookmarkButton itemId={item.id} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
 
                     <h3 className={styles.recipeTitle}>

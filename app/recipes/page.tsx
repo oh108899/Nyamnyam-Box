@@ -81,7 +81,7 @@ export default function RecipesPage() {
                       ) : (
                         <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                       )}
-                      <BookmarkButton itemId={String(recipe.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                      <BookmarkButton itemId={recipe.id} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
                   </Link>
                   <div className={styles.recipeTextWrap}>
