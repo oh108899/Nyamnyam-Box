@@ -24,7 +24,7 @@ type Profile = {
   id: string;
   nick_name: string;
   email: string;
-  avatar_url: string;
+  avatar_url: string | null;
 }
 
 export default function MyPage() {
@@ -130,22 +130,29 @@ export default function MyPage() {
             </>)
             : profile &&
             (
-              <>
-                    <div className={styles.profileAvatar}>
-                    <Image
-                      src={profile.avatar_url}
-                      width={80}
-                      height={80}
-                      alt=""
-                    />
-                    </div>
-                  <div className={styles.profileInfo}>
-                    <h2 className={styles.profileName}>{profile.nick_name}</h2>
-                    <p className={styles.profileMeta}>{profile.email}</p>
-                  </div>
+              <>                    
+              <div className={styles.profileAvatar}>
+                <Image
+                  src={profile.avatar_url ?? `/images/profilePrm.svg`}
+                  width={80}
+                  height={80}
+                  alt=""
+                />
+              </div>
+                <div className={styles.profileInfo}>
+                  <h2 className={styles.profileName}>{profile.nick_name}</h2>
+                  <p className={styles.profileMeta}>{profile.email}</p>
+                </div>
               </>
             )
           }
+        </section>
+
+        <section className={styles.bottomActionWrap}>
+          <Link href="/recipes/new" className={styles.bottomActionButton}>
+            <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
+            레시피 작성하기
+          </Link>
         </section>
 
         <section className={styles.recipeSection}>
@@ -190,13 +197,6 @@ export default function MyPage() {
                 ))}
           </div>
         </section>
-
-        <div className={styles.bottomActionWrap}>
-          <Link href="/recipes/new" className={styles.bottomActionButton}>
-            <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
-            레시피 작성하기
-          </Link>
-        </div>
 
         <BottomNav activeTab="my" />
       </div>

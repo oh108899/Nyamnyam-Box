@@ -79,7 +79,7 @@
 }
 
 .profileAvatar {
-  background: #d3d3d3;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
