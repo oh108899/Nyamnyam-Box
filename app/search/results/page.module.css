@@ -9,7 +9,8 @@
 
 .page {
   position: relative;
-  width: min(100%, 375px);
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
   background: var(--bg-color);

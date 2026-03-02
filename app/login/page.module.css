@@ -5,7 +5,9 @@
 
 .page {
   display: flex;
-  width: min(100%, 375px);
+  position: relative;
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
   flex-direction: column;
@@ -42,6 +44,15 @@
 .headerIcon {
   font-size: 24px;
   line-height: 1;
+}
+.headerIconBack {
+  display: inline-flex;
+  width: 20px;
+  height: 19px;
+  align-items: center;
+  background-image: url("/images/back.svg");
+  background-position: left center;
+  background-size: 20px 19px;
 }
 
 .headerTitle {
@@ -115,7 +126,9 @@
 
 .loginCommon {
   width: 100%;
+  max-width: 375px;
   height: 48px;
+  margin: 0 auto;
   background-size: 100% auto;
   background-position: center center;
   border: 0;

@@ -91,6 +91,9 @@ body {
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
+a {
+  text-decoration: none;
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
