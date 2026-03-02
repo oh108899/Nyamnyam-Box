@@ -31,11 +31,10 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-<<<<<<< HEAD
-        redirectTo: "https://nyamnyam-box.vercel.app/",
-=======
-        redirectTo: `https://nyamnyam-box.vercel.app/my`,
->>>>>>> main
+        redirectTo: `/my`,
+        queryParams: {
+          prompt: "consent select_account", // 계정 선택 + 동의 창 표시
+        }
       },
     });
 
@@ -59,15 +58,6 @@ export default function Login() {
           <p className={styles.loginText}>SNS 계정으로 간편 로그인</p>
 
           <div className={styles.loginWrap}>
-
-            {/* 네이버 */}
-            <button
-              type="button"
-              disabled
-              className={`${styles.loginCommon} ${styles.loginNaver}`}
-              aria-label="네이버 아이디로 로그인"
-            >
-            </button>
 
             {/* 카카오 */}
             <button
