@@ -42,7 +42,7 @@ button {
 --white: rgba(255, 255, 255, 1);
 --solid: rgba(235, 235, 235, 1);
 --dark--primary: rgba(255, 155, 61, 1);
---dark---link: rgba(255, 134, 27, 1);
+--dark--link: rgba(255, 134, 27, 1);
 --dark--primary-bg: rgba(255, 155, 61, 0.20000000298023224);
 --dark--secondary: rgba(91, 196, 168, 1);
 --dark--secondary-bg: rgba(91, 196, 168, 0.20000000298023224);
@@ -98,7 +98,7 @@ a {
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: rgba(255, 155, 61, 1);
-    ---link: rgba(255, 134, 27, 1);
+    --link: rgba(255, 134, 27, 1);
     --primary-bg: rgba(255, 155, 61, 0.20000000298023224);
     --secondary: rgba(91, 196, 168, 1);
     --secondary-bg: rgba(91, 196, 168, 0.20000000298023224);

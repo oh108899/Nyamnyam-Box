@@ -98,9 +98,17 @@
   clip-path: inset(50%);
 }
 
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 .loginLogo {
-  max-width: 151px;
+
+  width: 151px;
   aspect-ratio: 37.75 / 8;
   margin: 54px auto;
   background-image: url("/images/logoLogin.svg");
@@ -134,9 +142,7 @@
   border: 0;
   outline: none;
 }
-.loginNaver {
-  background-image: url("/images/naverLogin.svg");
-}
+
 .loginKakao {
   background-image: url("/images/kakaoLogin.svg");
 }
