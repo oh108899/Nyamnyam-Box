@@ -46,9 +46,9 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
 
   const views = recipe?.views ?? 0;
   const { error: updateError } = await supabase
-    .from("recipes")
-    .update({ views: views + 1 })
-    .eq("id", id);
+  .rpc("increment_recipe_views_once", {
+  recipe_id: Number(id),
+});
 
   if (updateError) {
     console.error("조회수 업데이트 중 오류 발생:", updateError);
@@ -174,9 +174,9 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                       <div className={styles.stepNum}>{step.step_num}</div>
                       <div className={styles.stepBox}>
                         <p className={`${styles.detailBody1} ${styles.detailBold}`}>STEP {step.step_num}</p>
-                        <p className={styles.detailBody1}>{step.content}</p>
-                        <figure className={styles.setpImage}>
-                          {step.img_url ? (
+                        <p className={`${styles.detailBody1} ${styles.stepContent}`}>{step.content}</p>
+                        {step.img_url?.trim() ? (
+                          <figure className={styles.setpImage}>
                             <Image
                               src={step.img_url}
                               alt={`요리순서 ${step.step_num}`}
@@ -185,8 +185,8 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
                               sizes="(max-width: 768px) 100vw, 375px"
                               unoptimized
                             />
-                          ) : null}
-                        </figure>
+                          </figure>
+                        ) : null}
                       </div>
                     </li>
                   ))

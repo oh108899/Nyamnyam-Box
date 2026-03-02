@@ -31,7 +31,11 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
+<<<<<<< HEAD
         redirectTo: "https://nyamnyam-box.vercel.app/",
+=======
+        redirectTo: `https://nyamnyam-box.vercel.app/my`,
+>>>>>>> main
       },
     });
 

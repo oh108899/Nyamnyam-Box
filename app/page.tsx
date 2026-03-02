@@ -207,7 +207,10 @@ export default function HomePage() {
                   <Link href={`/recipes/${item.id}`} className={styles.titleLink}>
                     <div className={styles.newRecipeImageWrap}>
                       {hasThumb(item.thumb) ? (
-                        <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                        <>
+                          <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                          {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                        </>
                       ) : (
                         <div className={styles.imageSkeleton} aria-hidden="true" />
                       )}
