@@ -31,7 +31,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "/my",
+        redirectTo: "https://nyamnyam-box.vercel.app/",
       },
     });
 
@@ -45,12 +45,8 @@ export default function Login() {
     <main className={styles.viewport}>
       <div className={styles.page}>
         <header className={styles.header}>
-          <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIcon}>←</span>
-          </Link>
-
+          <Link href="/" className={`${styles.headerButton} ${styles.headerIconBack}`} aria-label="뒤로가기" />
           <h1 className={styles.headerTitle}>마이페이지</h1>
-
         </header>
 
         <section className={styles.login}>

@@ -7,13 +7,18 @@ import { createClient } from "../../utils/supabase/client";
 export function useBookmark(itemId: string) {
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  
+
   useEffect(() => {
     const supabase = createClient();
 
     const check = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      //유저가 아니면 종료
+      if (!user) {
+        setIsBookmarked(false)
+        setLoading(false);
+        return;
+      }
 
       const { data } = await supabase
         .from("bookmark")
@@ -21,14 +26,14 @@ export function useBookmark(itemId: string) {
         .eq("user_id", user.id)
         .eq("recipe_id", itemId);
 
-      setIsBookmarked(data && data.length > 0);
+      setIsBookmarked((data?.length ?? 0) > 0);
       setLoading(false);
     };
     check();
   }, [itemId]);
 
   const handleToggleBookmark = async () => {
-    
+
     const supabase = createClient();
 
     const { data: { user } } = await supabase.auth.getUser();

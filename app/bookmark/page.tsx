@@ -8,6 +8,7 @@ import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
 import BookmarkButton from "../components/bookmark/BookmarkButton";
 import styles from "./page.module.css";
+import FloatingButton from "../components/FloatingButton";
 
 type Bookmark = {
   id: string;
@@ -29,10 +30,10 @@ export default function BookmarkPage() {
   const [loading, setLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
   const [bookmark, setBookmark] = useState<Bookmark[]>([]);
-  
+
   useEffect(() => {
     const supabase = createClient();
-    
+
     const fetchBookmark = async () => {
       setLoading(true);
 
@@ -77,9 +78,9 @@ export default function BookmarkPage() {
         <section className={styles.content}>
           <p className={styles.countText}>
             {loading ? "북마크 로딩중.." : (
-               bookmark.length === 0 
-               ? <></>
-               : <>북마크한 레시피 <span className={styles.countTextNum}>{bookmark.length}개</span></>
+              bookmark?.length > 0
+                ? <>북마크한 레시피 <span className={styles.countTextNum}>{bookmark.length}개</span></>
+                : null
             )}
           </p>
 
@@ -104,36 +105,33 @@ export default function BookmarkPage() {
                       const reviewCount = item.recipes.review?.[0]?.count ?? 0;
 
                       return (
-                    <article key={item.id} className={styles.recipeCard}>
-                      <Link href={`/recipes/${item.recipes.id}`}>
-                        <div className={styles.recipeImageWrap}>
-                          {thumbSrc ? (
-                            <Image src={thumbSrc} alt={recipeTitle} fill unoptimized className={styles.recipeImage} />
-                          ) : (
-                            <div className={styles.recipeImageSkeleton} aria-hidden="true" />
-                          )}
-                          <BookmarkButton itemId={String(item.recipe_id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
-                        </div>
+                        <article key={item.id} className={styles.recipeCard}>
+                          <Link href={`/recipes/${item.recipes.id}`}>
+                            <div className={styles.recipeImageWrap}>
+                              {thumbSrc ? (
+                                <Image src={thumbSrc} alt={recipeTitle} fill unoptimized className={styles.recipeImage} />
+                              ) : (
+                                <div className={styles.recipeImageSkeleton} aria-hidden="true" />
+                              )}
+                              <BookmarkButton itemId={String(item.recipe_id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                            </div>
 
-                      </Link>
-                      <h3 className={styles.recipeTitle}>{recipeTitle}</h3>
-                      <div className={styles.recipeMeta}>
-                        <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{item.recipes.views}</span>
-                        {reviewCount > 0 && (
-                          <span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{reviewCount}</span>
-                        )}
-                      </div>
-                    </article>
+                          </Link>
+                          <h3 className={styles.recipeTitle}>{recipeTitle}</h3>
+                          <div className={styles.recipeMeta}>
+                            <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{item.recipes.views}</span>
+                            {reviewCount > 0 && (
+                              <span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{reviewCount}</span>
+                            )}
+                          </div>
+                        </article>
                       );
                     })()
                   ))}
           </div>
         </section>
 
-        <Link href="/recipes/new" className={styles.floatingButton} aria-label="글쓰기">
-          <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
-        </Link>
-
+        <FloatingButton />
         <BottomNav activeTab="bookmark" />
       </div>
     </main>
