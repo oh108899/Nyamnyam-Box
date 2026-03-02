@@ -329,6 +329,8 @@
 .commentsProfile {
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .commentsBox {
   flex: 1 0 1;
@@ -356,7 +358,9 @@
   -webkit-box-orient: vertical
 }
 .commentsMy {
-  min-width: 72px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 .commentsMy button {
   background: transparent;
@@ -365,6 +369,7 @@
   color: var(--text-gray);
   font-weight: 500;
   cursor: pointer;
+  padding: 0;
 }
 .commentsPreContext {
     min-height: 54px;
@@ -375,9 +380,6 @@
   font-size: var(--body2);
   line-height: 1.6;
   width: 100%;
-}
-.commentsContent {
-  margin-top: 12px;
 }
 .commentsContext {
   font-family: inherit;
