@@ -101,7 +101,7 @@ export default function MyPage() {
       <div className={styles.page}>
         <header className={styles.header}>
           <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIcon}>←</span>
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
           </Link>
 
           <h1 className={styles.headerTitle}>마이페이지</h1>

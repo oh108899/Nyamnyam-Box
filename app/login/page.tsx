@@ -31,7 +31,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `/my`,
+        redirectTo: `${window.location.origin}/my`,
         queryParams: {
           prompt: "consent select_account", // 계정 선택 + 동의 창 표시
         }

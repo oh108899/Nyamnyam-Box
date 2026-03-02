@@ -201,7 +201,7 @@ export default function CommentsClient({
         const isMine = me?.id === r.user_id;
         const isEditing = editingId === r.id;
         // 아바타 이미지 없으면 기본 프로필 이미지 사용
-        const isPorfile = r.profile.avatar_url ?? `/images/profilePrm.svg`;
+        const isPorfile = r.profile?.avatar_url ?? `/images/profilePrm.svg`;
 
         return (
           <div key={r.id} className={classNames.commentsWrap}>
