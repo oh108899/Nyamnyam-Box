@@ -59,13 +59,13 @@ function SearchResultsContent() {
         .limit(50);
 
       if (trimmed) {
-        query = query.or(`title.ilike.%${trimmed}%,description.ilike.%${trimmed}%`);
+        query = query.or(`title.ilike.%${trimmed}%,desc.ilike.%${trimmed}%`);
       }
 
       const { data, error } = await query;
-
+      console.log("fetchResults", { data, error });
       if (error) {
-        console.error(error);
+        console.error("fetchResults error:", error.message, error);
         setResults([]);
         return;
       }
@@ -145,7 +145,7 @@ function SearchResultsContent() {
                     )}
                   </div>
                   <h3 className={styles.resultTitle}>{r.title}</h3>
-                  <div className={styles.resultMeta}>{r.time ?? r.cooking_time ?? "-"}</div>
+                  <div className={styles.resultMeta}>{r.cooking_time}</div>
                 </Link>
               ))}
           </div>
