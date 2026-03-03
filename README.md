@@ -58,7 +58,7 @@ gantt
     웹접근성, 웹표준 검사   :after a3, 1d
 ```
 
-### 1.5 주요 기능
+### 1.4 주요 기능
 
 - 사용자 인증
 - 레시피 CLUD
@@ -66,6 +66,10 @@ gantt
 - supabase를 활용한 데이터 테이블, 스토리지 관리
 - 북마크 등 유저 편의 기능 구현
 - 댓글과 같은 커뮤니티 기능 구현
+
+### 1.5 ERD
+<img width="923" height="814" alt="Image" src="https://github.com/user-attachments/assets/655507b1-d03a-42c9-aac4-d4b92f5a45ec" />
+
 
 
 ## 2. 개발 환경 및 배포
