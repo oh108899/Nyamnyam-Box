@@ -8,9 +8,20 @@ const nextConfig: NextConfig = {
         hostname: "jprpbxjosrpfwnsslvlm.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
-      {
+      // 프로필 이미지 가져오기
+       {
         protocol: "https",
-        hostname: "example.com",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "img1.kakaocdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "k.kakaocdn.net",
         pathname: "/**",
       },
     ],

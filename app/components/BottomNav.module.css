@@ -1,10 +1,11 @@
 .bottomNav {
   position: fixed;
+  width: 100%;
   left: 50%;
   bottom: 0;
   z-index: 30;
   display: flex;
-  width: min(100%, 375px);
+
   height: 64px;
   transform: translateX(-50%);
   align-items: center;

@@ -5,7 +5,8 @@
 
 .page {
   position: relative;
-  width: min(100%, 375px);
+  width: 100%;
+  min-width: 320px;
   min-height: 100vh;
   margin: 0 auto;
   overflow-x: hidden;
@@ -55,17 +56,17 @@
 }
 
 .section {
-  margin-top: 22px;
+  margin-top: 27px;
   padding: 0 16px;
 }
 
 .sectionLargeGap {
-  margin-top: 28px;
+  margin-top: 27px;
   padding: 0 16px;
 }
 
 .sectionBottom {
-  margin-top: 24px;
+  margin-top: 27px;
   padding: 0 16px;
 }
 
@@ -79,8 +80,8 @@
 
 .horizontalScroll {
   display: flex;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 16px;
+  margin-top: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -193,6 +194,9 @@
 }
 
 .topRecipeCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
   width: 140px;
   flex-shrink: 0;
   scroll-snap-align: start;
@@ -213,6 +217,7 @@
   font-size: var(--body1_700);
   font-weight: 700;
   line-height: 1.3;
+  flex: 1;
 }
 
 .titleLink {
@@ -227,20 +232,22 @@
 }
 
 .metaItem {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 4px;
   color: var(--primary);
-  font-size: var(--body2);
+  font-size: var(--desc);
   font-weight: 500;
   line-height: 1.3;
+  position: relative;
+  z-index: 5;
 }
 
 .newRecipeGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 14px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .newRecipeCard {
@@ -275,24 +282,6 @@
 .BookmarkIcon {
   fill: transparent;
   filter: brightness(0) invert(1);
-}
-
-
-.floatingButton {
-  position: fixed;
-  right: max(16px, calc(50% - 171px));
-  bottom: 76px;
-  z-index: 20;
-  display: flex;
-  width: 52px;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 9999px;
-  background: var(--primary);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  padding: 0;
 }
 
 @media (max-width: 375px) {

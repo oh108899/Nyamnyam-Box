@@ -13,6 +13,9 @@ type ReviewRow = {
   comment: string;
   created_at: string;
   updated_at: string | null;
+  profile: {
+    avatar_url: string | null;
+  };
 };
 
 type ClassNames = {
@@ -38,7 +41,7 @@ type Me = {
   nick_name: string;
 };
 
-const supabase = createClient(); 
+const supabase = createClient();
 
 export default function CommentsClient({
   recipeId,
@@ -88,7 +91,7 @@ export default function CommentsClient({
     const fetchReviews = async () => {
       const { data, error } = await supabase
         .from("review")
-        .select("*")
+        .select("*, profile(avatar_url)")
         .eq("recipe_id", recipeId)
         .order("created_at", { ascending: true });
 
@@ -96,7 +99,6 @@ export default function CommentsClient({
         console.error("댓글 로딩 에러:", error);
         return;
       }
-
       setReviews((data ?? []) as ReviewRow[]);
     };
 
@@ -127,7 +129,7 @@ export default function CommentsClient({
       .from("review")
       .update({ comment, updated_at: new Date().toISOString() })
       .eq("id", editingId)
-      .select("*")
+      .select("*, profile(avatar_url)")
       .single();
 
     if (error) {
@@ -198,11 +200,13 @@ export default function CommentsClient({
       {reviews.map((r) => {
         const isMine = me?.id === r.user_id;
         const isEditing = editingId === r.id;
+        // 아바타 이미지 없으면 기본 프로필 이미지 사용
+        const isPorfile = r.profile?.avatar_url ?? `/images/profilePrm.svg`;
 
         return (
           <div key={r.id} className={classNames.commentsWrap}>
             <div className={classNames.commentsProfile}>
-              <Image src="/images/profilePrm.svg" alt="" width={40} height={40} />
+              <Image src={isPorfile} alt="" width={40} height={40} />
             </div>
 
             <div className={classNames.commentsBox}>

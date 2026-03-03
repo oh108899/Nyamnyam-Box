@@ -24,6 +24,7 @@ type Profile = {
   id: string;
   nick_name: string;
   email: string;
+  avatar_url: string | null;
 }
 
 export default function MyPage() {
@@ -59,7 +60,7 @@ export default function MyPage() {
         setProfile(profile);
       }
 
-      //작성레시피
+      //작성레시피+북마크
       const { data: recipes, error: recipesError } = await supabase
         .from("recipes")
         .select("*, bookmark(count)")
@@ -77,7 +78,7 @@ export default function MyPage() {
       // console.log(profile);
     };
     fetchProfile();
-  }, []);
+  }, [router, supabase]);
 
 
   const handleLogout = async () => {
@@ -100,7 +101,7 @@ export default function MyPage() {
       <div className={styles.page}>
         <header className={styles.header}>
           <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIcon}>←</span>
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
           </Link>
 
           <h1 className={styles.headerTitle}>마이페이지</h1>
@@ -129,8 +130,15 @@ export default function MyPage() {
             </>)
             : profile &&
             (
-              <>
-                <div className={styles.profileAvatar} />
+              <>                    
+              <div className={styles.profileAvatar}>
+                <Image
+                  src={profile.avatar_url ?? `/images/profilePrm.svg`}
+                  width={80}
+                  height={80}
+                  alt=""
+                />
+              </div>
                 <div className={styles.profileInfo}>
                   <h2 className={styles.profileName}>{profile.nick_name}</h2>
                   <p className={styles.profileMeta}>{profile.email}</p>
@@ -138,6 +146,13 @@ export default function MyPage() {
               </>
             )
           }
+        </section>
+
+        <section className={styles.bottomActionWrap}>
+          <Link href="/recipes/new" className={styles.bottomActionButton}>
+            <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
+            레시피 작성하기
+          </Link>
         </section>
 
         <section className={styles.recipeSection}>
@@ -158,7 +173,7 @@ export default function MyPage() {
                 )
                 : myRecipes.map((recipe) => (
                   <article key={recipe.id} className={styles.recipeCard}>
-                      <Link href={`/recipes/${recipe.id}`}>
+                    <Link href={`/recipes/${recipe.id}`}>
                       <div className={styles.recipeImageWrap}>
                         {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                         {recipe.thumb &&
@@ -169,27 +184,22 @@ export default function MyPage() {
                           />}
                         {recipe.isBest && <span className={styles.bestBadge}>Best</span>}
                       </div>
-                      </Link>
-                      <h4 className={styles.recipeTitle}>{recipe.title}</h4>
-                      <div className={styles.recipeMeta}>
-                        <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
-                        <span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark.length}</span>
-                      </div>
-                    </article>
-                  
+                    </Link>
+                    <h4 className={styles.recipeTitle}>{recipe.title}</h4>
+                    <div className={styles.recipeMeta}>
+                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
+
+                      {(recipe.bookmark?.[0]?.count ?? 0) > 0 &&
+                        (<span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark?.[0]?.count ?? 0}</span>)}
+                    </div>
+                  </article>
+
                 ))}
           </div>
         </section>
 
-        <div className={styles.bottomActionWrap}>
-          <Link href="/recipes/new" className={styles.bottomActionButton}>
-            <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
-            레시피 작성하기
-          </Link>
-        </div>
-
         <BottomNav activeTab="my" />
       </div>
-    </main>
+    </main >
   );
 }
