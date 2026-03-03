@@ -10,8 +10,13 @@
   transform: translateX(-50%);
   align-items: center;
   justify-content: space-around;
-  border-top: 1px solid #dfdfdf;
+  border-top: 1px solid var(--solid);
   background: var(--white);
+}
+@media (prefers-color-scheme: dark) {
+  .bottomNav {
+    border-top: 1px solid var(--primary);
+  }
 }
 
 .navItem {

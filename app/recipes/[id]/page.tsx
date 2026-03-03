@@ -35,9 +35,8 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
       <main className={styles.viewport}>
         <div className={styles.page}>
           <header className={styles.header}>
-            <Link href="/" className={styles.iconButton} aria-label="뒤로가기">
-              <span className={`${styles.headerIconBack}`} aria-hidden="true"></span>
-              <span className={styles.hidden}>뒤로가기</span>
+            <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
+              <Image src="/images/back.svg" alt="" width={20} height={19} />
             </Link>
             <h1 className={styles.headerTitle}>레시피를 찾을 수 없습니다</h1>
           </header>
@@ -64,9 +63,8 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
     <main className={styles.viewport}>
       <div className={styles.page}>
         <header className={styles.header}>
-          <Link href="/" className={styles.iconButton} aria-label="뒤로가기">
-            <span className={`${styles.headerIconBack}`} aria-hidden="true"></span>
-            <span className={styles.hidden}>뒤로가기</span>
+          <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
           </Link>
           <h1 className={styles.headerTitle}>{recipe.title}</h1>
           <RecipeHeaderActions recipeId={String(recipe.id)} recipeUserId={recipe.user_id} className={styles.recipeEditDel} />
@@ -93,7 +91,9 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
           <div className={`${styles.detailMenu} ${styles.detailContainer}`}>
             <div className={styles.detailMenuName}>
               <h2 className={styles.detailTitle}>{recipe.title}</h2>
-              <button className={styles.shareIcon}><span className={styles.hidden}>공유하기 버튼</span></button>
+              <button className={styles.shareIcon}>
+                <Image src="/images/share.svg" alt="" width={16} height={16} aria-label="공유하기버튼" />
+              </button>
             </div>
             <p className={styles.detailBody1}>{recipe.desc}</p>
           </div>

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import styles from "./page.module.css";
+import Image from "next/image";
 
 
 export default function Login() {
@@ -50,7 +51,9 @@ export default function Login() {
     <main className={styles.viewport}>
       <div className={styles.page}>
         <header className={styles.header}>
-          <Link href="/" className={`${styles.headerButton} ${styles.headerIconBack}`} aria-label="뒤로가기" />
+          <Link href="/" className={styles.headerButton} aria-label="뒤로가기">
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
+          </Link>
           <h1 className={styles.headerTitle}>마이페이지</h1>
         </header>
 
