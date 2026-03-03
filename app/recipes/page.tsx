@@ -1,3 +1,5 @@
+// 담당자 오세찬, 김진선
+
 "use client";
 
 import Image from "next/image";

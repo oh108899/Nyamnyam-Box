@@ -1,3 +1,5 @@
+// 담당자 오세찬
+
 import Image from "next/image";
 import Link from "next/link";
 import CommentClient from "../../components/recipes/CommentClient";
