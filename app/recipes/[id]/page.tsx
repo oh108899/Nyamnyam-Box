@@ -1,4 +1,8 @@
-// 담당자 오세찬
+/*
+Page: 레시피 상세 페이지
+담당자: 오세찬
+역할: 레시피 상세 페이지 구현
+*/
 
 import Image from "next/image";
 import Link from "next/link";
