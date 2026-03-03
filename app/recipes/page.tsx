@@ -41,7 +41,7 @@ export default function RecipesPage() {
 
       const { data, error } = await supabase
         .from("recipes")
-        .select("id, title, thumb, is_AI, views, review(count)");
+        .select("id, title, thumb, is_AI, review(count)");
       if (error) {
         console.error(error);
       } else {
