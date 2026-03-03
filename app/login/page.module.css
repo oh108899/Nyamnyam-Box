@@ -5,7 +5,9 @@
 
 .page {
   display: flex;
-  width: min(100%, 375px);
+  position: relative;
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
   flex-direction: column;
@@ -42,6 +44,15 @@
 .headerIcon {
   font-size: 24px;
   line-height: 1;
+}
+.headerIconBack {
+  display: inline-flex;
+  width: 20px;
+  height: 19px;
+  align-items: center;
+  background-image: url("/images/back.svg");
+  background-position: left center;
+  background-size: 20px 19px;
 }
 
 .headerTitle {
@@ -87,9 +98,17 @@
   clip-path: inset(50%);
 }
 
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 .loginLogo {
-  max-width: 151px;
+
+  width: 151px;
   aspect-ratio: 37.75 / 8;
   margin: 54px auto;
   background-image: url("/images/logoLogin.svg");
@@ -115,15 +134,15 @@
 
 .loginCommon {
   width: 100%;
+  max-width: 375px;
   height: 48px;
+  margin: 0 auto;
   background-size: 100% auto;
   background-position: center center;
   border: 0;
   outline: none;
 }
-.loginNaver {
-  background-image: url("/images/naverLogin.svg");
-}
+
 .loginKakao {
   background-image: url("/images/kakaoLogin.svg");
 }

@@ -4,16 +4,18 @@ import { useState, useEffect } from "react";
 import { createClient } from "../../utils/supabase/client";
 
 
-export function useBookmark(itemId: string) {
+export function useBookmark(itemId: number | string) {
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  
+
   useEffect(() => {
     const supabase = createClient();
 
     const check = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      //유저가 아니면 종료
       if (!user) {
+        setIsBookmarked(false)
         setLoading(false);
         return;
       }
@@ -31,7 +33,7 @@ export function useBookmark(itemId: string) {
   }, [itemId]);
 
   const handleToggleBookmark = async () => {
-    
+
     const supabase = createClient();
 
     const { data: { user } } = await supabase.auth.getUser();

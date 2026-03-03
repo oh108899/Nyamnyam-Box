@@ -19,14 +19,13 @@ export default function RecipeHeaderActions({ recipeId, recipeUserId, className 
   
   useEffect(() => {
     const fetchMe = async () => {
-
       const { data: { user } } = await supabase.auth.getUser();
       setmyRecipe(user?.id === recipeUserId)
     }
 
     fetchMe()
 
-  }, [recipeUserId])
+  }, [recipeUserId, supabase])
 
   const handleRecipeDel = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

@@ -8,6 +8,7 @@ import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
 import BookmarkButton from './../components/bookmark/BookmarkButton';
 import styles from "./page.module.css";
+import FloatingButton from "../components/FloatingButton";
 
 type Recipe = {
   id: number;
@@ -80,7 +81,7 @@ export default function RecipesPage() {
                       ) : (
                         <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                       )}
-                      <BookmarkButton itemId={String(recipe.id)} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                      <BookmarkButton itemId={recipe.id} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                     </div>
                   </Link>
                   <div className={styles.recipeTextWrap}>
@@ -98,10 +99,7 @@ export default function RecipesPage() {
           </div>
         </section>
 
-        <Link href="/recipes/new" className={styles.floatingButton} aria-label="글쓰기">
-          <Image src="/images/write.svg" alt="" width={19} height={20} aria-hidden="true" />
-        </Link>
-
+        <FloatingButton />
         <BottomNav activeTab="recipes" />
       </div>
     </main>
