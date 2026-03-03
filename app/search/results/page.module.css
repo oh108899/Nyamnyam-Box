@@ -1,6 +1,6 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .header :global(a[aria-label="검색"]) {
@@ -13,7 +13,6 @@
   min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }

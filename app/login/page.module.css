@@ -1,6 +1,6 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .page {
@@ -12,7 +12,6 @@
   margin: 0 auto;
   flex-direction: column;
   position: relative;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
@@ -67,7 +66,7 @@
 }
 
 .bottomActionWrap {
-  padding: 16px 16px 88px;
+  padding: 16px 16px;
 }
 
 .bottomActionButton {

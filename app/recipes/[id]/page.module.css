@@ -46,14 +46,15 @@
 
 .headerButton {
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border: 0;
   background: transparent;
+  color: var(--text-black);
+  text-decoration: none;
   padding: 0;
-
 }
 
 .headerTitle {
