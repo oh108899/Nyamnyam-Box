@@ -1,3 +1,5 @@
+// 담당자 오세찬
+
 "use client";
 
 import Image from "next/image";
@@ -41,9 +43,11 @@ export default function HomePage() {
         supabase.from("recipes").select(),
         supabase
           .from("recipes")
-          .select()
-          .order("views", { ascending: false })
-          .limit(10),
+          .select(`*,bookmark(count)`)
+          .order("count", {
+            foreignTable: "bookmark",
+            ascending: false,
+          }),
         supabase
           .from("recipes")
           .select()
@@ -92,15 +96,15 @@ export default function HomePage() {
               ))
               : pickRecipes.map((item) => (
                 <article key={item.id} className={styles.pickCard}>
-                  {hasThumb(item.thumb) 
-                  ? (
-                    <>
-                      <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
-                      {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
-                    </>
-                  ) : (
-                    <div className={styles.imageSkeleton} aria-hidden="true" />
-                  )}
+                  {hasThumb(item.thumb)
+                    ? (
+                      <>
+                        <Image src={item.thumb} alt={item.title} fill unoptimized className={styles.coverImage} sizes="(max-width: 768px) 100vw, 375px" />
+                        {item.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                      </>
+                    ) : (
+                      <div className={styles.imageSkeleton} aria-hidden="true" />
+                    )}
 
                   <div className={styles.pickGradient} />
                   <div className={styles.pickTextWrap}>

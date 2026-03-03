@@ -1,3 +1,5 @@
+// 담당자 오세찬, 김미경
+
 "use client";
 
 import Link from "next/link";

@@ -1,3 +1,5 @@
+// 담당자 오세찬
+
 import Image from "next/image";
 import Link from "next/link";
 import CommentClient from "../../components/recipes/CommentClient";
@@ -42,16 +44,6 @@ export default async function RecipePages({ params }: { params: Promise<{ id: st
         </div>
       </main>
     );
-  }
-
-  const views = recipe?.views ?? 0;
-  const { error: updateError } = await supabase
-  .rpc("increment_recipe_views_once", {
-  recipe_id: Number(id),
-});
-
-  if (updateError) {
-    console.error("조회수 업데이트 중 오류 발생:", updateError);
   }
 
   const { data: ingredients } = await supabase

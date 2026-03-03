@@ -193,7 +193,21 @@
   display: grid;
   grid-template-columns: 1fr 88px 28px;
   gap: 8px;
-  align-items: center;
+  align-items: start;
+}
+
+.fieldWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldError {
+  margin: 0;
+  color: #d12d2d;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .amountInput {
@@ -302,6 +316,7 @@
   display: grid;
   grid-template-columns: 1fr 92px;
   gap: 8px;
+  align-items: start;
 }
 
 .stepTextarea {

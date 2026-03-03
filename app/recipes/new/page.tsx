@@ -1,3 +1,5 @@
+// 담당자 오세찬
+
 "use client";
 
 import Image from "next/image";
@@ -27,6 +29,11 @@ type Step = {
   imagePreview: string;
 };
 
+type IngredientFieldError = {
+  name?: string;
+  qty?: string;
+};
+
 export default function WritePage() {
   const supabase = createClient();
   const router = useRouter();
@@ -51,6 +58,13 @@ export default function WritePage() {
   const [aiGenerating, setAiGenerating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [aiStepImageUrls, setAiStepImageUrls] = useState<Record<number, string>>({});
+  const [aiTitleError, setAiTitleError] = useState("");
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [ingredientErrors, setIngredientErrors] = useState<Record<number, IngredientFieldError>>({});
+  const [ingredientListError, setIngredientListError] = useState("");
+  const [stepErrors, setStepErrors] = useState<Record<number, string>>({});
+  const [stepListError, setStepListError] = useState("");
 
   const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", qty: "" }]);
   const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
@@ -74,18 +88,30 @@ export default function WritePage() {
   }, [router, supabase]);
 
   const addIngredient = () => {
+    setIngredientListError("");
     setIngredients((prev) => [...prev, { id: Date.now(), name: "", qty: "" }]);
   };
 
   const removeIngredient = (id: number) => {
+    setIngredientErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     setIngredients((prev) => prev.filter((item) => item.id !== id));
   };
 
   const addStep = () => {
+    setStepListError("");
     setSteps((prev) => [...prev, { id: Date.now(), description: "", imageFile: null, imagePreview: "" }]);
   };
 
   const removeStep = (id: number) => {
+    setStepErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     setSteps((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -160,9 +186,10 @@ export default function WritePage() {
 
     if (activeTab === "ai" && !aiGeneratedDraft) {
       if (!aiTitle.trim()) {
-        alert("AI 레시피 생성을 위해 레시피 제목을 입력해주세요.");
+        setAiTitleError("레시피 제목을 입력해주세요.");
         return;
       }
+      setAiTitleError("");
 
       setAiGenerating(true);
       const aiRecipe = await getAIRecipe();
@@ -218,24 +245,57 @@ export default function WritePage() {
 
     const trimmedTitle = title.trim();
     const trimmedDescription = description.trim();
+    let hasValidationError = false;
+
+    setTitleError("");
+    setDescriptionError("");
+    setIngredientListError("");
+    setStepListError("");
+    setIngredientErrors({});
+    setStepErrors({});
 
     if (!trimmedTitle) {
-      alert("레시피 제목을 입력해주세요.");
-      return;
+      setTitleError("레시피 제목을 입력해주세요.");
+      hasValidationError = true;
     }
 
     if (!trimmedDescription) {
-      alert("레시피 설명을 입력해주세요.");
-      return;
+      setDescriptionError("레시피 설명을 입력해주세요.");
+      hasValidationError = true;
     }
 
-    if (ingredients.length === 0 || ingredients.some((item) => !item.name.trim() || !item.qty.trim())) {
-      alert("재료명과 양을 빈칸 없이 모두 입력해주세요.");
-      return;
+    if (ingredients.length === 0) {
+      setIngredientListError("재료를 최소 1개 이상 입력해주세요.");
+      hasValidationError = true;
+    } else {
+      const nextIngredientErrors: Record<number, IngredientFieldError> = {};
+      ingredients.forEach((item) => {
+        const nextError: IngredientFieldError = {};
+        if (!item.name.trim()) nextError.name = "재료명을 입력해주세요.";
+        if (!item.qty.trim()) nextError.qty = "양을 입력해주세요.";
+        if (nextError.name || nextError.qty) {
+          nextIngredientErrors[item.id] = nextError;
+          hasValidationError = true;
+        }
+      });
+      setIngredientErrors(nextIngredientErrors);
     }
 
-    if (steps.length === 0 || steps.some((step) => !step.description.trim())) {
-      alert("요리 순서를 빈칸 없이 모두 입력해주세요.");
+    if (steps.length === 0) {
+      setStepListError("요리 순서를 최소 1개 이상 입력해주세요.");
+      hasValidationError = true;
+    } else {
+      const nextStepErrors: Record<number, string> = {};
+      steps.forEach((step) => {
+        if (!step.description.trim()) {
+          nextStepErrors[step.id] = "요리 순서를 입력해주세요.";
+          hasValidationError = true;
+        }
+      });
+      setStepErrors(nextStepErrors);
+    }
+
+    if (hasValidationError) {
       return;
     }
 
@@ -417,17 +477,25 @@ export default function WritePage() {
                 <label className={styles.fieldLabel}>레시피 제목</label>
                 <input
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    if (e.target.value.trim()) setTitleError("");
+                  }}
                   placeholder="레시피 제목을 설명해 주세요"
                   className={styles.input}
                 />
+                {titleError && <p className={styles.fieldError}>{titleError}</p>}
                 <label className={styles.fieldLabel}>레시피 설명</label>
                 <textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    if (e.target.value.trim()) setDescriptionError("");
+                  }}
                   placeholder="레시피 설명을 입력 해 주세요"
                   className={styles.textarea}
                 />
+                {descriptionError && <p className={styles.fieldError}>{descriptionError}</p>}
               </section>
 
               <OptionSection
@@ -469,26 +537,44 @@ export default function WritePage() {
                 <div className={styles.groupList}>
                   {ingredients.map((item) => (
                     <div key={item.id} className={styles.row}>
-                      <input
-                        placeholder="요리 재료 입력"
-                        className={styles.input}
-                        value={item.name}
-                        onChange={(e) =>
-                          setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, name: e.target.value } : ingredient)),
-                          )
-                        }
-                      />
-                      <input
-                        placeholder="1큰술"
-                        className={styles.amountInput}
-                        value={item.qty}
-                        onChange={(e) =>
-                          setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
-                          )
-                        }
-                      />
+                      <div className={styles.fieldWrap}>
+                        <input
+                          placeholder="요리 재료 입력"
+                          className={styles.input}
+                          value={item.name}
+                          onChange={(e) => {
+                            setIngredients((prev) =>
+                              prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, name: e.target.value } : ingredient)),
+                            );
+                            if (e.target.value.trim()) {
+                              setIngredientErrors((prev) => ({
+                                ...prev,
+                                [item.id]: { ...prev[item.id], name: "" },
+                              }));
+                            }
+                          }}
+                        />
+                        {ingredientErrors[item.id]?.name && <p className={styles.fieldError}>{ingredientErrors[item.id]?.name}</p>}
+                      </div>
+                      <div className={styles.fieldWrap}>
+                        <input
+                          placeholder="1큰술"
+                          className={styles.amountInput}
+                          value={item.qty}
+                          onChange={(e) => {
+                            setIngredients((prev) =>
+                              prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
+                            );
+                            if (e.target.value.trim()) {
+                              setIngredientErrors((prev) => ({
+                                ...prev,
+                                [item.id]: { ...prev[item.id], qty: "" },
+                              }));
+                            }
+                          }}
+                        />
+                        {ingredientErrors[item.id]?.qty && <p className={styles.fieldError}>{ingredientErrors[item.id]?.qty}</p>}
+                      </div>
                       <button type="button" onClick={() => removeIngredient(item.id)} className={styles.removeButton}>
                         <span className={styles.materialIcon} aria-hidden="true">
                           remove_circle_outline
@@ -497,6 +583,7 @@ export default function WritePage() {
                     </div>
                   ))}
                 </div>
+                {ingredientListError && <p className={styles.fieldError}>{ingredientListError}</p>}
                 <button type="button" onClick={addIngredient} className={styles.outlineButton}>
                   재료 추가
                 </button>
@@ -517,14 +604,20 @@ export default function WritePage() {
                         </button>
                       </div>
                       <div className={styles.stepBody}>
-                        <textarea
-                          value={step.description}
-                          onChange={(e) =>
-                            setSteps((prev) => prev.map((item) => (item.id === step.id ? { ...item, description: e.target.value } : item)))
-                          }
-                          placeholder="요리 순서 입력"
-                          className={styles.stepTextarea}
-                        />
+                        <div className={styles.fieldWrap}>
+                          <textarea
+                            value={step.description}
+                            onChange={(e) => {
+                              setSteps((prev) => prev.map((item) => (item.id === step.id ? { ...item, description: e.target.value } : item)));
+                              if (e.target.value.trim()) {
+                                setStepErrors((prev) => ({ ...prev, [step.id]: "" }));
+                              }
+                            }}
+                            placeholder="요리 순서 입력"
+                            className={styles.stepTextarea}
+                          />
+                          {stepErrors[step.id] && <p className={styles.fieldError}>{stepErrors[step.id]}</p>}
+                        </div>
                         <label htmlFor={`step-image-${step.id}`} className={styles.stepImageButton}>
                           {step.imagePreview ? (
                             <Image src={step.imagePreview} alt={`요리 순서 ${index + 1} 이미지`} fill className={styles.previewImage} />
@@ -546,6 +639,7 @@ export default function WritePage() {
                     </div>
                   ))}
                 </div>
+                {stepListError && <p className={styles.fieldError}>{stepListError}</p>}
                 <button type="button" onClick={addStep} className={styles.outlineButton}>
                   요리 순서 추가
                 </button>
@@ -558,10 +652,14 @@ export default function WritePage() {
                 <label className={styles.fieldLabel}>레시피 제목</label>
                 <input
                   value={aiTitle}
-                  onChange={(e) => setAiTitle(e.target.value)}
+                  onChange={(e) => {
+                    setAiTitle(e.target.value);
+                    if (e.target.value.trim()) setAiTitleError("");
+                  }}
                   placeholder="레시피 제목을 설명해 주세요"
                   className={styles.input}
                 />
+                {aiTitleError && <p className={styles.fieldError}>{aiTitleError}</p>}
               </section>
 
               <OptionSection
