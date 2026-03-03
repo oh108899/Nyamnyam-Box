@@ -41,9 +41,9 @@ export default function HomePage() {
         supabase.from("recipes").select(),
         supabase
           .from("recipes")
-          .select(`*,bookmarks(count)`)
+          .select(`*,bookmark(count)`)
           .order("count", {
-            foreignTable: "bookmarks",
+            foreignTable: "bookmark",
             ascending: false,
           }),
         supabase
