@@ -1,16 +1,17 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .page {
   display: flex;
-  width: min(100%, 375px);
+  position: relative;
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
   flex-direction: column;
   position: relative;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
@@ -21,7 +22,7 @@
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--solid);
   background: var(--white);
   padding: 0 16px;
 }
@@ -31,17 +32,33 @@
   width: 44px;
   height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border: 0;
   background: transparent;
   color: var(--text-black);
   text-decoration: none;
   padding: 0;
 }
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
+}
 
 .headerIcon {
   font-size: 24px;
   line-height: 1;
+}
+.headerIconBack {
+  display: inline-flex;
+  width: 20px;
+  height: 19px;
+  align-items: center;
+}
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
 }
 
 .headerTitle {
@@ -56,7 +73,7 @@
 }
 
 .bottomActionWrap {
-  padding: 16px 16px 88px;
+  padding: 16px 16px;
 }
 
 .bottomActionButton {
@@ -68,7 +85,7 @@
   gap: 8px;
   border-radius: 8px;
   background: var(--primary);
-  color: var(--white);
+  color: var(--button-text);
   font-size: var(--body1_700);
   font-weight: 700;
   line-height: 1.3;
@@ -87,9 +104,17 @@
   clip-path: inset(50%);
 }
 
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 .loginLogo {
-  max-width: 151px;
+
+  width: 151px;
   aspect-ratio: 37.75 / 8;
   margin: 54px auto;
   background-image: url("/images/logoLogin.svg");
@@ -115,15 +140,15 @@
 
 .loginCommon {
   width: 100%;
+  max-width: 375px;
   height: 48px;
+  margin: 0 auto;
   background-size: 100% auto;
   background-position: center center;
   border: 0;
   outline: none;
 }
-.loginNaver {
-  background-image: url("/images/naverLogin.svg");
-}
+
 .loginKakao {
   background-image: url("/images/kakaoLogin.svg");
 }

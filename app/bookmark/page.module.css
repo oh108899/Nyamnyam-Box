@@ -1,14 +1,14 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .page {
   position: relative;
-  width: min(100%, 375px);
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
@@ -18,7 +18,7 @@
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--solid);
   background: var(--white);
   padding: 0 16px;
 }
@@ -38,19 +38,24 @@
   text-indent: 120%;
   background-image: url("/images/logo.png");
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  background-size: auto 100%;
+  background-position: left center;
 }
 
 .headerButton {
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   border: 0;
   background: transparent;
   padding: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
 }
 
 .content {
@@ -66,11 +71,15 @@
 }
 
 .countText {
-  margin: 6px 0 14px;
+  margin: 0 0 14px;
   color: var(--text-gray);
   font-size: var(--body2);
   font-weight: 500;
   line-height: 1.3;
+}
+.countTextNum {
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .recipeGrid {
@@ -127,20 +136,28 @@
   }
 }
 
-.bookmarkButton {
+.BookmarkButton {
   position: absolute;
   top: 8px;
   right: 8px;
-  display: flex;
   width: 32px;
   height: 32px;
+  display: flex;
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 9999px;
-  background: rgba(24, 24, 24, 0.42);
-  backdrop-filter: blur(4px);
-  padding: 0;
+  outline: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  cursor: pointer;
+}
+
+
+
+.BookmarkIcon {
+  fill: transparent;
+  filter: brightness(0) invert(1);
 }
 
 .recipeTitle {
@@ -159,12 +176,29 @@
   font-size: var(--desc);
   font-weight: 500;
   line-height: 1.3;
+  position: relative;
+  z-index: 5;
 }
-
-.recipeMeta span {
-  display: inline-flex;
+.recipeMetaBadge {
+  display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: auto 10px;
+}
+.recipeMetaView{
+  background-image: url("/images/recipeVeiw.svg");
+  padding-left: 20px;
+}
+.recipeMetaComment {
+  background-image: url("/images/comments.svg");
+  padding-left: 16px;
+}
+.recipeMetaBookmark {
+  background-image: url("/images/recipeBookmark.svg");
+  padding-left: 16px;
 }
 
 .recipeTitleSkeleton {
@@ -179,18 +213,3 @@
   border-radius: 8px;
 }
 
-.floatingButton {
-  position: fixed;
-  right: max(16px, calc(50% - 171px));
-  bottom: 76px;
-  z-index: 20;
-  display: flex;
-  width: 52px;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 9999px;
-  background: var(--primary);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-}

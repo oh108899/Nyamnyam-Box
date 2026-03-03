@@ -1,0 +1,8 @@
+
+/* 기본 */
+.BookmarkIcon {
+  background-color: transparent;
+}
+.BookmarkIconActive {
+  fill: var(--primary);
+}

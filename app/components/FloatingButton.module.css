@@ -1,0 +1,16 @@
+.floatingButton {
+  position: fixed;
+  left: calc(100% - 68px);
+  bottom: 76px;
+  z-index: 20;
+  display: flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--primary);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  padding: 0;
+}

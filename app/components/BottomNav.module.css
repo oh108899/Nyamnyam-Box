@@ -1,16 +1,22 @@
 .bottomNav {
   position: fixed;
+  width: 100%;
   left: 50%;
   bottom: 0;
   z-index: 30;
   display: flex;
-  width: min(100%, 375px);
+
   height: 64px;
   transform: translateX(-50%);
   align-items: center;
   justify-content: space-around;
-  border-top: 1px solid #dfdfdf;
+  border-top: 1px solid var(--solid);
   background: var(--white);
+}
+@media (prefers-color-scheme: dark) {
+  .bottomNav {
+    border-top: 1px solid var(--primary);
+  }
 }
 
 .navItem {

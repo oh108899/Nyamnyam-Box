@@ -1,3 +1,9 @@
+/*
+Page: 검색 결과 페이지
+담당자: 김미경
+역할: 검색 결과 페이지 구현
+*/
+
 "use client";
 
 import Link from "next/link";
@@ -12,10 +18,11 @@ import LogoHeader from "../../components/LogoHeader";
 type RecipeRow = {
   id: number;
   title: string;
-  thumb: string | null;
+  image: string | null;
   is_AI: boolean;
-  cooking_time: string;
-  desc: string;
+  time: string | number | null;
+  cooking_time: string | number | null;
+  description?: string | null;
 };
 
 export default function SearchResultsPage() {
@@ -48,8 +55,8 @@ function SearchResultsContent() {
 
       let query = supabase
         .from("recipes")
-        .select("id,title,thumb,is_AI,cooking_time,desc")
-        .limit(4);
+        .select("id,title,image,is_AI,time,cooking_time,description")
+        .limit(50);
 
       if (trimmed) {
         query = query.or(`title.ilike.%${trimmed}%,desc.ilike.%${trimmed}%`);
@@ -125,9 +132,9 @@ function SearchResultsContent() {
                 <Link key={r.id} href={`/recipes/${r.id}`} className={styles.resultCard}>
                   <div className={styles.resultImageWrap}>
                     {r.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
-                    {r.thumb ? (
+                    {r.image ? (
                       <Image
-                        src={r.thumb}
+                        src={r.image}
                         alt={r.title}
                         fill
                         sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"

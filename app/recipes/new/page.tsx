@@ -1,3 +1,9 @@
+/*
+Page: 레시피 작성 페이지
+담당자: 오세찬
+역할: 레시피 작성 페이지 구현
+*/
+
 "use client";
 
 import Image from "next/image";
@@ -27,6 +33,11 @@ type Step = {
   imagePreview: string;
 };
 
+type IngredientFieldError = {
+  name?: string;
+  qty?: string;
+};
+
 export default function WritePage() {
   const supabase = createClient();
   const router = useRouter();
@@ -46,6 +57,18 @@ export default function WritePage() {
   const [aiDifficulty, setAiDifficulty] = useState<Difficulty>("전체");
   const [aiTime, setAiTime] = useState<Time>("15분 이내");
   const [aiServing, setAiServing] = useState<Serving>("1인분");
+  const [aiGeneratedDraft, setAiGeneratedDraft] = useState(false);
+  const [aiShareAgreed, setAiShareAgreed] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [aiStepImageUrls, setAiStepImageUrls] = useState<Record<number, string>>({});
+  const [aiTitleError, setAiTitleError] = useState("");
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [ingredientErrors, setIngredientErrors] = useState<Record<number, IngredientFieldError>>({});
+  const [ingredientListError, setIngredientListError] = useState("");
+  const [stepErrors, setStepErrors] = useState<Record<number, string>>({});
+  const [stepListError, setStepListError] = useState("");
 
   const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", qty: "" }]);
   const [steps, setSteps] = useState<Step[]>([{ id: 1, description: "", imageFile: null, imagePreview: "" }]);
@@ -69,18 +92,30 @@ export default function WritePage() {
   }, [router, supabase]);
 
   const addIngredient = () => {
+    setIngredientListError("");
     setIngredients((prev) => [...prev, { id: Date.now(), name: "", qty: "" }]);
   };
 
   const removeIngredient = (id: number) => {
+    setIngredientErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     setIngredients((prev) => prev.filter((item) => item.id !== id));
   };
 
   const addStep = () => {
+    setStepListError("");
     setSteps((prev) => [...prev, { id: Date.now(), description: "", imageFile: null, imagePreview: "" }]);
   };
 
   const removeStep = (id: number) => {
+    setStepErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     setSteps((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -110,7 +145,176 @@ export default function WritePage() {
     );
   };
 
+  const API_BASE = '/api/v1';
+  const CLIENT_ID = process.env.NEXT_PUBLIC_AI_CLIENT_ID ?? "";
+  async function apiRequest(path: string, options: RequestInit = {}) {
+    const res = await fetch(`${API_BASE}${path}`, options);
+    const data = await res.json();
+    const only =
+      typeof data?.content === "string"
+        ? data.content
+        : JSON.stringify(data, null, 2) ||
+          typeof data?.summary === "string"
+          ? data.summary
+          : JSON.stringify(data, null, 2);
+    return only;
+  }
+  const getAIRecipe = async () => {
+    if (!CLIENT_ID) {
+      console.error("NEXT_PUBLIC_AI_CLIENT_ID is not set");
+      return;
+    }
+
+    const qs = new URLSearchParams({
+      content: `응답은 무조건 JSON 형식으로 다른 어떤말도 하지마. 재료는 일반적으로 가정집에 있는 재료를 사용해. 제목: ${aiTitle}, 난이도: ${aiDifficulty}, 소요 시간: ${aiTime}, 재료 기준: ${aiServing}에 맞는 요리 레시피를 알려줘. 응답은 무조건 JSON 형식으로 만 해, 제목은 title, 난이도는 difficulty, 소요 시간은 time, 재료 기준은 serving, 레시피 설명은 desc, 재료는 ingredients 배열로 (재료명 name, 양 qty), 요리 순서는 steps 배열로 (순서 step_num, 내용 content) 표현해줘. 제목이 특정 요리명이 아니라 재료명일 경우, 해당 재료로 만들 수 있는 대표적인 요리를 생성해. 그 다음 제목엔 그 요리의 제목을 써.`
+      ,
+      client_id: CLIENT_ID
+    }).toString();
+    const data = await apiRequest(`/question?${qs}`);
+    const cleaned = data
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+    let aiRecipe;
+    try {
+      aiRecipe = JSON.parse(cleaned);
+    } catch (err) {
+      console.error("AI 응답 파싱 실패", err);
+      return;
+    }
+    return aiRecipe;
+  };
+
   const handleSubmit = async () => {
+    if (aiGenerating || submitting) return;
+
+    if (activeTab === "ai" && !aiGeneratedDraft) {
+      if (!aiTitle.trim()) {
+        setAiTitleError("레시피 제목을 입력해주세요.");
+        return;
+      }
+      setAiTitleError("");
+
+      setAiGenerating(true);
+      const aiRecipe = await getAIRecipe();
+      setAiGenerating(false);
+
+      if (!aiRecipe) {
+        alert("AI 레시피 생성에 실패했습니다. 다시 시도해주세요.");
+        return;
+      }
+
+      setTitle(String(aiRecipe.title ?? ""));
+      setDescription(String(aiRecipe.desc ?? ""));
+
+      setDifficulty(aiRecipe.difficulty as Difficulty);
+      setTime(aiRecipe.time as Time);
+      setServing(aiRecipe.serving as Serving);
+
+      const generatedIngredients = Array.isArray(aiRecipe.ingredients)
+        ? aiRecipe.ingredients.map((item: any, index: number) => ({
+          id: Date.now() + index,
+          name: String(item?.name ?? ""),
+          qty: String(item?.qty ?? ""),
+        }))
+        : [];
+      setIngredients(generatedIngredients.length > 0 ? generatedIngredients : [{ id: Date.now(), name: "", qty: "" }]);
+
+      const generatedSteps = Array.isArray(aiRecipe.steps)
+        ? aiRecipe.steps.map((item: any, index: number) => ({
+          id: Date.now() + index + 1000,
+          description: String(item?.content ?? ""),
+          imageFile: null,
+          imagePreview: "",
+        }))
+        : [];
+      const nextSteps: Step[] = generatedSteps.length > 0 ? generatedSteps : [{ id: Date.now(), description: "", imageFile: null, imagePreview: "" }];
+      setSteps(nextSteps);
+
+      const imgUrlMap: Record<number, string> = {};
+      nextSteps.forEach((step: Step, index: number) => {
+        const url = Array.isArray(aiRecipe.steps) ? String(aiRecipe.steps[index]?.img_url ?? "") : "";
+        imgUrlMap[step.id] = url;
+      });
+      setAiStepImageUrls(imgUrlMap);
+      setAiGeneratedDraft(true);
+      setAiShareAgreed(false);
+      return;
+    }
+
+    if (aiGeneratedDraft && !aiShareAgreed) {
+      alert("AI 생성 레시피 저장을 위해 공유 동의 체크가 필요합니다.");
+      return;
+    }
+
+    const trimmedTitle = title.trim();
+    const trimmedDescription = description.trim();
+    let hasValidationError = false;
+
+    setTitleError("");
+    setDescriptionError("");
+    setIngredientListError("");
+    setStepListError("");
+    setIngredientErrors({});
+    setStepErrors({});
+
+    if (!trimmedTitle) {
+      setTitleError("레시피 제목을 입력해주세요.");
+      hasValidationError = true;
+    }
+
+    if (!trimmedDescription) {
+      setDescriptionError("레시피 설명을 입력해주세요.");
+      hasValidationError = true;
+    }
+
+    if (ingredients.length === 0) {
+      setIngredientListError("재료를 최소 1개 이상 입력해주세요.");
+      hasValidationError = true;
+    } else {
+      const nextIngredientErrors: Record<number, IngredientFieldError> = {};
+      ingredients.forEach((item) => {
+        const nextError: IngredientFieldError = {};
+        if (!item.name.trim()) nextError.name = "재료명을 입력해주세요.";
+        if (!item.qty.trim()) nextError.qty = "양을 입력해주세요.";
+        if (nextError.name || nextError.qty) {
+          nextIngredientErrors[item.id] = nextError;
+          hasValidationError = true;
+        }
+      });
+      setIngredientErrors(nextIngredientErrors);
+    }
+
+    if (steps.length === 0) {
+      setStepListError("요리 순서를 최소 1개 이상 입력해주세요.");
+      hasValidationError = true;
+    } else {
+      const nextStepErrors: Record<number, string> = {};
+      steps.forEach((step) => {
+        if (!step.description.trim()) {
+          nextStepErrors[step.id] = "요리 순서를 입력해주세요.";
+          hasValidationError = true;
+        }
+      });
+      setStepErrors(nextStepErrors);
+    }
+
+    if (hasValidationError) {
+      return;
+    }
+
+    const ingredientRows = ingredients.map((item) => ({
+      name: item.name.trim(),
+      qty: item.qty.trim(),
+    }));
+
+    const normalizedSteps = steps.map((step) => ({
+      ...step,
+      description: step.description.trim(),
+    }));
+
+    setSubmitting(true);
+
     const {
       data: { user },
       error: userError,
@@ -119,6 +323,7 @@ export default function WritePage() {
     if (userError || !user) {
       console.error(userError);
       router.push("/login");
+      setSubmitting(false);
       return;
     }
 
@@ -132,6 +337,7 @@ export default function WritePage() {
 
       if (coverUploadError) {
         console.error(coverUploadError);
+        setSubmitting(false);
         return;
       }
 
@@ -139,28 +345,16 @@ export default function WritePage() {
       thumbUrl = coverUrlData.publicUrl;
     }
 
-    const recipePayload =
-      activeTab === "manual"
-        ? {
-            title: title,
-            desc: description,
-            thumb: thumbUrl,
-            difficulty: difficulty,
-            cooking_time: time,
-            serving: serving,
-            is_AI: false,
-            user_id: user.id,
-          }
-        : {
-            title: aiTitle,
-            desc: "",
-            thumb: thumbUrl,
-            difficulty: aiDifficulty,
-            cooking_time: aiTime,
-            serving: aiServing,
-            is_AI: true,
-            user_id: user.id,
-          };
+    const recipePayload = {
+      title: trimmedTitle,
+      desc: trimmedDescription,
+      thumb: thumbUrl,
+      difficulty: difficulty,
+      cooking_time: time,
+      serving: serving,
+      is_AI: aiGeneratedDraft,
+      user_id: user.id,
+    };
 
     const { data: savedRecipe, error: recipeError } = await supabase
       .from("recipes")
@@ -170,68 +364,70 @@ export default function WritePage() {
 
     if (recipeError || !savedRecipe) {
       console.error(recipeError);
+      setSubmitting(false);
       return;
     }
 
-    if (activeTab === "manual") {
-      const ingredientRows = ingredients
-        .filter((item) => item.name.trim() && item.qty.trim())
-        .map((item) => ({
-          recipe_id: savedRecipe.id,
-          name: item.name.trim(),
-          qty: item.qty.trim(),
-        }));
+    const ingredientInsertRows = ingredientRows.map((item) => ({
+      recipe_id: savedRecipe.id,
+      name: item.name,
+      qty: item.qty,
+    }));
 
-      if (ingredientRows.length > 0) {
-        const { error: ingredientError } = await supabase.from("ingredients").insert(ingredientRows);
+    if (ingredientInsertRows.length > 0) {
+      const { error: ingredientError } = await supabase.from("ingredients").insert(ingredientInsertRows);
 
-        if (ingredientError) {
-          console.error(ingredientError);
-          return;
-        }
-      }
-
-      const filteredSteps = steps.filter((step) => step.description.trim());
-      const stepRows: Array<{ recipe_id: number; step_num: number; content: string; img_url: string }> = [];
-
-      for (let index = 0; index < filteredSteps.length; index += 1) {
-        const step = filteredSteps[index];
-        let stepImageUrl = "";
-
-        if (step.imageFile) {
-          const ext = step.imageFile.name.split(".").pop() || "jpg";
-          const stepPath = `${user.id}/${savedRecipe.id}/step-${index + 1}-${Date.now()}.${ext}`;
-          const { error: stepUploadError } = await supabase.storage.from("steps").upload(stepPath, step.imageFile, {
-            upsert: true,
-          });
-
-          if (stepUploadError) {
-            console.error(stepUploadError);
-            return;
-          }
-
-          const { data: stepUrlData } = supabase.storage.from("steps").getPublicUrl(stepPath);
-          stepImageUrl = stepUrlData.publicUrl;
-        }
-
-        stepRows.push({
-          recipe_id: savedRecipe.id,
-          step_num: index + 1,
-          content: step.description.trim(),
-          img_url: stepImageUrl,
-        });
-      }
-
-      if (stepRows.length > 0) {
-        const { error: stepError } = await supabase.from("recipe-steps").insert(stepRows);
-
-        if (stepError) {
-          console.error(stepError);
-          return;
-        }
+      if (ingredientError) {
+        console.error(ingredientError);
+        setSubmitting(false);
+        return;
       }
     }
 
+    const stepRows: Array<{ recipe_id: number; step_num: number; content: string; img_url: string }> = [];
+
+    for (let index = 0; index < normalizedSteps.length; index += 1) {
+      const step = normalizedSteps[index];
+      let stepImageUrl = "";
+
+      if (step.imageFile) {
+        const ext = step.imageFile.name.split(".").pop() || "jpg";
+        const stepPath = `${user.id}/${savedRecipe.id}/step-${index + 1}-${Date.now()}.${ext}`;
+        const { error: stepUploadError } = await supabase.storage.from("steps").upload(stepPath, step.imageFile, {
+          upsert: true,
+        });
+
+        if (stepUploadError) {
+          console.error(stepUploadError);
+          setSubmitting(false);
+          return;
+        }
+
+        const { data: stepUrlData } = supabase.storage.from("steps").getPublicUrl(stepPath);
+        stepImageUrl = stepUrlData.publicUrl;
+      } else if (aiGeneratedDraft) {
+        stepImageUrl = aiStepImageUrls[step.id] ?? "";
+      }
+
+      stepRows.push({
+        recipe_id: savedRecipe.id,
+        step_num: index + 1,
+        content: step.description,
+        img_url: stepImageUrl,
+      });
+    }
+
+    if (stepRows.length > 0) {
+      const { error: stepError } = await supabase.from("recipe-steps").insert(stepRows);
+
+      if (stepError) {
+        console.error(stepError);
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    setSubmitting(false);
     router.push(`/recipes/${savedRecipe.id}`);
   };
 
@@ -244,12 +440,9 @@ export default function WritePage() {
       <div className={styles.page}>
         <header className={styles.header}>
           <button type="button" onClick={() => router.back()} className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIcon}>←</span>
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
           </button>
           <h1 className={styles.headerTitle}>레시피 작성</h1>
-          <button type="button" onClick={handleSubmit} className={styles.completeButton}>
-            완료
-          </button>
         </header>
 
         <WriteTabs
@@ -281,24 +474,32 @@ export default function WritePage() {
         </div>
 
         <section className={styles.content}>
-          {activeTab === "manual" ? (
+          {activeTab === "manual" || (activeTab === "ai" && aiGeneratedDraft) ? (
             <>
               <section className={styles.section}>
                 <h2 className={styles.sectionTitle}>기본 정보</h2>
                 <label className={styles.fieldLabel}>레시피 제목</label>
                 <input
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    if (e.target.value.trim()) setTitleError("");
+                  }}
                   placeholder="레시피 제목을 설명해 주세요"
                   className={styles.input}
                 />
+                {titleError && <p className={styles.fieldError}>{titleError}</p>}
                 <label className={styles.fieldLabel}>레시피 설명</label>
                 <textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    if (e.target.value.trim()) setDescriptionError("");
+                  }}
                   placeholder="레시피 설명을 입력 해 주세요"
                   className={styles.textarea}
                 />
+                {descriptionError && <p className={styles.fieldError}>{descriptionError}</p>}
               </section>
 
               <OptionSection
@@ -340,26 +541,44 @@ export default function WritePage() {
                 <div className={styles.groupList}>
                   {ingredients.map((item) => (
                     <div key={item.id} className={styles.row}>
-                      <input
-                        placeholder="요리 재료 입력"
-                        className={styles.input}
-                        value={item.name}
-                        onChange={(e) =>
-                          setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, name: e.target.value } : ingredient)),
-                          )
-                        }
-                      />
-                      <input
-                        placeholder="1큰술"
-                        className={styles.amountInput}
-                        value={item.qty}
-                        onChange={(e) =>
-                          setIngredients((prev) =>
-                            prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
-                          )
-                        }
-                      />
+                      <div className={styles.fieldWrap}>
+                        <input
+                          placeholder="요리 재료 입력"
+                          className={styles.input}
+                          value={item.name}
+                          onChange={(e) => {
+                            setIngredients((prev) =>
+                              prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, name: e.target.value } : ingredient)),
+                            );
+                            if (e.target.value.trim()) {
+                              setIngredientErrors((prev) => ({
+                                ...prev,
+                                [item.id]: { ...prev[item.id], name: "" },
+                              }));
+                            }
+                          }}
+                        />
+                        {ingredientErrors[item.id]?.name && <p className={styles.fieldError}>{ingredientErrors[item.id]?.name}</p>}
+                      </div>
+                      <div className={styles.fieldWrap}>
+                        <input
+                          placeholder="1큰술"
+                          className={styles.amountInput}
+                          value={item.qty}
+                          onChange={(e) => {
+                            setIngredients((prev) =>
+                              prev.map((ingredient) => (ingredient.id === item.id ? { ...ingredient, qty: e.target.value } : ingredient)),
+                            );
+                            if (e.target.value.trim()) {
+                              setIngredientErrors((prev) => ({
+                                ...prev,
+                                [item.id]: { ...prev[item.id], qty: "" },
+                              }));
+                            }
+                          }}
+                        />
+                        {ingredientErrors[item.id]?.qty && <p className={styles.fieldError}>{ingredientErrors[item.id]?.qty}</p>}
+                      </div>
                       <button type="button" onClick={() => removeIngredient(item.id)} className={styles.removeButton}>
                         <span className={styles.materialIcon} aria-hidden="true">
                           remove_circle_outline
@@ -368,6 +587,7 @@ export default function WritePage() {
                     </div>
                   ))}
                 </div>
+                {ingredientListError && <p className={styles.fieldError}>{ingredientListError}</p>}
                 <button type="button" onClick={addIngredient} className={styles.outlineButton}>
                   재료 추가
                 </button>
@@ -388,14 +608,20 @@ export default function WritePage() {
                         </button>
                       </div>
                       <div className={styles.stepBody}>
-                        <textarea
-                          value={step.description}
-                          onChange={(e) =>
-                            setSteps((prev) => prev.map((item) => (item.id === step.id ? { ...item, description: e.target.value } : item)))
-                          }
-                          placeholder="요리 순서 입력"
-                          className={styles.stepTextarea}
-                        />
+                        <div className={styles.fieldWrap}>
+                          <textarea
+                            value={step.description}
+                            onChange={(e) => {
+                              setSteps((prev) => prev.map((item) => (item.id === step.id ? { ...item, description: e.target.value } : item)));
+                              if (e.target.value.trim()) {
+                                setStepErrors((prev) => ({ ...prev, [step.id]: "" }));
+                              }
+                            }}
+                            placeholder="요리 순서 입력"
+                            className={styles.stepTextarea}
+                          />
+                          {stepErrors[step.id] && <p className={styles.fieldError}>{stepErrors[step.id]}</p>}
+                        </div>
                         <label htmlFor={`step-image-${step.id}`} className={styles.stepImageButton}>
                           {step.imagePreview ? (
                             <Image src={step.imagePreview} alt={`요리 순서 ${index + 1} 이미지`} fill className={styles.previewImage} />
@@ -417,6 +643,7 @@ export default function WritePage() {
                     </div>
                   ))}
                 </div>
+                {stepListError && <p className={styles.fieldError}>{stepListError}</p>}
                 <button type="button" onClick={addStep} className={styles.outlineButton}>
                   요리 순서 추가
                 </button>
@@ -429,10 +656,14 @@ export default function WritePage() {
                 <label className={styles.fieldLabel}>레시피 제목</label>
                 <input
                   value={aiTitle}
-                  onChange={(e) => setAiTitle(e.target.value)}
+                  onChange={(e) => {
+                    setAiTitle(e.target.value);
+                    if (e.target.value.trim()) setAiTitleError("");
+                  }}
                   placeholder="레시피 제목을 설명해 주세요"
                   className={styles.input}
                 />
+                {aiTitleError && <p className={styles.fieldError}>{aiTitleError}</p>}
               </section>
 
               <OptionSection
@@ -470,14 +701,34 @@ export default function WritePage() {
               />
             </>
           )}
+
+          {aiGeneratedDraft && (
+            <section className={styles.section}>
+              <label className={styles.shareAgreeLabel}>
+                <input
+                  type="checkbox"
+                  checked={aiShareAgreed}
+                  onChange={(e) => setAiShareAgreed(e.target.checked)}
+                />
+                <span>AI생성 레시피 저장시 다른사람에게 공유될 수 있습니다.</span>
+              </label>
+            </section>
+          )}
         </section>
 
         <div className={styles.bottomActionWrap}>
-          <Link href="/recipes" className={styles.cancelButton}>
-            작성 취소
-          </Link>
-          <button type="button" className={styles.bottomActionButton} onClick={handleSubmit}>
-            {activeTab === "manual" ? "레시피 작성 완료" : "AI 레시피 생성"}
+          <button type="button" className={styles.cancelButton} onClick={() => router.back()}>작성 취소</button>
+          <button
+            type="button"
+            className={styles.bottomActionButton}
+            onClick={() => handleSubmit()}
+            disabled={aiGenerating || submitting || (aiGeneratedDraft && !aiShareAgreed)}
+          >
+            {activeTab === "ai" && !aiGeneratedDraft
+              ? (aiGenerating ? "AI 레시피 생성중..." : "AI 레시피 생성")
+              : aiGeneratedDraft
+                ? "AI 레시피 저장"
+                : "레시피 작성 완료"}
           </button>
         </div>
       </div>

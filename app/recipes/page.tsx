@@ -1,13 +1,33 @@
+/*
+Page: 레시피 목록 페이지
+총괄(Owner): 오세찬
+*
+UI 레이아웃: 오세찬
+데이터 Fetch: 김진선
+상태관리: 오세찬
+*
+최종 리뷰: 오세찬
+*/
+
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
+import { createClient } from "../utils/supabase/client";
 import BottomNav from "../components/BottomNav";
 import LogoHeader from "../components/LogoHeader";
+import BookmarkButton from './../components/bookmark/BookmarkButton';
 import styles from "./page.module.css";
+import FloatingButton from "../components/FloatingButton";
 
 type Recipe = {
-  id: number; created_at: string; user_id: string; title: string; desc: string; thumb: string; difficulty: string; cooking_time: string; serving: string
+  id: number;
+  title: string;
+  thumb: string | null;
+  is_AI: boolean;
+  views: number | null;
+  review: { count: number }[] | null;
 };
 
 export default function RecipesPage() {
@@ -17,19 +37,22 @@ export default function RecipesPage() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      setLoading(true);
+
       const { data, error } = await supabase
         .from("recipes")
-        .select();
+        .select("id, title, thumb, is_AI, review(count)");
       if (error) {
         console.error(error);
       } else {
-        setRecipes(data || []);
+        setRecipes((data ?? []) as Recipe[]);
       }
+
       setLoading(false);
     };
     fetchRecipes();
-  }, []);
-  
+  }, [supabase]);
+
   return (
     <main className={styles.viewport}>
       <div className={styles.page}>
@@ -41,7 +64,14 @@ export default function RecipesPage() {
         />
 
         <section className={styles.content}>
-          <p className={styles.countText}>{loading ? "레시피 로딩중.." : `${recipes.length}개`}</p>
+          <p className={styles.countText}>{loading
+            ? "레시피 로딩중.."
+            : (
+              <>
+                냠냠박스 레시피 <span className={styles.countTextNum}>{recipes.length}개</span>
+              </>
+            )}
+          </p>
 
           <div className={styles.recipeGrid}>
             {loading
@@ -54,29 +84,33 @@ export default function RecipesPage() {
               ))
               : recipes.map((recipe) => (
                 <article key={recipe.id} className={styles.recipeCard}>
-                  <div className={styles.recipeImageWrap}>
-                    <Image src={recipe.image} alt={recipe.title} fill className={styles.recipeImage} />
-                    <button type="button" className={styles.bookmarkButton} aria-label="북마크">
-                      <Image src="/images/bookmark.svg" alt="" width={13} height={16} aria-hidden="true" />
-                    </button>
-                  </div>
-
-                  <h2 className={styles.recipeTitle}>{recipe.title}</h2>
-                  <div className={styles.recipeMeta}>
-                    <span>
-                      <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                      {recipe.time}
-                    </span>
-                    <span>
-                      <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                      {recipe.comments}
-                    </span>
+                  <Link href={`/recipes/${recipe.id}`}>
+                    <div className={styles.recipeImageWrap}>
+                      {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                      {recipe.thumb ? (
+                        <Image src={recipe.thumb} alt={recipe.title} fill unoptimized className={styles.recipeImage} />
+                      ) : (
+                        <div className={styles.recipeImageSkeleton} aria-hidden="true" />
+                      )}
+                      <BookmarkButton itemId={recipe.id} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
+                    </div>
+                  </Link>
+                  <div className={styles.recipeTextWrap}>
+                    <h2 className={styles.recipeTitle}>
+                      <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
+                    </h2>
+                    <div className={styles.recipeMeta}>
+                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views ?? 0}</span>
+                      {(recipe.review?.[0]?.count ?? 0) > 0 &&
+                        (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{recipe.review?.[0]?.count ?? 0}</span>)}
+                    </div>
                   </div>
                 </article>
               ))}
           </div>
         </section>
 
+        <FloatingButton />
         <BottomNav activeTab="recipes" />
       </div>
     </main>

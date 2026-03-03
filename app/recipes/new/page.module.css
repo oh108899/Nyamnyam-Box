@@ -1,61 +1,69 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .page {
   position: relative;
-  width: min(100%, 375px);
+  width: 100%;
+  min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
 .header {
+  position: relative;
   display: flex;
-  height: 62px;
+  height: 64px;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #dcdcdc;
+  justify-content: flex-start;
+  border-bottom: 1px solid var(--solid);
   background: var(--white);
   padding: 0 16px;
 }
 
 .headerButton {
   display: flex;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border: 0;
   background: transparent;
   color: var(--text-black);
+  text-decoration: none;
   padding: 0;
+  cursor: pointer;
 }
 
-.headerIcon {
-  font-size: 24px;
-  line-height: 1;
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
+}
+.headerIconBack {
+  display: inline-flex;
+  width: 20px;
+  height: 19px;
+  align-items: center;
 }
 
 .headerTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
-  font-size: var(--body1_700);
-  font-weight: 700;
+  font-size: var(--body1);
+  font-weight: 500;
   line-height: 1.3;
+  color: var(--text-black);
 }
 
-.completeButton {
-  min-width: 34px;
-  border: 0;
-  background: transparent;
-  color: var(--primary);
-  font-size: var(--body1);
-  font-weight: 700;
-  line-height: 1.3;
-  padding: 0;
+.bottomActionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .tabBar {
@@ -188,7 +196,21 @@
   display: grid;
   grid-template-columns: 1fr 88px 28px;
   gap: 8px;
-  align-items: center;
+  align-items: start;
+}
+
+.fieldWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldError {
+  margin: 0;
+  color: #d12d2d;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .amountInput {
@@ -297,6 +319,7 @@
   display: grid;
   grid-template-columns: 1fr 92px;
   gap: 8px;
+  align-items: start;
 }
 
 .stepTextarea {
@@ -338,9 +361,10 @@
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 10px;
-  width: min(100%, 375px);
+  width: 100%;
+
   transform: translateX(-50%);
-  background: var(--bg-color);
+  background: var(--white);
   padding: 10px 16px 12px;
 }
 
@@ -350,8 +374,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #efefef;
-  color: #c8c8c8;
+  background: var(--bg-color);
+  color: var(--text-light-gray);
   font-size: var(--body1_700);
   font-weight: 700;
   line-height: 1.3;
@@ -366,7 +390,7 @@
   border: 0;
   border-radius: 10px;
   background: var(--primary);
-  color: var(--white);
+  color: var(--button-text);
   font-size: var(--body1_700);
   font-weight: 700;
   line-height: 1.3;
@@ -384,4 +408,14 @@
   white-space: nowrap;
   direction: ltr;
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.shareAgreeLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-black);
+  font-size: var(--body2);
+  font-weight: 500;
+  line-height: 1.4;
 }
