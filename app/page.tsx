@@ -45,7 +45,7 @@ export default function HomePage() {
           .order("count", {
             foreignTable: "bookmarks",
             ascending: false,
-          })
+          }),
         supabase
           .from("recipes")
           .select()
