@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
 import { createClient } from "../../utils/supabase/client";
@@ -10,15 +10,23 @@ import BottomNav from "../../components/BottomNav";
 import LogoHeader from "../../components/LogoHeader";
 
 type RecipeRow = {
-  id: string;
+  id: number;
   title: string;
   thumb: string | null;
-  time: string | number | null;
-  cooking_time: string | number | null;
-  description?: string | null;
+  is_AI: boolean;
+  cooking_time: string;
+  desc: string;
 };
 
 export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchResultsContent />
+    </Suspense>
+  );
+}
+
+function SearchResultsContent() {
   const router = useRouter();
   const sp = useSearchParams();
 
@@ -40,17 +48,17 @@ export default function SearchResultsPage() {
 
       let query = supabase
         .from("recipes")
-        .select("id,title,image,time,cooking_time,description")
-        .limit(50);
+        .select("id,title,thumb,is_AI,cooking_time,desc")
+        .limit(4);
 
       if (trimmed) {
-        query = query.or(`title.ilike.%${trimmed}%,description.ilike.%${trimmed}%`);
+        query = query.or(`title.ilike.%${trimmed}%,desc.ilike.%${trimmed}%`);
       }
 
       const { data, error } = await query;
-
+      console.log("fetchResults", { data, error });
       if (error) {
-        console.error(error);
+        console.error("fetchResults error:", error.message, error);
         setResults([]);
         return;
       }
@@ -116,6 +124,7 @@ export default function SearchResultsPage() {
               : results.map((r) => (
                 <Link key={r.id} href={`/recipes/${r.id}`} className={styles.resultCard}>
                   <div className={styles.resultImageWrap}>
+                    {r.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
                     {r.thumb ? (
                       <Image
                         src={r.thumb}
@@ -129,7 +138,7 @@ export default function SearchResultsPage() {
                     )}
                   </div>
                   <h3 className={styles.resultTitle}>{r.title}</h3>
-                  <div className={styles.resultMeta}>{r.time ?? r.cooking_time ?? "-"}</div>
+                  <div className={styles.resultMeta}>{r.cooking_time}</div>
                 </Link>
               ))}
           </div>
