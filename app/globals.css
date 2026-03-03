@@ -40,6 +40,9 @@ button {
 --text-light-gray: rgba(184, 184, 184, 1);
 --bg-color: rgba(248, 249, 250, 1);
 --white: rgba(255, 255, 255, 1);
+--button-text: rgba(255, 255, 255, 1);
+
+
 --solid: rgba(235, 235, 235, 1);
 --dark--primary: rgba(255, 155, 61, 1);
 --dark--link: rgba(255, 134, 27, 1);
@@ -94,6 +97,9 @@ body {
 a {
   text-decoration: none;
 }
+button {
+  cursor: pointer;
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -104,8 +110,9 @@ a {
     --secondary-bg: rgba(91, 196, 168, 0.20000000298023224);
     --text-black: rgba(229, 229, 229, 1);
     --text-gray: rgba(160, 160, 160, 1);
-    --bg-color: rgba(18, 18, 18, 1);
-    --white: rgba(44, 44, 44, 1);
+    --bg-color: rgba(44, 44, 44, 1);
+    --white: rgba(18, 18, 18, 1);
     --solid: rgba(69, 69, 69, 1);
-  }
+    --button-text: rgba(255, 255, 255, 1);
+  }  
 }

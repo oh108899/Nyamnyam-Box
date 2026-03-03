@@ -5,6 +5,11 @@
 .section {
   padding-bottom: 91px;
 }
+@media (prefers-color-scheme: dark) {
+  .section {
+    background-color: var(--white);
+  }
+}
 
 .page {
   position: relative;
@@ -23,19 +28,9 @@
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--solid);
   background: var(--white);
   padding: 0 16px;
-}
-
-.headerIconBack {
-  display: inline-flex;
-  align-items: center;
-  background-image: url("/images/back.svg");
-  background-position: left center;
-  background-size: 20px 19px;
-  width: 20px;
-  height: 19px;
 }
 
 .logoHeading {
@@ -46,16 +41,21 @@
 
 .headerButton {
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border: 0;
   background: transparent;
+  color: var(--text-black);
+  text-decoration: none;
   padding: 0;
-
 }
-
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
+}
 .headerTitle {
   margin: 0;
   font-size: var(--body1);
@@ -215,15 +215,17 @@
 }
 .shareIcon {
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 40px;
   height: 40px;
   border: solid 1px var(--solid);
   background: var(--white);
-  border-radius: 50px;
-  background-image: url("/images/share.svg");
-  background-repeat: no-repeat;
-  background-size: 16px 16px;
-  background-position: center;
+  border-radius: 50%;
+}
+.shareIcon img {
+  filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
 }
 
 .detailQuick ul {
@@ -268,6 +270,11 @@
   background: var(--white);
   border-radius: 8px;
   border: solid 1px var(--solid);
+}
+@media (prefers-color-scheme: dark) {
+  .detailIngredient ul li {
+    background: var(--bg-color);
+  }
 }
 
 .detailStep {
@@ -319,14 +326,14 @@
 }
 .setpImage {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background-color: #ebebeb;
   margin-top: 16px;
-  border-radius: 8px;
-  overflow: hidden;
 }
 .setpImage img {
   object-fit: cover;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .commentsWrap {
@@ -338,6 +345,11 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  .commentsWrap {
+    background-color: var(--bg-color);
+  }
 }
 .commentsProfile {
   width: 40px;
@@ -401,6 +413,11 @@
   resize: none;
   overflow: auto;
 }
+@media (prefers-color-scheme: dark) {
+  .commentsContext {
+    background-color: var(--bg-color);
+  }
+}
 .commentsWrite {
   width: 100%;
   height: 56px;
@@ -408,11 +425,12 @@
   border: none;
   margin-top: 12px;
   background: var(--primary);
-  color: var(--white);
+  color: var(--button-text);
   font-weight: 600;
   font-size: 16px;
   line-height: 1;
 }
+
 .editButton {
   display: flex;
   justify-content: space-between;
@@ -434,7 +452,13 @@
   background: var(--bg-color);
   color: var(--text-gray);
 }
+@media (prefers-color-scheme: dark) {
+  .editButtonCancle {
+    background: var(--solid);
+  }
+}
+
 .editButtonConfirm {
   background: var(--primary);
-  color: var(--white);
+  color: var(--button-text);
 }

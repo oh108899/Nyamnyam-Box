@@ -440,7 +440,7 @@ export default function WritePage() {
       <div className={styles.page}>
         <header className={styles.header}>
           <button type="button" onClick={() => router.back()} className={styles.headerButton} aria-label="뒤로가기">
-            <span className={styles.headerIconBack} aria-hidden="true"></span>
+            <Image src="/images/back.svg" alt="" width={20} height={19} />
           </button>
           <h1 className={styles.headerTitle}>레시피 작성</h1>
         </header>

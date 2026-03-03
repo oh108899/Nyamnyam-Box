@@ -1,6 +1,6 @@
 .viewport {
   min-height: 100vh;
-  background: var(--bg-color);
+  background: var(--white);
 }
 
 .page {
@@ -9,7 +9,6 @@
   min-width: 32px;
   min-height: 100vh;
   margin: 0 auto;
-  background: var(--bg-color);
   color: var(--text-black);
   font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
@@ -19,7 +18,7 @@
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--solid);
   background: var(--white);
   padding: 0 16px;
 }
@@ -39,19 +38,24 @@
   text-indent: 120%;
   background-image: url("/images/logo.png");
   background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  background-size: auto 100%;
+  background-position: left center;
 }
 
 .headerButton {
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   border: 0;
   background: transparent;
   padding: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .headerButton img {
+    filter: invert(92%) sepia(0%) saturate(383%) hue-rotate(203deg) brightness(99%) contrast(97%);
+  }
 }
 
 .content {
