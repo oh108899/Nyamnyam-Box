@@ -33,7 +33,7 @@ const ingredientOptions = ["고기", "채소", "해산물", "곡물"];
 
 export default function SearchPage() {
   const [keyword, setKeyword] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>("한식");
+  // const [selectedCategory, setSelectedCategory] = useState<string | null>("한식");
   const [difficulty, setDifficulty] = useState("쉬움");
   const [time, setTime] = useState("30분 이내");
   const [ingredient, setIngredient] = useState("고기");

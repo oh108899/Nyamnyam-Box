@@ -14,6 +14,7 @@ import styles from "./page.module.css";
 import { createClient } from "../../utils/supabase/client";
 import BottomNav from "../../components/BottomNav";
 import LogoHeader from "../../components/LogoHeader";
+import BookmarkButton from "../../components/bookmark/BookmarkButton";
 
 type RecipeRow = {
   id: number;
@@ -142,6 +143,7 @@ function SearchResultsContent() {
                     ) : (
                       <div className={styles.resultImagePlaceholder} />
                     )}
+                    <BookmarkButton itemId={r.id} className={styles.BookmarkButton} imageClassName={styles.BookmarkIcon} />
                   </div>
                   <h3 className={styles.resultTitle}>{r.title}</h3>
                   <div className={styles.resultMeta}>{r.cooking_time}</div>
