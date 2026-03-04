@@ -18,11 +18,10 @@ import LogoHeader from "../../components/LogoHeader";
 type RecipeRow = {
   id: number;
   title: string;
-  image: string | null;
+  thumb: string | null;
   is_AI: boolean;
-  time: string | number | null;
   cooking_time: string | number | null;
-  description?: string | null;
+  desc: string | null;
 };
 
 export default function SearchResultsPage() {
@@ -55,7 +54,7 @@ function SearchResultsContent() {
 
       let query = supabase
         .from("recipes")
-        .select("id,title,image,is_AI,time,cooking_time,description")
+        .select("id,title,thumb,is_AI,cooking_time,desc")
         .limit(50);
 
       if (trimmed) {
@@ -132,9 +131,9 @@ function SearchResultsContent() {
                 <Link key={r.id} href={`/recipes/${r.id}`} className={styles.resultCard}>
                   <div className={styles.resultImageWrap}>
                     {r.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
-                    {r.image ? (
+                    {r.thumb ? (
                       <Image
-                        src={r.image}
+                        src={r.thumb}
                         alt={r.title}
                         fill
                         sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
