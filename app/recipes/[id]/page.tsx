@@ -23,9 +23,9 @@ type StepRow = {
   content: string;
   img_url: string | null;
 };
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient();
-  const { id } = params;
+  const { id } = await params;
 
   const { data: recipe } = await supabase
     .from("recipes")
