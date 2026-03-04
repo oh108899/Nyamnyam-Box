@@ -28,6 +28,7 @@ type Bookmark = {
     cooking_time?: string;
     serving?: string;
     views?: number;
+    is_AI?: boolean;
     review?: { count: number }[];
   };
 }
@@ -113,7 +114,10 @@ export default function BookmarkPage() {
                           <Link href={`/recipes/${item.recipes.id}`}>
                             <div className={styles.recipeImageWrap}>
                               {thumbSrc ? (
-                                <Image src={thumbSrc} alt={recipeTitle} fill unoptimized className={styles.recipeImage} />
+                                <>
+                                 {item.recipes.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
+                                  <Image src={thumbSrc} alt={recipeTitle} fill unoptimized className={styles.recipeImage} />
+                                </>
                               ) : (
                                 <div className={styles.recipeImageSkeleton} aria-hidden="true" />
                               )}
