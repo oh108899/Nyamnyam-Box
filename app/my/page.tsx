@@ -24,6 +24,7 @@ type MyRecipe = {
   likes: string;
   isBest: boolean;
   bookmark: { count: number }[];
+  review: { count: number }[];
 };
 
 type Profile = {
@@ -66,10 +67,10 @@ export default function MyPage() {
         setProfile(profile);
       }
 
-      //작성레시피+북마크
+      //작성레시피
       const { data: recipes, error: recipesError } = await supabase
         .from("recipes")
-        .select("*, bookmark(count)")
+        .select("*, bookmark(count), review(count)")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -136,15 +137,15 @@ export default function MyPage() {
             </>)
             : profile &&
             (
-              <>                    
-              <div className={styles.profileAvatar}>
-                <Image
-                  src={profile.avatar_url ?? `/images/profilePrm.svg`}
-                  width={80}
-                  height={80}
-                  alt=""
-                />
-              </div>
+              <>
+                <div className={styles.profileAvatar}>
+                  <Image
+                    src={profile.avatar_url ?? `/images/profilePrm.svg`}
+                    width={80}
+                    height={80}
+                    alt=""
+                  />
+                </div>
                 <div className={styles.profileInfo}>
                   <h2 className={styles.profileName}>{profile.nick_name}</h2>
                   <p className={styles.profileMeta}>{profile.email}</p>
@@ -174,29 +175,26 @@ export default function MyPage() {
                 </article>
               ))
               : myRecipes.length === 0
-                ? (
-                  <p className={styles.emptyText}>아직 작성한 레시피가 없습니다</p>
-                )
+                ? (<p className={styles.emptyText}>아직 작성한 레시피가 없습니다</p>)
                 : myRecipes.map((recipe) => (
                   <article key={recipe.id} className={styles.recipeCard}>
                     <Link href={`/recipes/${recipe.id}`}>
                       <div className={styles.recipeImageWrap}>
                         {recipe.is_AI && <span className={styles.aiBadge}>AI레시피!</span>}
-                        {recipe.thumb &&
-                          <Image
-                            src={recipe.thumb}
-                            alt={recipe.title}
-                            fill className={styles.recipeImage}
-                          />}
+                        {recipe.thumb && <Image src={recipe.thumb} alt={recipe.title} fill className={styles.recipeImage} />}
                         {recipe.isBest && <span className={styles.bestBadge}>Best</span>}
                       </div>
                     </Link>
                     <h4 className={styles.recipeTitle}>{recipe.title}</h4>
                     <div className={styles.recipeMeta}>
-                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views}</span>
-
+                      {(recipe.review?.[0]?.count ?? 0) > 0 && (
+                        <span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>
+                          <Image src="/images/comments.svg" alt="" width={12} height={12} aria-hidden="true" /> {recipe.review?.[0]?.count ?? 0}
+                        </span>
+                      )}
                       {(recipe.bookmark?.[0]?.count ?? 0) > 0 &&
-                        (<span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>{recipe.bookmark?.[0]?.count ?? 0}</span>)}
+                        (<span className={`${styles.recipeMetaBookmark} ${styles.recipeMetaBadge}`}>
+                          <Image src="/images/recipeBookmark.svg" alt="" width={10} height={12} aria-hidden="true" /> {recipe.bookmark?.[0]?.count ?? 0}</span>)}
                     </div>
                   </article>
 

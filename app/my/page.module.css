@@ -262,19 +262,11 @@
 .recipeMetaBadge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   
   background-position: left center;
   background-repeat: no-repeat;
   background-size: auto 10px;
-}
-.recipeMetaView{
-  background-image: url("/images/recipeVeiw.svg");
-  padding-left: 20px;
-}
-.recipeMetaBookmark {
-  background-image: url("/images/recipeBookmark.svg");
-  padding-left: 16px;
 }
 
 .recipeTitleSkeleton {

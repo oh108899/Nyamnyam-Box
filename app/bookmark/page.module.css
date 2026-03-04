@@ -171,7 +171,7 @@
 .recipeMeta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   color: var(--primary);
   font-size: var(--desc);
   font-weight: 500;
@@ -182,7 +182,7 @@
 .recipeMetaBadge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   
   background-position: left center;
   background-repeat: no-repeat;

@@ -186,7 +186,7 @@
 .recipeMetaBadge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   
   background-position: left center;
   background-repeat: no-repeat;

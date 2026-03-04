@@ -26,7 +26,8 @@ type Recipe = {
   title: string;
   thumb: string | null;
   is_AI: boolean;
-  views: number | null;
+  cooking_time: string;
+  serving : string;
   review: { count: number }[] | null;
 };
 
@@ -41,7 +42,7 @@ export default function RecipesPage() {
 
       const { data, error } = await supabase
         .from("recipes")
-        .select("id, title, thumb, is_AI, review(count)");
+        .select("id, title, thumb, cooking_time, serving, is_AI, review(count)");
       if (error) {
         console.error(error);
       } else {
@@ -100,9 +101,14 @@ export default function RecipesPage() {
                       <Link href={`/recipes/${recipe.id}`}>{recipe.title}</Link>
                     </h2>
                     <div className={styles.recipeMeta}>
-                      <span className={`${styles.recipeMetaView} ${styles.recipeMetaBadge}`}>{recipe.views ?? 0}</span>
-                      {(recipe.review?.[0]?.count ?? 0) > 0 &&
-                        (<span className={`${styles.recipeMetaComment} ${styles.recipeMetaBadge}`}>{recipe.review?.[0]?.count ?? 0}</span>)}
+                      <span className={styles.recipeMetaBadge}>
+                        <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
+                        {recipe.cooking_time}
+                      </span>
+                        <span className={styles.recipeMetaBadge}>
+                          <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
+                          {recipe.serving}
+                        </span>
                     </div>
                   </div>
                 </article>

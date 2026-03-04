@@ -145,11 +145,11 @@ export default function HomePage() {
                   <div className={styles.metaRow}>
                     <span className={styles.metaItem}>
                       <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                      댓글 로딩중..
+                      로딩중..
                     </span>
                     <span className={styles.metaItem}>
                       <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
-                      시간 로딩중..
+                      로딩중..
                     </span>
                   </div>
                 </article>
@@ -173,13 +173,13 @@ export default function HomePage() {
                   </h3>
                   <div className={styles.metaRow}>
                     <span className={styles.metaItem}>
-                      <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
-                      조회수 {item.views ?? 0}
-                    </span>
-                    <span className={styles.metaItem}>
                       <Image src="/images/cookTime.png" alt="" width={12} height={12} aria-hidden="true" />
                       {item.cooking_time}
                     </span>
+                    <span className={styles.metaItem}>
+                        <Image src="/images/people.svg" alt="" width={12} height={12} aria-hidden="true" />
+                        {item.serving}
+                      </span>
                   </div>
                 </article>
               ))}

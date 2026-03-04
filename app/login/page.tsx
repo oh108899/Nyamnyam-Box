@@ -38,7 +38,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/my`,
+        redirectTo: `https://nyamnyam-box.vercel.app/my`,
         queryParams: {
           prompt: "consent select_account", // 계정 선택 + 동의 창 표시
         }

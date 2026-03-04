@@ -144,7 +144,6 @@ export default function CommentsClient({
   // 댓글 작성
   const handleWrite = async () => {
     if (!me) {
-      alert("댓글 작성은 로그인이 필요합니다.");
       return;
     }
 
@@ -208,11 +207,9 @@ export default function CommentsClient({
             <div className={classNames.commentsProfile}>
               <Image src={isPorfile} alt="" width={40} height={40} />
             </div>
-
             <div className={classNames.commentsBox}>
               <div className={classNames.commentsUser}>
                 <span className={classNames.commentsId}>{r.nick_name}</span>
-
                 {isMine && !isEditing && (
                   <div className={classNames.commentsMy}>
                     <CommentActions
@@ -224,7 +221,6 @@ export default function CommentsClient({
                   </div>
                 )}
               </div>
-
               {isEditing ? (
                 <>
                   <textarea
