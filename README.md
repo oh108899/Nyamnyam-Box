@@ -170,16 +170,16 @@ Supabase DB (PostgreSQL)<br>
         ↓<br>
 Supabase Storage
 ## 5. AI 생성 흐름:
-사용자 입력
-   ↓
-AI API 요청
-   ↓
-JSON 응답 파싱
-   ↓
-상태 반영
-   ↓
-사용자의 공유 동의
-   ↓
+사용자 입력<br>
+   ↓<br>
+AI API 요청<br>
+   ↓<br>
+JSON 응답 파싱<br>
+   ↓<br>
+상태 반영<br>
+   ↓<br>
+사용자의 공유 동의<br>
+   ↓<br>
 DB 저장
 
 ## 6. 회고
