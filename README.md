@@ -162,12 +162,12 @@ gantt
 ```
 
 ## 4. 아키텍처
-Client (Next.js)
-        ↓
-Supabase Auth
-        ↓
-Supabase DB (PostgreSQL)
-        ↓
+Client (Next.js)<br>
+        ↓<br>
+Supabase Auth<br>
+        ↓<br>
+Supabase DB (PostgreSQL)<br>
+        ↓<br>
 Supabase Storage
 ## 5. AI 생성 흐름:
 사용자 입력
