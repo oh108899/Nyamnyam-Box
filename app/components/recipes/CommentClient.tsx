@@ -189,11 +189,13 @@ export default function CommentsClient({
           placeholder={me ? "댓글을 작성해주세요" : "로그인 후 댓글 작성 가능합니다"}
           disabled={!me}
         />
-        <CommentWriteButton
-          writeClassName={classNames.commentsWrite}
-          onWrite={handleWrite}
-          disabled={!me}
-        />
+        {me &&
+          <CommentWriteButton
+            writeClassName={classNames.commentsWrite}
+            onWrite={handleWrite}
+            disabled={!me}
+          />}
+
       </div>
 
       {reviews.map((r) => {
