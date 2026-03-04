@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
   const { data: recipe } = await supabase
     .from("recipes")
-    .select("title, desc")
+    .select("title, desc, thumb")
     .eq("id", id)
     .single();
 
