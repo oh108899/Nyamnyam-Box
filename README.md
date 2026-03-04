@@ -68,8 +68,78 @@ gantt
 - 댓글과 같은 커뮤니티 기능 구현
 
 ### 1.5 ERD
-<img width="923" height="814" alt="Image" src="https://github.com/user-attachments/assets/655507b1-d03a-42c9-aac4-d4b92f5a45ec" />
+```mermaid
+erDiagram
 
+    recipes {
+        int8 id PK
+        timestamptz created_at
+        uuid user_id FK
+        text title
+        varchar desc
+        text thumb
+        text difficulty
+        text cooking_time
+        text serving
+        bool is_AI
+        timestamptz updated_at
+        text category
+    }
+
+    ingredients {
+        int8 id PK
+        int8 recipe_id FK
+        text name
+        text qty
+    }
+
+    recipe_steps {
+        int8 id PK
+        int8 recipe_id FK
+        int2 step_num
+        varchar content
+        text img_url
+    }
+
+    bookmark {
+        int8 id PK
+        timestamptz created_at
+        uuid user_id FK
+        int8 recipe_id FK
+    }
+
+    review {
+        int8 id PK
+        timestamptz created_at
+        int8 recipe_id FK
+        uuid user_id FK
+        varchar comment
+        text nick_name
+        timestamptz updated_at
+    }
+
+    profile {
+        uuid id PK
+        timestamptz created_at
+        text nick_name
+        text avatar_url
+        text email
+    }
+
+    auth_users {
+        uuid id PK
+    }
+
+    recipes ||--o{ ingredients : has
+    recipes ||--o{ recipe_steps : has
+    recipes ||--o{ bookmark : bookmarked_by
+    recipes ||--o{ review : reviewed_by
+
+    profile ||--|| auth_users : extends
+    profile ||--o{ recipes : writes
+    profile ||--o{ bookmark : saves
+    profile ||--o{ review : writes
+```
 
 
 ## 2. 개발 환경 및 배포
