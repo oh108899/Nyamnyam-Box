@@ -23,6 +23,32 @@ type StepRow = {
   content: string;
   img_url: string | null;
 };
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const supabase = createClient();
+  const { id } = params;
+
+  const { data: recipe } = await supabase
+    .from("recipes")
+    .select("title, desc")
+    .eq("id", id)
+    .single();
+
+  if (!recipe) {
+    return {
+      title: "레시피를 찾을 수 없습니다",
+    };
+  }
+
+  return {
+  title: recipe.title,
+  description: recipe.desc,
+  openGraph: {
+    title: recipe.title,
+    description: recipe.desc,
+    images: recipe.thumb ? [recipe.thumb] : [],
+  },
+};
+}
 
 export default async function RecipePages({ params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient();
